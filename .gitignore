@@ -1,0 +1,19 @@
+# Data (DB + backups)
+data/*
+!data/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Misc
+.DS_Store
+*.log
+.env
