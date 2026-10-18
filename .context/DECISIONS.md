@@ -11,6 +11,8 @@
 | D5 | 2026-10-18 | Money serialized as JSON strings (Decimal) | No float rounding on the wire |
 | D6 | 2026-10-18 | UI labels inline in Spanish, no i18n library | Single-language personal app; less ceremony |
 | D7 | 2026-10-18 | Routing with `react-router` | Standard, small; one route per sidebar page |
+| D9 | 2026-10-18 | TypeScript pinned to `~5.9` | `openapi-typescript` 7.x peer-requires TS 5; revisit when it supports TS 6 |
+| D10 | 2026-10-18 | OpenAPI operationId = endpoint function name; `src/api/openapi.json` is committed | Clean generated type names; API changes visible in diffs |
 | D8 | 2026-10-18 | Dark mode deferred; tokens structured so it's one more variable set | Open question in spec; default to "later" |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)

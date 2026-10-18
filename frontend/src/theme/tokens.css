@@ -1,0 +1,55 @@
+/*
+ * Badger Grub design tokens.
+ * Brand tokens are the source of truth; the shadcn/ui semantic variables below map onto them.
+ * A dark theme later is just another block overriding these variables (e.g. `.dark { ... }`).
+ *
+ * Contrast rule: gold and craft are never used as text on white.
+ */
+:root {
+  /* Brand */
+  --brand-black: #1a1a1a;
+  --brand-burgundy: #5b1e2d;
+  --brand-burgundy-hover: #4a1825;
+  --brand-craft: #cba97e;
+  --brand-gold: #d4af37;
+
+  /* Surfaces */
+  --surface: #faf7f2;
+  --surface-card: #ffffff;
+
+  /* Status (muted) */
+  --ok: #3f7a4f;
+  --ok-soft: #e3efe6;
+  --warn: #9a6a12;
+  --warn-soft: #f6ecd6;
+  --bad: #a23b3b;
+  --bad-soft: #f5e1e1;
+
+  /* shadcn/ui semantic variables */
+  --background: var(--surface);
+  --foreground: var(--brand-black);
+  --card: var(--surface-card);
+  --card-foreground: var(--brand-black);
+  --popover: var(--surface-card);
+  --popover-foreground: var(--brand-black);
+  --primary: var(--brand-burgundy);
+  --primary-foreground: #ffffff;
+  --secondary: #f1ebe1;
+  --secondary-foreground: var(--brand-black);
+  --muted: #f3eee6;
+  --muted-foreground: #6b6259;
+  --accent: color-mix(in srgb, var(--brand-craft) 20%, white);
+  --accent-foreground: var(--brand-black);
+  --destructive: var(--bad);
+  --border: color-mix(in srgb, var(--brand-craft) 45%, white);
+  --input: color-mix(in srgb, var(--brand-craft) 55%, white);
+  --ring: var(--brand-burgundy);
+  --radius: 0.375rem;
+
+  /* Sidebar */
+  --sidebar: var(--brand-black);
+  --sidebar-foreground: #e9e4dc;
+  --sidebar-muted: #9a938a;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-indicator: var(--brand-gold);
+}

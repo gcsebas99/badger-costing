@@ -14,23 +14,23 @@ Repo, tooling and visual skeleton; no features yet.
 
 **Done when:** `make dev` opens the app with working navigation and `make test` passes.
 
-- [ ] **M0.1 Repo setup** — git init, `.gitignore`, `.nvmrc`, `.context/` docs, root `CLAUDE.md`
-- [ ] **M0.2 Backend skeleton**
-  - [ ] uv project (`backend/pyproject.toml`), FastAPI, SQLModel, Alembic, pytest, ruff
-  - [ ] `app/main.py` with `/api` router, `app/config.py` (settings), `app/db.py` (engine, session dep)
-  - [ ] `GET /api/health` → `{status, version, database}` + test
-  - [ ] Alembic configured with SQLModel metadata, SQLite batch mode, baseline revision
-- [ ] **M0.3 Frontend skeleton**
-  - [ ] Vite + React + TS, Tailwind v4, shadcn/ui (`components.json`, `cn` util, base components)
-  - [ ] Badger Grub tokens (`theme/tokens.css`) mapped to Tailwind; Inter font
-  - [ ] Layout: black sidebar w/ gold active indicator, top bar (search + "Nuevo"), routed empty pages
-  - [ ] TanStack Query provider; API status indicator using `/api/health`
-  - [ ] `formatCRC()` / number helpers + vitest
-- [ ] **M0.4 Integration**
-  - [ ] Vite proxy `/api` → `:8000`
-  - [ ] `make types`: dump OpenAPI → `openapi-typescript` → `src/api/schema.d.ts`; typed fetch client
-- [ ] **M0.5 Makefile** — `install`, `dev`, `test`, `migrate`, `migration`, `types`, `backup`, `lint`, `format`
-- [ ] **M0.6 Verification** — `make test` green, `make dev` checked in the browser
+- [x] **M0.1 Repo setup** — git init, `.gitignore`, `.nvmrc`, `.context/` docs, root `CLAUDE.md`
+- [x] **M0.2 Backend skeleton**
+  - [x] uv project (`backend/pyproject.toml`), FastAPI, SQLModel, Alembic, pytest, ruff
+  - [x] `app/main.py` with `/api` router, `app/config.py` (settings), `app/db.py` (engine, session dep)
+  - [x] `GET /api/health` → `{status, version, database}` + test
+  - [x] Alembic configured with SQLModel metadata, SQLite batch mode, baseline revision
+- [x] **M0.3 Frontend skeleton**
+  - [x] Vite + React + TS, Tailwind v4, shadcn/ui (`components.json`, `cn` util, base components)
+  - [x] Badger Grub tokens (`theme/tokens.css`) mapped to Tailwind; Inter font
+  - [x] Layout: black sidebar w/ gold active indicator, top bar (search + "Nuevo"), routed empty pages
+  - [x] TanStack Query provider; API status indicator using `/api/health`
+  - [x] `formatCRC()` / number helpers + vitest
+- [x] **M0.4 Integration**
+  - [x] Vite proxy `/api` → `:8000`
+  - [x] `make types`: dump OpenAPI → `openapi-typescript` → `src/api/schema.d.ts`; typed fetch client
+- [x] **M0.5 Makefile** — `install`, `dev`, `test`, `migrate`, `migration`, `types`, `backup`, `lint`, `format`
+- [x] **M0.6 Verification** — `make test` green, `make dev` checked in the browser
 
 ## M1 — Supplies (`m1-supplies`)
 
