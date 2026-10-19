@@ -21,6 +21,134 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/recipes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Recipes */
+        get: operations["list_recipes"];
+        put?: never;
+        /** Create Recipe */
+        post: operations["create_recipe"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/facets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Recipe Facets */
+        get: operations["recipe_facets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/ingredients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Ingredient Options
+         * @description Supplies and sub-recipes that can go into a recipe, with the units each accepts.
+         */
+        get: operations["ingredient_options"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Recipe Cost
+         * @description Cost an unsaved recipe; used by the editor to recalculate live.
+         */
+        post: operations["preview_recipe_cost"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/{recipe_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Recipe */
+        get: operations["read_recipe"];
+        put?: never;
+        post?: never;
+        /** Delete Recipe */
+        delete: operations["delete_recipe"];
+        options?: never;
+        head?: never;
+        /** Update Recipe */
+        patch: operations["update_recipe"];
+        trace?: never;
+    };
+    "/api/recipes/{recipe_id}/cost": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Recipe Cost */
+        get: operations["recipe_cost"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/{recipe_id}/usages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Recipe Usages */
+        get: operations["recipe_usages"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/settings": {
         parameters: {
             query?: never;
@@ -94,6 +222,23 @@ export interface paths {
         head?: never;
         /** Update Supply */
         patch: operations["update_supply"];
+        trace?: never;
+    };
+    "/api/supplies/{supply_id}/usages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Supply Usages */
+        get: operations["supply_usages"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/supplies/{supply_id}/prices": {
@@ -175,6 +320,67 @@ export interface components {
              */
             database: "ok" | "error";
         };
+        /** IngredientOption */
+        IngredientOption: {
+            item_type: components["schemas"]["RecipeItemType"];
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /**
+             * Detail
+             * @description Brand for supplies; category for sub-recipes.
+             */
+            detail: string | null;
+            base_unit: components["schemas"]["Unit"];
+            /** Allowed Units */
+            allowed_units: components["schemas"]["Unit"][];
+            reference_unit: components["schemas"]["Unit"];
+            /** Reference Unit Cost */
+            reference_unit_cost: string | null;
+            /** Active */
+            active: boolean;
+        };
+        /** ItemCostRead */
+        ItemCostRead: {
+            /** Position */
+            position: number;
+            /** Id */
+            id: number | null;
+            item_type: components["schemas"]["RecipeItemType"];
+            /** Ref Id */
+            ref_id: number;
+            /** Name */
+            name: string;
+            /** Quantity */
+            quantity: string;
+            unit: components["schemas"]["Unit"];
+            /** Waste Rate */
+            waste_rate: string;
+            /** Gross Quantity */
+            gross_quantity: string;
+            status: components["schemas"]["ItemStatus"];
+            /** Message */
+            message: string | null;
+            base_unit: components["schemas"]["Unit"] | null;
+            /** Base Quantity */
+            base_quantity: string | null;
+            /** Unit Cost */
+            unit_cost: string | null;
+            reference_unit: components["schemas"]["Unit"] | null;
+            /** Reference Unit Cost */
+            reference_unit_cost: string | null;
+            /** Cost */
+            cost: string | null;
+            /** Share */
+            share: string | null;
+            subrecipe: components["schemas"]["RecipeCostRead"] | null;
+        };
+        /**
+         * ItemStatus
+         * @enum {string}
+         */
+        ItemStatus: "ok" | "missing_price" | "conversion_error" | "incomplete_subrecipe" | "not_found";
         /** PriceCreate */
         PriceCreate: {
             /** Amount */
@@ -210,6 +416,262 @@ export interface components {
              * @description Whether this price is part of the current cost.
              */
             in_effect: boolean;
+        };
+        /** RecipeCostRead */
+        RecipeCostRead: {
+            /** Recipe Id */
+            recipe_id: number | null;
+            /** Name */
+            name: string;
+            /** Yield Qty */
+            yield_qty: string;
+            yield_unit: components["schemas"]["Unit"];
+            /** Portions */
+            portions: string;
+            /** Safety Margin Rate */
+            safety_margin_rate: string;
+            /** Ingredients Cost */
+            ingredients_cost: string;
+            /** Safety Margin Cost */
+            safety_margin_cost: string;
+            /** Total Cost */
+            total_cost: string;
+            base_unit: components["schemas"]["Unit"];
+            /** Cost Per Base Unit */
+            cost_per_base_unit: string;
+            reference_unit: components["schemas"]["Unit"];
+            /** Cost Per Reference Unit */
+            cost_per_reference_unit: string;
+            /** Cost Per Portion */
+            cost_per_portion: string;
+            /** Complete */
+            complete: boolean;
+            /** Items */
+            items: components["schemas"]["ItemCostRead"][];
+        };
+        /** RecipeCreate */
+        RecipeCreate: {
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /**
+             * Is Subrecipe
+             * @default false
+             */
+            is_subrecipe: boolean;
+            /** Yield Qty */
+            yield_qty: number | string;
+            yield_unit: components["schemas"]["Unit"];
+            /** Portions */
+            portions: number | string;
+            /**
+             * Safety Margin Rate
+             * @description 0.05 = 5 %
+             * @default 0
+             */
+            safety_margin_rate: number | string;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Items
+             * @default []
+             */
+            items: components["schemas"]["RecipeItemIn"][];
+        };
+        /** RecipeDetail */
+        RecipeDetail: {
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /**
+             * Is Subrecipe
+             * @default false
+             */
+            is_subrecipe: boolean;
+            /** Yield Qty */
+            yield_qty: string;
+            yield_unit: components["schemas"]["Unit"];
+            /** Portions */
+            portions: string;
+            /**
+             * Safety Margin Rate
+             * @description 0.05 = 5 %
+             * @default 0
+             */
+            safety_margin_rate: string;
+            /** Notes */
+            notes?: string | null;
+            /** Id */
+            id: number;
+            /** Items */
+            items: components["schemas"]["RecipeItemRead"][];
+            cost: components["schemas"]["RecipeCostRead"];
+            /** Used In */
+            used_in: components["schemas"]["RecipeUsage"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** RecipeFacets */
+        RecipeFacets: {
+            /** Categories */
+            categories: string[];
+        };
+        /** RecipeItemIn */
+        RecipeItemIn: {
+            item_type: components["schemas"]["RecipeItemType"];
+            /**
+             * Ref Id
+             * @description Supply id or sub-recipe id, depending on item_type.
+             */
+            ref_id: number;
+            /**
+             * Quantity
+             * @description Net quantity.
+             */
+            quantity: number | string;
+            unit: components["schemas"]["Unit"];
+            /**
+             * Waste Rate
+             * @description 0.13 = 13 %
+             * @default 0
+             */
+            waste_rate: number | string;
+        };
+        /** RecipeItemRead */
+        RecipeItemRead: {
+            /** Id */
+            id: number;
+            /** Position */
+            position: number;
+            item_type: components["schemas"]["RecipeItemType"];
+            /** Ref Id */
+            ref_id: number;
+            /** Quantity */
+            quantity: string;
+            unit: components["schemas"]["Unit"];
+            /** Waste Rate */
+            waste_rate: string;
+        };
+        /**
+         * RecipeItemType
+         * @enum {string}
+         */
+        RecipeItemType: "supply" | "recipe";
+        /**
+         * RecipePreview
+         * @description Unsaved recipe to cost live from the editor. `id` = recipe being edited, if any.
+         */
+        RecipePreview: {
+            /** Id */
+            id?: number | null;
+            /**
+             * Name
+             * @default Borrador
+             */
+            name: string;
+            /** Yield Qty */
+            yield_qty: number | string;
+            yield_unit: components["schemas"]["Unit"];
+            /** Portions */
+            portions: number | string;
+            /**
+             * Safety Margin Rate
+             * @description 0.05 = 5 %
+             * @default 0
+             */
+            safety_margin_rate: number | string;
+            /**
+             * Items
+             * @default []
+             */
+            items: components["schemas"]["RecipeItemIn"][];
+        };
+        /** RecipeSummary */
+        RecipeSummary: {
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /**
+             * Is Subrecipe
+             * @default false
+             */
+            is_subrecipe: boolean;
+            /** Yield Qty */
+            yield_qty: string;
+            yield_unit: components["schemas"]["Unit"];
+            /** Portions */
+            portions: string;
+            /**
+             * Safety Margin Rate
+             * @description 0.05 = 5 %
+             * @default 0
+             */
+            safety_margin_rate: string;
+            /** Notes */
+            notes?: string | null;
+            /** Id */
+            id: number;
+            /** Item Count */
+            item_count: number;
+            /** Total Cost */
+            total_cost: string;
+            /** Cost Per Portion */
+            cost_per_portion: string;
+            reference_unit: components["schemas"]["Unit"];
+            /** Cost Per Reference Unit */
+            cost_per_reference_unit: string;
+            /** Complete */
+            complete: boolean;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /**
+         * RecipeUpdate
+         * @description Partial update. When `items` is sent, it replaces all ingredient lines.
+         */
+        RecipeUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Category */
+            category?: string | null;
+            /** Is Subrecipe */
+            is_subrecipe?: boolean | null;
+            /** Yield Qty */
+            yield_qty?: number | string | null;
+            yield_unit?: components["schemas"]["Unit"] | null;
+            /** Portions */
+            portions?: number | string | null;
+            /** Safety Margin Rate */
+            safety_margin_rate?: (number | string) | null;
+            /** Notes */
+            notes?: string | null;
+            /** Items */
+            items?: components["schemas"]["RecipeItemIn"][] | null;
+        };
+        /** RecipeUsage */
+        RecipeUsage: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** Is Subrecipe */
+            is_subrecipe: boolean;
         };
         /** SettingsRead */
         SettingsRead: {
@@ -426,6 +888,315 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthRead"];
+                };
+            };
+        };
+    };
+    list_recipes: {
+        parameters: {
+            query?: {
+                /** @description Search in name. */
+                q?: string | null;
+                category?: string | null;
+                is_subrecipe?: boolean | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_recipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecipeCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recipe_facets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeFacets"];
+                };
+            };
+        };
+    };
+    ingredient_options: {
+        parameters: {
+            query?: {
+                /** @description Recipe being edited (left out of the sub-recipe options). */
+                exclude_recipe_id?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngredientOption"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_recipe_cost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecipePreview"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeCostRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_recipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_recipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_recipe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecipeUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recipe_cost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeCostRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recipe_usages: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeUsage"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -654,6 +1425,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SupplyDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    supply_usages: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                supply_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeUsage"][];
                 };
             };
             /** @description Validation Error */

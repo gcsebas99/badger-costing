@@ -85,6 +85,10 @@ class PieceEquivalence:
             raise UnitConversionError("La equivalencia de una pieza debe ser mayor que cero.")
 
 
+def units_in_family(unit_family: UnitFamily) -> list[Unit]:
+    return [unit for unit, (fam, _) in _UNIT_INFO.items() if fam == unit_family]
+
+
 def parse_unit(raw: str) -> Unit:
     """Parse user/spreadsheet input like 'kg ', 'L', 'Litros', 'pza'."""
     key = raw.strip().lower().rstrip(".")

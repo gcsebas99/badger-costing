@@ -70,7 +70,7 @@ def make_recipe(
         yield_unit=Unit(yield_unit),
         portions=Decimal(portions),
         safety_margin_rate=Decimal(safety_margin),
-        items=items,
+        ingredients=items,
     )
     session.add(recipe)
     session.commit()

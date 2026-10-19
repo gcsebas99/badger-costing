@@ -43,7 +43,8 @@ class Recipe(SQLModel, table=True):
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow)
 
-    items: list["RecipeItem"] = Relationship(
+    # Not called `items`: SQLModel.model_validate would read dict.items from input dicts.
+    ingredients: list["RecipeItem"] = Relationship(
         back_populates="recipe",
         sa_relationship_kwargs={
             "cascade": "all, delete-orphan",
@@ -87,5 +88,6 @@ class RecipeItem(SQLModel, table=True):
     waste_rate: Decimal = Field(default=Decimal(0), sa_type=DecimalText)  # 0.13 = 13 %
 
     recipe: Recipe = Relationship(
-        back_populates="items", sa_relationship_kwargs={"foreign_keys": "RecipeItem.recipe_id"}
+        back_populates="ingredients",
+        sa_relationship_kwargs={"foreign_keys": "RecipeItem.recipe_id"},
     )

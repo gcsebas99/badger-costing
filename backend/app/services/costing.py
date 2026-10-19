@@ -99,7 +99,7 @@ def spec_from_recipe(recipe: Recipe) -> RecipeSpec:
                 unit=line.unit,
                 waste_rate=line.waste_rate,
             )
-            for line in sorted(recipe.items, key=lambda line: line.position)
+            for line in sorted(recipe.ingredients, key=lambda line: line.position)
         ],
     )
 
@@ -166,7 +166,7 @@ class CostingContext:
         supplies = session.exec(
             select(Supply).options(selectinload(Supply.prices), selectinload(Supply.equivalence))
         ).all()
-        recipes = session.exec(select(Recipe).options(selectinload(Recipe.items))).all()
+        recipes = session.exec(select(Recipe).options(selectinload(Recipe.ingredients))).all()
         return cls(
             {s.id: s for s in supplies},
             {r.id: spec_from_recipe(r) for r in recipes},

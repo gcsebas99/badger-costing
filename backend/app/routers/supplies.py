@@ -8,6 +8,7 @@ from app.db import SessionDep
 from app.models.common import utcnow
 from app.models.settings import CostMode
 from app.models.supply import DEFAULT_SUPPLY_GROUPS, Supply, SupplyPrice, UnitEquivalence
+from app.schemas.recipe import RecipeUsage
 from app.schemas.supply import (
     EquivalenceIn,
     PriceCreate,
@@ -22,6 +23,7 @@ from app.services.settings import get_settings
 from app.services.supply_cost import prices_in_effect, sort_newest_first, supply_cost
 from app.services.text import fold
 from app.services.units import PieceEquivalence, UnitConversionError
+from app.services.usages import recipes_using_supply
 
 router = APIRouter(prefix="/supplies", tags=["supplies"])
 
@@ -159,10 +161,23 @@ def update_supply(supply_id: int, payload: SupplyUpdate, session: SessionDep):
 
 @router.delete("/{supply_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_supply(supply_id: int, session: SessionDep):
-    # TODO(M2): refuse when the supply is used by a recipe (suggest deactivating instead).
-    session.delete(_get_supply(session, supply_id))
+    supply = _get_supply(session, supply_id)
+    users = recipes_using_supply(session, supply_id)
+    if users:
+        names = ", ".join(r.name for r in users)
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            f"Se usa en: {names}. Desactívalo en lugar de eliminarlo.",
+        )
+    session.delete(supply)
     session.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.get("/{supply_id}/usages", response_model=list[RecipeUsage])
+def supply_usages(supply_id: int, session: SessionDep):
+    _get_supply(session, supply_id)
+    return [RecipeUsage.model_validate(r) for r in recipes_using_supply(session, supply_id)]
 
 
 @router.get("/{supply_id}/prices", response_model=list[PriceRead])

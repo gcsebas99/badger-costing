@@ -26,6 +26,464 @@
         }
       }
     },
+    "/api/recipes": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "List Recipes",
+        "operationId": "list_recipes",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Search in name.",
+              "title": "Q"
+            },
+            "description": "Search in name."
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "is_subrecipe",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Is Subrecipe"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecipeSummary"
+                  },
+                  "title": "Response List Recipes"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Create Recipe",
+        "operationId": "create_recipe",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recipes/facets": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Recipe Facets",
+        "operationId": "recipe_facets",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeFacets"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recipes/ingredients": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Ingredient Options",
+        "description": "Supplies and sub-recipes that can go into a recipe, with the units each accepts.",
+        "operationId": "ingredient_options",
+        "parameters": [
+          {
+            "name": "exclude_recipe_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Recipe being edited (left out of the sub-recipe options).",
+              "title": "Exclude Recipe Id"
+            },
+            "description": "Recipe being edited (left out of the sub-recipe options)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IngredientOption"
+                  },
+                  "title": "Response Ingredient Options"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recipes/preview": {
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Preview Recipe Cost",
+        "description": "Cost an unsaved recipe; used by the editor to recalculate live.",
+        "operationId": "preview_recipe_cost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipePreview"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeCostRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recipes/{recipe_id}": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Read Recipe",
+        "operationId": "read_recipe",
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Recipe Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Update Recipe",
+        "operationId": "update_recipe",
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Recipe Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Delete Recipe",
+        "operationId": "delete_recipe",
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Recipe Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recipes/{recipe_id}/cost": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Recipe Cost",
+        "operationId": "recipe_cost",
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Recipe Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeCostRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recipes/{recipe_id}/usages": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Recipe Usages",
+        "operationId": "recipe_usages",
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Recipe Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecipeUsage"
+                  },
+                  "title": "Response Recipe Usages"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/settings": {
       "get": {
         "tags": [
@@ -377,6 +835,52 @@
         }
       }
     },
+    "/api/supplies/{supply_id}/usages": {
+      "get": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "Supply Usages",
+        "operationId": "supply_usages",
+        "parameters": [
+          {
+            "name": "supply_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Supply Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecipeUsage"
+                  },
+                  "title": "Response Supply Usages"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/supplies/{supply_id}/prices": {
       "get": {
         "tags": [
@@ -619,6 +1123,252 @@
         ],
         "title": "HealthRead"
       },
+      "IngredientOption": {
+        "properties": {
+          "item_type": {
+            "$ref": "#/components/schemas/RecipeItemType"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail",
+            "description": "Brand for supplies; category for sub-recipes."
+          },
+          "base_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "allowed_units": {
+            "items": {
+              "$ref": "#/components/schemas/Unit"
+            },
+            "type": "array",
+            "title": "Allowed Units"
+          },
+          "reference_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "reference_unit_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Unit Cost"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "item_type",
+          "id",
+          "name",
+          "detail",
+          "base_unit",
+          "allowed_units",
+          "reference_unit",
+          "reference_unit_cost",
+          "active"
+        ],
+        "title": "IngredientOption"
+      },
+      "ItemCostRead": {
+        "properties": {
+          "position": {
+            "type": "integer",
+            "title": "Position"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "item_type": {
+            "$ref": "#/components/schemas/RecipeItemType"
+          },
+          "ref_id": {
+            "type": "integer",
+            "title": "Ref Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "quantity": {
+            "type": "string",
+            "title": "Quantity"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "waste_rate": {
+            "type": "string",
+            "title": "Waste Rate"
+          },
+          "gross_quantity": {
+            "type": "string",
+            "title": "Gross Quantity"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "base_unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "base_quantity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Quantity"
+          },
+          "unit_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Cost"
+          },
+          "reference_unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reference_unit_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Unit Cost"
+          },
+          "cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost"
+          },
+          "share": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Share"
+          },
+          "subrecipe": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RecipeCostRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "position",
+          "id",
+          "item_type",
+          "ref_id",
+          "name",
+          "quantity",
+          "unit",
+          "waste_rate",
+          "gross_quantity",
+          "status",
+          "message",
+          "base_unit",
+          "base_quantity",
+          "unit_cost",
+          "reference_unit",
+          "reference_unit_cost",
+          "cost",
+          "share",
+          "subrecipe"
+        ],
+        "title": "ItemCostRead"
+      },
+      "ItemStatus": {
+        "type": "string",
+        "enum": [
+          "ok",
+          "missing_price",
+          "conversion_error",
+          "incomplete_subrecipe",
+          "not_found"
+        ],
+        "title": "ItemStatus"
+      },
       "PriceCreate": {
         "properties": {
           "amount": {
@@ -704,6 +1454,741 @@
           "in_effect"
         ],
         "title": "PriceRead"
+      },
+      "RecipeCostRead": {
+        "properties": {
+          "recipe_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "yield_qty": {
+            "type": "string",
+            "title": "Yield Qty"
+          },
+          "yield_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "portions": {
+            "type": "string",
+            "title": "Portions"
+          },
+          "safety_margin_rate": {
+            "type": "string",
+            "title": "Safety Margin Rate"
+          },
+          "ingredients_cost": {
+            "type": "string",
+            "title": "Ingredients Cost"
+          },
+          "safety_margin_cost": {
+            "type": "string",
+            "title": "Safety Margin Cost"
+          },
+          "total_cost": {
+            "type": "string",
+            "title": "Total Cost"
+          },
+          "base_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "cost_per_base_unit": {
+            "type": "string",
+            "title": "Cost Per Base Unit"
+          },
+          "reference_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "cost_per_reference_unit": {
+            "type": "string",
+            "title": "Cost Per Reference Unit"
+          },
+          "cost_per_portion": {
+            "type": "string",
+            "title": "Cost Per Portion"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ItemCostRead"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recipe_id",
+          "name",
+          "yield_qty",
+          "yield_unit",
+          "portions",
+          "safety_margin_rate",
+          "ingredients_cost",
+          "safety_margin_cost",
+          "total_cost",
+          "base_unit",
+          "cost_per_base_unit",
+          "reference_unit",
+          "cost_per_reference_unit",
+          "cost_per_portion",
+          "complete",
+          "items"
+        ],
+        "title": "RecipeCostRead"
+      },
+      "RecipeCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Category"
+          },
+          "is_subrecipe": {
+            "type": "boolean",
+            "title": "Is Subrecipe",
+            "default": false
+          },
+          "yield_qty": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Yield Qty"
+          },
+          "yield_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "portions": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Portions"
+          },
+          "safety_margin_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Safety Margin Rate",
+            "description": "0.05 = 5 %",
+            "default": "0"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemIn"
+            },
+            "type": "array",
+            "title": "Items",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "category",
+          "yield_qty",
+          "yield_unit",
+          "portions"
+        ],
+        "title": "RecipeCreate"
+      },
+      "RecipeDetail": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Category"
+          },
+          "is_subrecipe": {
+            "type": "boolean",
+            "title": "Is Subrecipe",
+            "default": false
+          },
+          "yield_qty": {
+            "type": "string",
+            "title": "Yield Qty"
+          },
+          "yield_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "portions": {
+            "type": "string",
+            "title": "Portions"
+          },
+          "safety_margin_rate": {
+            "type": "string",
+            "title": "Safety Margin Rate",
+            "description": "0.05 = 5 %",
+            "default": "0"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemRead"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "cost": {
+            "$ref": "#/components/schemas/RecipeCostRead"
+          },
+          "used_in": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeUsage"
+            },
+            "type": "array",
+            "title": "Used In"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "category",
+          "yield_qty",
+          "yield_unit",
+          "portions",
+          "id",
+          "items",
+          "cost",
+          "used_in",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "RecipeDetail"
+      },
+      "RecipeFacets": {
+        "properties": {
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Categories"
+          }
+        },
+        "type": "object",
+        "required": [
+          "categories"
+        ],
+        "title": "RecipeFacets"
+      },
+      "RecipeItemIn": {
+        "properties": {
+          "item_type": {
+            "$ref": "#/components/schemas/RecipeItemType"
+          },
+          "ref_id": {
+            "type": "integer",
+            "title": "Ref Id",
+            "description": "Supply id or sub-recipe id, depending on item_type."
+          },
+          "quantity": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Quantity",
+            "description": "Net quantity."
+          },
+          "unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "waste_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 10.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Waste Rate",
+            "description": "0.13 = 13 %",
+            "default": "0"
+          }
+        },
+        "type": "object",
+        "required": [
+          "item_type",
+          "ref_id",
+          "quantity",
+          "unit"
+        ],
+        "title": "RecipeItemIn"
+      },
+      "RecipeItemRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "position": {
+            "type": "integer",
+            "title": "Position"
+          },
+          "item_type": {
+            "$ref": "#/components/schemas/RecipeItemType"
+          },
+          "ref_id": {
+            "type": "integer",
+            "title": "Ref Id"
+          },
+          "quantity": {
+            "type": "string",
+            "title": "Quantity"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "waste_rate": {
+            "type": "string",
+            "title": "Waste Rate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "position",
+          "item_type",
+          "ref_id",
+          "quantity",
+          "unit",
+          "waste_rate"
+        ],
+        "title": "RecipeItemRead"
+      },
+      "RecipeItemType": {
+        "type": "string",
+        "enum": [
+          "supply",
+          "recipe"
+        ],
+        "title": "RecipeItemType"
+      },
+      "RecipePreview": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": "Borrador"
+          },
+          "yield_qty": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Yield Qty"
+          },
+          "yield_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "portions": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Portions"
+          },
+          "safety_margin_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Safety Margin Rate",
+            "description": "0.05 = 5 %",
+            "default": "0"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemIn"
+            },
+            "type": "array",
+            "title": "Items",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "yield_qty",
+          "yield_unit",
+          "portions"
+        ],
+        "title": "RecipePreview",
+        "description": "Unsaved recipe to cost live from the editor. `id` = recipe being edited, if any."
+      },
+      "RecipeSummary": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Category"
+          },
+          "is_subrecipe": {
+            "type": "boolean",
+            "title": "Is Subrecipe",
+            "default": false
+          },
+          "yield_qty": {
+            "type": "string",
+            "title": "Yield Qty"
+          },
+          "yield_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "portions": {
+            "type": "string",
+            "title": "Portions"
+          },
+          "safety_margin_rate": {
+            "type": "string",
+            "title": "Safety Margin Rate",
+            "description": "0.05 = 5 %",
+            "default": "0"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "item_count": {
+            "type": "integer",
+            "title": "Item Count"
+          },
+          "total_cost": {
+            "type": "string",
+            "title": "Total Cost"
+          },
+          "cost_per_portion": {
+            "type": "string",
+            "title": "Cost Per Portion"
+          },
+          "reference_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "cost_per_reference_unit": {
+            "type": "string",
+            "title": "Cost Per Reference Unit"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "category",
+          "yield_qty",
+          "yield_unit",
+          "portions",
+          "id",
+          "item_count",
+          "total_cost",
+          "cost_per_portion",
+          "reference_unit",
+          "cost_per_reference_unit",
+          "complete",
+          "updated_at"
+        ],
+        "title": "RecipeSummary"
+      },
+      "RecipeUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "is_subrecipe": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Subrecipe"
+          },
+          "yield_qty": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Yield Qty"
+          },
+          "yield_unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "portions": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Portions"
+          },
+          "safety_margin_rate": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "maximum": 1.0,
+                    "minimum": 0.0
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "description": "0.05 = 5 %"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Safety Margin Rate"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RecipeItemIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "title": "RecipeUpdate",
+        "description": "Partial update. When `items` is sent, it replaces all ingredient lines."
+      },
+      "RecipeUsage": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "is_subrecipe": {
+            "type": "boolean",
+            "title": "Is Subrecipe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "is_subrecipe"
+        ],
+        "title": "RecipeUsage"
       },
       "SettingsRead": {
         "properties": {
