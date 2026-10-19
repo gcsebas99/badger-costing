@@ -5,8 +5,8 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 ## Current status
 
 - **Milestone:** M0 complete on branch `m0-base` — awaiting Sebas's browser review before merge to `main`.
-- **Next:** M1 — Supplies (branch `m1-supplies`). Needs answer on "current cost = latest vs avg of 3"
-  (see `DECISIONS.md`); default plan is a setting defaulting to avg-of-3.
+- **Next:** M1 — Supplies (branch `m1-supplies`). Current cost rule decided: avg of last up to 3 prices (D11).
+- **Remote:** `origin` = https://github.com/gcsebas99/badger-costing.git
 
 ---
 

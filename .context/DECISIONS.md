@@ -14,11 +14,11 @@
 | D8 | 2026-10-18 | Dark mode deferred; tokens structured so it's one more variable set | Open question in spec; default to "later" |
 | D9 | 2026-10-18 | TypeScript pinned to `~5.9` | `openapi-typescript` 7.x peer-requires TS 5; revisit when it supports TS 6 |
 | D10 | 2026-10-18 | OpenAPI operationId = endpoint function name; `src/api/openapi.json` is committed | Clean generated type names; API changes visible in diffs |
+| D11 | 2026-10-18 | Current supply cost = average of the last **up to 3** prices (1 price → that price; 2 → avg of 2). Latest-only stays available as a setting | Answered by Sebas; matches the Excel template |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 
-- [ ] **Current cost** = latest price or average of last 3? (template averages 3) — *needed in M1*.
-      Default plan: configurable setting, default **avg of last 3**.
+- [x] **Current cost** → D11.
 - [ ] **Platforms and %** (Uber Eats, Rappi, DiDi Food) — *needed in M3*.
 - [ ] **Target food cost %**: global or per menu group? — *needed in M3*.
       Default plan: global with optional per-group override.
