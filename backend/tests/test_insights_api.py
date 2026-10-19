@@ -58,10 +58,7 @@ def test_dashboard_flags_incomplete_recipes(client):
     data = client.get("/api/dashboard").json()
     assert data["incomplete"][0]["kind"] == "recipe"
     assert data["incomplete"][0]["name"] == "Salsa"
-    assert (
-        "sin precio" in data["incomplete"][0]["issues"][0].lower()
-        or data["incomplete"][0]["issues"]
-    )
+    assert data["incomplete"][0]["issues"] == ["Sal: El suministro no tiene precio."]
 
 
 def test_simulation_shows_affected_products_and_recipes(client, setup):  # noqa: F811
