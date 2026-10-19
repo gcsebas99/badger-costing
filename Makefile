@@ -65,4 +65,4 @@ backup: ## Timestamped DB copy into data/backups (override with BACKUP_DIR=/path
 
 import-supplies: ## Import supplies from a template .xlsx: make import-supplies file=path.xlsx [args=--dry-run]
 	@test -n "$(file)" || (echo 'Usage: make import-supplies file=path/to/file.xlsx [args="--dry-run"]' && exit 1)
-	$(API) python -W ignore -m scripts.import_supplies "$(abspath $(file))" $(args)
+	$(API) python -W ignore -m scripts.import_supplies "$(if $(filter /%,$(file)),$(file),$(CURDIR)/$(file))" $(args)
