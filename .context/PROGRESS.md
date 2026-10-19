@@ -4,13 +4,34 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 ## Current status
 
-- **Milestone:** M4 complete on branch `m4-dashboard` (committed locally, not pushed) — awaiting
-  Sebas's browser review. M0–M3 (MVP) are merged and pushed to `main`.
-- **Next:** M5 — Menu engineering & manual (branch `m5-menu`). Needs: the recipe manual `.md` files
-  (location + a sample) and how sales data will be provided (CSV columns / period).
+- **Milestone:** M5 partially complete on branch `m5-menu` (committed locally, not pushed): M5.1 sales
+  data and M5.2 menu engineering done; **M5.3/M5.4 (recipe manual import/write-back) blocked** until
+  Sebas shares sample manual `.md` files. M0–M4 are merged and pushed to `main`.
+- **Next:** M5.3/M5.4 once the manual format is known; after the roadmap: inventory.
 - **Setup for real use:** Ajustes → create menu groups (and platforms when used); bank fee is 0 % by
   default.
 - **Remote:** `origin` = https://github.com/gcsebas99/badger-costing.git
+
+---
+
+## 2026-10-18 · M5 (part 1) — Menu engineering (`m5-menu`)
+
+**Done**
+- Migration `0005`: `sales_period` (name unique, date range), `sales_entry` (period, product, platform
+  or direct, units) with RESTRICT on product/platform.
+- Services: `menu_engineering.py` (template method per group, channel-weighted margins),
+  `sales_import.py` (CSV with flexible headers/delimiters, accent-insensitive matching, unmatched
+  report); `usages.sales_count` guards product/platform deletion.
+- API: `/api/sales-periods` CRUD, `PUT /{id}/entries`, `POST /{id}/import`, `GET /{id}/menu-engineering`.
+- Frontend: "Ingeniería de menú" section: period picker + new period dialog (current month
+  defaults), Ventas grid (products × channels), CSV import, Análisis (2×2 matrix with advice + table).
+- Tests reproduce the template's pizza group (8 dishes, 335 units) classifications.
+- Verified in Chrome on the scratch DB: 3 burgers, units incl. Uber → clásica = Caballo (weighted
+  margin ₡2.292,24), BBQ/doble = Puzzle.
+- Tests: backend 135, frontend 33.
+
+**Gotchas**
+- Two consecutive `setSearchParams(fn)` calls overwrite each other → update params in one call.
 
 ---
 

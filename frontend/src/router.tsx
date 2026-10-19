@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { RouteError } from '@/components/layout/RouteError'
 import { DashboardPage } from '@/pages/dashboard/DashboardPage'
+import { MenuPage } from '@/pages/menu/MenuPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ProductEditorPage } from '@/pages/products/ProductEditorPage'
 import { ProductsPage } from '@/pages/products/ProductsPage'
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
           { path: 'productos', element: <ProductsPage /> },
           { path: 'productos/nuevo', element: <ProductEditorPage key="new" /> },
           { path: 'productos/:id', element: <ProductEditorPage /> },
+          { path: 'menu', element: <MenuPage /> },
           { path: 'ajustes', element: <SettingsPage /> },
           { path: 'simulador', element: <SimulatorPage /> },
           { path: '*', element: <NotFoundPage /> },

@@ -45,6 +45,12 @@
 | D39 | 2026-10-18 | "Recent increase" = latest price vs. the previous one (by date), top 8 | Simple and explainable; no time window to configure |
 | D40 | 2026-10-18 | Backup logic lives in `services/backup.py` (used by `make backup` and `/api/backups`); downloads only accept generated names | One implementation; no path traversal |
 | D41 | 2026-10-18 | Simulator is a hidden route (`/simulador`) linked from Dashboard and the supply sheet, not in the sidebar | Keeps the spec's five sidebar sections |
+| D42 | 2026-10-18 | Menu engineering per menu group; popularity HIGH if share ≥ 1/N (template, not the 70 % rule); margin HIGH if ≥ group's weighted average | Matches the template Sebas already uses |
+| D43 | 2026-10-18 | Unit margin = weighted average of channel margins (price ex VAT − cost − fee) by units sold per channel | Consistent with app margins; template ignored fees |
+| D44 | 2026-10-18 | Analysis uses today's costs and prices (no per-period cost history) | Costs are computed live by design |
+| D45 | 2026-10-18 | Sales entries RESTRICT product/platform deletion (409 → deactivate instead) | Sales history must not disappear silently |
+| D46 | 2026-10-18 | CSV sales import: frontend reads the file and posts its text (no multipart dependency); flexible headers; replace or add | Works with typical POS exports |
+| D47 | 2026-10-18 | New sidebar section "Ingeniería de menú" (`/menu`) | Large enough feature to deserve its own section |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 
@@ -54,3 +60,6 @@
 - [ ] Are manual portions (g/ml) the sale unit of sub-recipes? — default applied (D23); revisit if
       sub-recipes should also be usable "per portion".
 - [x] Dark mode in M0? → deferred (D8).
+- [ ] **Recipe manual `.md` format** (location, ingredient table layout, "Costo aproximado" section)
+      — *needed for M5.3/M5.4*.
+- [ ] **Sales data source**: POS CSV columns? Default implemented: flexible CSV + manual grid.

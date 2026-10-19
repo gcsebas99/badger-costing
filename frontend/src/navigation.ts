@@ -1,6 +1,7 @@
 import {
   ChefHat,
   FlaskConical,
+  LayoutGrid,
   LayoutDashboard,
   type LucideIcon,
   Package,
@@ -47,6 +48,7 @@ export const NAV_ITEMS: NavItem[] = [
     newPath: '/productos/nuevo',
     searchPlaceholder: 'Buscar producto…',
   },
+  { path: '/menu', label: 'Ingeniería de menú', icon: LayoutGrid },
   { path: '/ajustes', label: 'Ajustes', icon: Settings },
   { path: '/simulador', label: 'Simulador de impacto', icon: FlaskConical, hidden: true },
 ]

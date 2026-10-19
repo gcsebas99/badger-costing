@@ -87,6 +87,7 @@ Always run `make test` and `make types` before calling a task done.
   values use `toDecimalInput`. Percent inputs ↔ API rates via `percentInputToRate` / `rateToPercentInput`.
 - Full-page editors live at `/<area>/nueva|nuevo` and `/<area>/:id`; "Nuevo" uses `NavItem.newPath`.
   Printable sheets at `/<area>/:id/ficha` (outside the layout). Hidden routes use `NavItem.hidden`.
+- Menu engineering: `/api/sales-periods` (+ `/entries`, `/import`, `/menu-engineering`), page `/menu`.
 - Dashboard data: `GET /api/dashboard`; what-if: `POST /api/simulate`; CSV: `/api/export/{kind}.csv`;
   backups: `/api/backups`.
 - Editors' live cost: debounced form snapshot → `POST /api/recipes/preview` / `/api/products/preview`.

@@ -96,10 +96,14 @@ and Uber Eats, red when below threshold.
 
 **Done when:** manual sauces exist as costed recipes without manual re-entry.
 
-- [ ] **M5.1 Sales data** — units sold per period (manual entry or CSV)
-- [ ] **M5.2 Classification** — Star / Plowhorse / Puzzle / Dog matrix
+- [x] **M5.1 Sales data** — sales periods; units per product and channel (grid entry or CSV import
+      with flexible headers, accent-insensitive name matching)
+- [x] **M5.2 Classification** — Estrella / Caballo / Puzzle / Perro per menu group (template method,
+      margin net of channel fees), 2×2 matrix + table with advice
 - [ ] **M5.3 Manual import** — parse recipe `.md` ingredient tables → `recipe_item`
+      ⏸ blocked: needs a sample of the manual's `.md` format from Sebas
 - [ ] **M5.4 Write-back** — write computed cost into the "Costo aproximado" section of each `.md`
+      ⏸ blocked: same
 
 ---
 
