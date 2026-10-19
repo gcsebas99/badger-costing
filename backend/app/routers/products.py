@@ -21,6 +21,7 @@ from app.services.costing import ItemSpec
 from app.services.product_cost import ProductSpec, spec_from_product
 from app.services.product_pricing import PricingContext, PricingInput, pricing_input
 from app.services.text import fold
+from app.services.usages import sales_count
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -300,6 +301,12 @@ def _as_inputs(specs: list[ItemSpec]) -> list[RecipeItemIn]:
 
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_product(product_id: int, session: SessionDep):
-    session.delete(_get_product(session, product_id))
+    product = _get_product(session, product_id)
+    if sales_count(session, product_id=product_id):
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "El producto tiene ventas registradas. Desactívalo en lugar de eliminarlo.",
+        )
+    session.delete(product)
     session.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -11,6 +11,7 @@ from app.models.product import (
     SalesPlatform,
 )
 from app.models.recipe import Recipe, RecipeItem, RecipeItemType
+from app.models.sales import SalesEntry, SalesPeriod
 from app.models.settings import AppSettings, CostMode
 from app.models.supply import Supply, SupplyPrice, UnitEquivalence
 
@@ -26,6 +27,8 @@ __all__ = [
     "RecipeItem",
     "RecipeItemType",
     "SQLModel",
+    "SalesEntry",
+    "SalesPeriod",
     "SalesPlatform",
     "Supply",
     "SupplyPrice",

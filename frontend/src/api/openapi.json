@@ -1257,6 +1257,347 @@
         }
       }
     },
+    "/api/sales-periods": {
+      "get": {
+        "tags": [
+          "sales"
+        ],
+        "summary": "List Periods",
+        "operationId": "list_periods",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SalesPeriodRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Periods"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "sales"
+        ],
+        "summary": "Create Period",
+        "operationId": "create_period",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesPeriodIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesPeriodDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sales-periods/{period_id}": {
+      "get": {
+        "tags": [
+          "sales"
+        ],
+        "summary": "Read Period",
+        "operationId": "read_period",
+        "parameters": [
+          {
+            "name": "period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Period Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesPeriodDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "sales"
+        ],
+        "summary": "Update Period",
+        "operationId": "update_period",
+        "parameters": [
+          {
+            "name": "period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Period Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesPeriodUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesPeriodDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "sales"
+        ],
+        "summary": "Delete Period",
+        "operationId": "delete_period",
+        "parameters": [
+          {
+            "name": "period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Period Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sales-periods/{period_id}/entries": {
+      "put": {
+        "tags": [
+          "sales"
+        ],
+        "summary": "Replace Entries",
+        "description": "Replace all units of the period with the given list.",
+        "operationId": "replace_entries",
+        "parameters": [
+          {
+            "name": "period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Period Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesEntriesIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesPeriodDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sales-periods/{period_id}/import": {
+      "post": {
+        "tags": [
+          "sales"
+        ],
+        "summary": "Import Csv",
+        "description": "Import units from CSV text. With `replace`, imported rows overwrite existing values;\notherwise they're added to them.",
+        "operationId": "import_csv",
+        "parameters": [
+          {
+            "name": "period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Period Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesCsvIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesImportResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sales-periods/{period_id}/menu-engineering": {
+      "get": {
+        "tags": [
+          "sales"
+        ],
+        "summary": "Menu Engineering",
+        "operationId": "menu_engineering",
+        "parameters": [
+          {
+            "name": "period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Period Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MenuGroupAnalysisRead"
+                  },
+                  "title": "Response Menu Engineering"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/settings": {
       "get": {
         "tags": [
@@ -2424,6 +2765,74 @@
         ],
         "title": "ItemStatus"
       },
+      "MenuClass": {
+        "type": "string",
+        "enum": [
+          "star",
+          "plowhorse",
+          "puzzle",
+          "dog"
+        ],
+        "title": "MenuClass"
+      },
+      "MenuGroupAnalysisRead": {
+        "properties": {
+          "menu_group_id": {
+            "type": "integer",
+            "title": "Menu Group Id"
+          },
+          "menu_group_name": {
+            "type": "string",
+            "title": "Menu Group Name"
+          },
+          "item_count": {
+            "type": "integer",
+            "title": "Item Count"
+          },
+          "total_units": {
+            "type": "integer",
+            "title": "Total Units"
+          },
+          "popularity_threshold": {
+            "type": "string",
+            "title": "Popularity Threshold"
+          },
+          "total_margin": {
+            "type": "string",
+            "title": "Total Margin"
+          },
+          "average_margin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Margin"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MenuItemRead"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "menu_group_id",
+          "menu_group_name",
+          "item_count",
+          "total_units",
+          "popularity_threshold",
+          "total_margin",
+          "average_margin",
+          "items"
+        ],
+        "title": "MenuGroupAnalysisRead"
+      },
       "MenuGroupIn": {
         "properties": {
           "name": {
@@ -2548,6 +2957,91 @@
         },
         "type": "object",
         "title": "MenuGroupUpdate"
+      },
+      "MenuItemRead": {
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "title": "Product Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "units": {
+            "type": "integer",
+            "title": "Units"
+          },
+          "popularity": {
+            "type": "string",
+            "title": "Popularity"
+          },
+          "high_popularity": {
+            "type": "boolean",
+            "title": "High Popularity"
+          },
+          "unit_margin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Margin"
+          },
+          "total_margin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Margin"
+          },
+          "high_margin": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High Margin"
+          },
+          "classification": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MenuClass"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unpriced_units": {
+            "type": "integer",
+            "title": "Unpriced Units"
+          }
+        },
+        "type": "object",
+        "required": [
+          "product_id",
+          "name",
+          "units",
+          "popularity",
+          "high_popularity",
+          "unit_margin",
+          "total_margin",
+          "high_margin",
+          "classification",
+          "unpriced_units"
+        ],
+        "title": "MenuItemRead"
       },
       "PlatformIn": {
         "properties": {
@@ -4532,6 +5026,358 @@
         ],
         "title": "RecipeUsage",
         "description": "Where something is used: a recipe or a sale product."
+      },
+      "SalesCsvIn": {
+        "properties": {
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "description": "Raw CSV text (the frontend reads the file)."
+          },
+          "replace": {
+            "type": "boolean",
+            "title": "Replace",
+            "description": "Replace existing values for the same rows.",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "title": "SalesCsvIn"
+      },
+      "SalesEntriesIn": {
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/SalesEntryIn"
+            },
+            "type": "array",
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "entries"
+        ],
+        "title": "SalesEntriesIn"
+      },
+      "SalesEntryIn": {
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "title": "Product Id"
+          },
+          "platform_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform Id",
+            "description": "None = venta directa"
+          },
+          "units": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Units"
+          }
+        },
+        "type": "object",
+        "required": [
+          "product_id",
+          "units"
+        ],
+        "title": "SalesEntryIn"
+      },
+      "SalesEntryRead": {
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "title": "Product Id"
+          },
+          "platform_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform Id"
+          },
+          "units": {
+            "type": "integer",
+            "title": "Units"
+          }
+        },
+        "type": "object",
+        "required": [
+          "product_id",
+          "platform_id",
+          "units"
+        ],
+        "title": "SalesEntryRead"
+      },
+      "SalesImportResult": {
+        "properties": {
+          "imported_rows": {
+            "type": "integer",
+            "title": "Imported Rows"
+          },
+          "unmatched_products": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unmatched Products"
+          },
+          "unmatched_channels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unmatched Channels"
+          },
+          "invalid_rows": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Invalid Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "imported_rows",
+          "unmatched_products",
+          "unmatched_channels",
+          "invalid_rows"
+        ],
+        "title": "SalesImportResult"
+      },
+      "SalesPeriodDetail": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "total_units": {
+            "type": "integer",
+            "title": "Total Units"
+          },
+          "product_count": {
+            "type": "integer",
+            "title": "Product Count"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/SalesEntryRead"
+            },
+            "type": "array",
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "start_date",
+          "end_date",
+          "notes",
+          "created_at",
+          "total_units",
+          "product_count",
+          "entries"
+        ],
+        "title": "SalesPeriodDetail"
+      },
+      "SalesPeriodIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "start_date",
+          "end_date"
+        ],
+        "title": "SalesPeriodIn"
+      },
+      "SalesPeriodRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "total_units": {
+            "type": "integer",
+            "title": "Total Units"
+          },
+          "product_count": {
+            "type": "integer",
+            "title": "Product Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "start_date",
+          "end_date",
+          "notes",
+          "created_at",
+          "total_units",
+          "product_count"
+        ],
+        "title": "SalesPeriodRead"
+      },
+      "SalesPeriodUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "title": "SalesPeriodUpdate"
       },
       "SettingsRead": {
         "properties": {

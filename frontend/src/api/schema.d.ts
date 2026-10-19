@@ -373,6 +373,101 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/sales-periods": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Periods */
+        get: operations["list_periods"];
+        put?: never;
+        /** Create Period */
+        post: operations["create_period"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sales-periods/{period_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Period */
+        get: operations["read_period"];
+        put?: never;
+        post?: never;
+        /** Delete Period */
+        delete: operations["delete_period"];
+        options?: never;
+        head?: never;
+        /** Update Period */
+        patch: operations["update_period"];
+        trace?: never;
+    };
+    "/api/sales-periods/{period_id}/entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace Entries
+         * @description Replace all units of the period with the given list.
+         */
+        put: operations["replace_entries"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sales-periods/{period_id}/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import Csv
+         * @description Import units from CSV text. With `replace`, imported rows overwrite existing values;
+         *     otherwise they're added to them.
+         */
+        post: operations["import_csv"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sales-periods/{period_id}/menu-engineering": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Menu Engineering */
+        get: operations["menu_engineering"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/settings": {
         parameters: {
             query?: never;
@@ -701,6 +796,30 @@ export interface components {
          * @enum {string}
          */
         ItemStatus: "ok" | "missing_price" | "conversion_error" | "incomplete_subrecipe" | "not_found";
+        /**
+         * MenuClass
+         * @enum {string}
+         */
+        MenuClass: "star" | "plowhorse" | "puzzle" | "dog";
+        /** MenuGroupAnalysisRead */
+        MenuGroupAnalysisRead: {
+            /** Menu Group Id */
+            menu_group_id: number;
+            /** Menu Group Name */
+            menu_group_name: string;
+            /** Item Count */
+            item_count: number;
+            /** Total Units */
+            total_units: number;
+            /** Popularity Threshold */
+            popularity_threshold: string;
+            /** Total Margin */
+            total_margin: string;
+            /** Average Margin */
+            average_margin: string | null;
+            /** Items */
+            items: components["schemas"]["MenuItemRead"][];
+        };
         /** MenuGroupIn */
         MenuGroupIn: {
             /** Name */
@@ -743,6 +862,28 @@ export interface components {
             position?: number | null;
             /** Target Food Cost Rate */
             target_food_cost_rate?: number | string | null;
+        };
+        /** MenuItemRead */
+        MenuItemRead: {
+            /** Product Id */
+            product_id: number;
+            /** Name */
+            name: string;
+            /** Units */
+            units: number;
+            /** Popularity */
+            popularity: string;
+            /** High Popularity */
+            high_popularity: boolean;
+            /** Unit Margin */
+            unit_margin: string | null;
+            /** Total Margin */
+            total_margin: string | null;
+            /** High Margin */
+            high_margin: boolean | null;
+            classification: components["schemas"]["MenuClass"] | null;
+            /** Unpriced Units */
+            unpriced_units: number;
         };
         /** PlatformIn */
         PlatformIn: {
@@ -1418,6 +1559,143 @@ export interface components {
              * @default false
              */
             is_subrecipe: boolean;
+        };
+        /** SalesCsvIn */
+        SalesCsvIn: {
+            /**
+             * Content
+             * @description Raw CSV text (the frontend reads the file).
+             */
+            content: string;
+            /**
+             * Replace
+             * @description Replace existing values for the same rows.
+             * @default true
+             */
+            replace: boolean;
+        };
+        /** SalesEntriesIn */
+        SalesEntriesIn: {
+            /** Entries */
+            entries: components["schemas"]["SalesEntryIn"][];
+        };
+        /** SalesEntryIn */
+        SalesEntryIn: {
+            /** Product Id */
+            product_id: number;
+            /**
+             * Platform Id
+             * @description None = venta directa
+             */
+            platform_id?: number | null;
+            /** Units */
+            units: number;
+        };
+        /** SalesEntryRead */
+        SalesEntryRead: {
+            /** Product Id */
+            product_id: number;
+            /** Platform Id */
+            platform_id: number | null;
+            /** Units */
+            units: number;
+        };
+        /** SalesImportResult */
+        SalesImportResult: {
+            /** Imported Rows */
+            imported_rows: number;
+            /** Unmatched Products */
+            unmatched_products: string[];
+            /** Unmatched Channels */
+            unmatched_channels: string[];
+            /** Invalid Rows */
+            invalid_rows: number[];
+        };
+        /** SalesPeriodDetail */
+        SalesPeriodDetail: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Notes */
+            notes: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Total Units */
+            total_units: number;
+            /** Product Count */
+            product_count: number;
+            /** Entries */
+            entries: components["schemas"]["SalesEntryRead"][];
+        };
+        /** SalesPeriodIn */
+        SalesPeriodIn: {
+            /** Name */
+            name: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** SalesPeriodRead */
+        SalesPeriodRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Notes */
+            notes: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Total Units */
+            total_units: number;
+            /** Product Count */
+            product_count: number;
+        };
+        /** SalesPeriodUpdate */
+        SalesPeriodUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Start Date */
+            start_date?: string | null;
+            /** End Date */
+            end_date?: string | null;
+            /** Notes */
+            notes?: string | null;
         };
         /** SettingsRead */
         SettingsRead: {
@@ -2586,6 +2864,255 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecipeUsage"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_periods: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesPeriodRead"][];
+                };
+            };
+        };
+    };
+    create_period: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SalesPeriodIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesPeriodDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_period: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                period_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesPeriodDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_period: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                period_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_period: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                period_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SalesPeriodUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesPeriodDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    replace_entries: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                period_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SalesEntriesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesPeriodDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    import_csv: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                period_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SalesCsvIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesImportResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    menu_engineering: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                period_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MenuGroupAnalysisRead"][];
                 };
             };
             /** @description Validation Error */

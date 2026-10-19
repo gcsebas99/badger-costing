@@ -16,6 +16,7 @@ from app.schemas.product import (
     PlatformUpdate,
 )
 from app.services.text import fold
+from app.services.usages import sales_count
 
 router = APIRouter(tags=["catalog"])
 
@@ -66,7 +67,13 @@ def update_platform(platform_id: int, payload: PlatformUpdate, session: SessionD
 @router.delete("/platforms/{platform_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_platform(platform_id: int, session: SessionDep):
     """Deleting a platform also deletes the product prices set for it."""
-    session.delete(_get_platform(session, platform_id))
+    platform = _get_platform(session, platform_id)
+    if sales_count(session, platform_id=platform_id):
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "La plataforma tiene ventas registradas. Desactívala en lugar de eliminarla.",
+        )
+    session.delete(platform)
     session.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 

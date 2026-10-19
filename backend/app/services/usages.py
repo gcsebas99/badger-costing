@@ -1,9 +1,11 @@
 """Where-used lookups: which recipes and products reference a supply or a recipe directly."""
 
+from sqlalchemy import func
 from sqlmodel import Session, col, or_, select
 
 from app.models.product import MenuGroup, Product, ProductItem
 from app.models.recipe import Recipe, RecipeItem
+from app.models.sales import SalesEntry
 
 
 def recipes_using_supply(session: Session, supply_id: int) -> list[Recipe]:
@@ -52,3 +54,13 @@ def _products(
         .order_by(Product.name)
     )
     return [(product, group) for product, group in session.exec(query).all()]
+
+
+def sales_count(session: Session, *, product_id: int | None = None, platform_id: int | None = None):
+    """How many sales entries reference a product and/or platform."""
+    query = select(func.count()).select_from(SalesEntry)
+    if product_id is not None:
+        query = query.where(col(SalesEntry.product_id) == product_id)
+    if platform_id is not None:
+        query = query.where(col(SalesEntry.platform_id) == platform_id)
+    return session.exec(query).one()
