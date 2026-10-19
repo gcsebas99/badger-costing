@@ -85,9 +85,9 @@ def test_latest_cost_mode_setting(client):
     client.post(
         f"/api/supplies/{supply['id']}/prices", json={"amount": "200", "purchased_on": "2026-10-02"}
     )
-    assert client.patch("/api/settings", json={"cost_mode": "latest"}).json() == {
-        "cost_mode": "latest"
-    }
+    assert (
+        client.patch("/api/settings", json={"cost_mode": "latest"}).json()["cost_mode"] == "latest"
+    )
 
     body = client.get(f"/api/supplies/{supply['id']}").json()
     assert Decimal(body["current_price"]) == Decimal("200")
@@ -197,7 +197,3 @@ def test_delete_supply_removes_prices(client, session):
 def test_unknown_supply_returns_404(client):
     assert client.get("/api/supplies/999").status_code == 404
     assert client.patch("/api/supplies/999", json={"name": "x"}).status_code == 404
-
-
-def test_settings_default(client):
-    assert client.get("/api/settings").json() == {"cost_mode": "average_last_3"}

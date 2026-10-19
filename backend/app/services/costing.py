@@ -250,7 +250,7 @@ class CostingContext:
     # Internals
 
     def _compute(self, spec: RecipeSpec, stack: tuple[int, ...]) -> RecipeCost:
-        items = [self._item_cost(position, line, stack) for position, line in enumerate(spec.items)]
+        items = [self.item_cost(position, line, stack) for position, line in enumerate(spec.items)]
         ingredients = sum((i.cost for i in items if i.cost is not None), Decimal(0))
         for line in items:
             if line.cost is not None and ingredients > 0:
@@ -279,7 +279,8 @@ class CostingContext:
             items=items,
         )
 
-    def _item_cost(self, position: int, line: ItemSpec, stack: tuple[int, ...]) -> ItemCost:
+    def item_cost(self, position: int, line: ItemSpec, stack: tuple[int, ...] = ()) -> ItemCost:
+        """Cost one line (recipe ingredient or product component)."""
         gross = line.quantity * (1 + line.waste_rate)
         result = ItemCost(
             position=position,

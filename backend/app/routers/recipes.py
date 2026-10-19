@@ -23,7 +23,7 @@ from app.services.costing import CostingContext, CycleError, ItemSpec, RecipeSpe
 from app.services.settings import get_settings
 from app.services.text import fold
 from app.services.units import UnitFamily, family, units_in_family
-from app.services.usages import recipes_using_recipe
+from app.services.usages import products_using_recipe, recipes_using_recipe
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
 
@@ -92,6 +92,15 @@ def _usage(recipe: Recipe) -> RecipeUsage:
     return RecipeUsage.model_validate(recipe)
 
 
+def _usages(session: Session, recipe_id: int) -> list[RecipeUsage]:
+    recipes = [_usage(r) for r in recipes_using_recipe(session, recipe_id)]
+    products = [
+        RecipeUsage(kind="product", id=p.id, name=p.name, category=group)
+        for p, group in products_using_recipe(session, recipe_id)
+    ]
+    return recipes + products
+
+
 def _to_detail(session: Session, recipe_id: int) -> RecipeDetail:
     recipe = _get_recipe(session, recipe_id)
     cost = _context(session).recipe_cost(recipe_id)
@@ -111,7 +120,7 @@ def _to_detail(session: Session, recipe_id: int) -> RecipeDetail:
                 for line in recipe.ingredients
             ],
             "cost": RecipeCostRead.model_validate(cost),
-            "used_in": [_usage(r) for r in recipes_using_recipe(session, recipe_id)],
+            "used_in": _usages(session, recipe_id),
         }
     )
 
@@ -270,7 +279,7 @@ def recipe_cost(recipe_id: int, session: SessionDep):
 @router.get("/{recipe_id}/usages", response_model=list[RecipeUsage])
 def recipe_usages(recipe_id: int, session: SessionDep):
     _get_recipe(session, recipe_id)
-    return [_usage(r) for r in recipes_using_recipe(session, recipe_id)]
+    return _usages(session, recipe_id)
 
 
 @router.patch("/{recipe_id}", response_model=RecipeDetail)
@@ -303,7 +312,7 @@ def update_recipe(recipe_id: int, payload: RecipeUpdate, session: SessionDep):
 @router.delete("/{recipe_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_recipe(recipe_id: int, session: SessionDep):
     recipe = _get_recipe(session, recipe_id)
-    users = recipes_using_recipe(session, recipe_id)
+    users = _usages(session, recipe_id)
     if users:
         names = ", ".join(r.name for r in users)
         raise HTTPException(status.HTTP_409_CONFLICT, f"La receta se usa en: {names}.")

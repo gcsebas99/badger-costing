@@ -1,6 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Annotated, Self
+from typing import Annotated, Literal, Self
 
 from pydantic import Field, model_validator
 
@@ -136,10 +136,13 @@ class RecipeCostRead(ApiModel):
 
 
 class RecipeUsage(ApiModel):
+    """Where something is used: a recipe or a sale product."""
+
+    kind: Literal["recipe", "product"] = "recipe"
     id: int
     name: str
-    category: str
-    is_subrecipe: bool
+    category: str = Field(description="Recipe category, or menu group for products.")
+    is_subrecipe: bool = False
 
 
 class RecipeSummary(RecipeBase):

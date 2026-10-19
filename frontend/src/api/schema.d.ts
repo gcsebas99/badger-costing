@@ -21,6 +21,141 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/platforms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Platforms */
+        get: operations["list_platforms"];
+        put?: never;
+        /** Create Platform */
+        post: operations["create_platform"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/platforms/{platform_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Platform
+         * @description Deleting a platform also deletes the product prices set for it.
+         */
+        delete: operations["delete_platform"];
+        options?: never;
+        head?: never;
+        /** Update Platform */
+        patch: operations["update_platform"];
+        trace?: never;
+    };
+    "/api/menu-groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Menu Groups */
+        get: operations["list_menu_groups"];
+        put?: never;
+        /** Create Menu Group */
+        post: operations["create_menu_group"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/menu-groups/{group_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Menu Group */
+        delete: operations["delete_menu_group"];
+        options?: never;
+        head?: never;
+        /** Update Menu Group */
+        patch: operations["update_menu_group"];
+        trace?: never;
+    };
+    "/api/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Products
+         * @description Products with cost, per-channel pricing and alerts (the "Análisis de precios" table).
+         */
+        get: operations["list_products"];
+        put?: never;
+        /** Create Product */
+        post: operations["create_product"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Product
+         * @description Cost and price an unsaved product; used by the editor to recalculate live.
+         */
+        post: operations["preview_product"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/{product_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Product */
+        get: operations["read_product"];
+        put?: never;
+        post?: never;
+        /** Delete Product */
+        delete: operations["delete_product"];
+        options?: never;
+        head?: never;
+        /** Update Product */
+        patch: operations["update_product"];
+        trace?: never;
+    };
     "/api/recipes": {
         parameters: {
             query?: never;
@@ -281,6 +416,42 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /**
+         * AlertLevel
+         * @enum {string}
+         */
+        AlertLevel: "ok" | "warn" | "bad";
+        /**
+         * ChannelKind
+         * @enum {string}
+         */
+        ChannelKind: "direct" | "platform";
+        /** ChannelPricingRead */
+        ChannelPricingRead: {
+            kind: components["schemas"]["ChannelKind"];
+            /** Platform Id */
+            platform_id: number | null;
+            /** Name */
+            name: string;
+            /** Price */
+            price: string;
+            /** Price Ex Vat */
+            price_ex_vat: string;
+            /** Fee Rate */
+            fee_rate: string;
+            /** Fee */
+            fee: string;
+            /** Cost */
+            cost: string;
+            /** Food Cost Rate */
+            food_cost_rate: string | null;
+            /** Margin */
+            margin: string;
+            /** Margin Rate */
+            margin_rate: string | null;
+            margin_status: components["schemas"]["AlertLevel"];
+            food_cost_status: components["schemas"]["AlertLevel"];
+        };
+        /**
          * CostMode
          * @enum {string}
          */
@@ -381,6 +552,104 @@ export interface components {
          * @enum {string}
          */
         ItemStatus: "ok" | "missing_price" | "conversion_error" | "incomplete_subrecipe" | "not_found";
+        /** MenuGroupIn */
+        MenuGroupIn: {
+            /** Name */
+            name: string;
+            /**
+             * Position
+             * @default 0
+             */
+            position: number;
+            /**
+             * Target Food Cost Rate
+             * @description None = use the default from settings
+             */
+            target_food_cost_rate?: number | string | null;
+        };
+        /** MenuGroupRead */
+        MenuGroupRead: {
+            /** Name */
+            name: string;
+            /**
+             * Position
+             * @default 0
+             */
+            position: number;
+            /**
+             * Target Food Cost Rate
+             * @description None = use the default from settings
+             */
+            target_food_cost_rate?: string | null;
+            /** Id */
+            id: number;
+            /** Product Count */
+            product_count: number;
+        };
+        /** MenuGroupUpdate */
+        MenuGroupUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Position */
+            position?: number | null;
+            /** Target Food Cost Rate */
+            target_food_cost_rate?: number | string | null;
+        };
+        /** PlatformIn */
+        PlatformIn: {
+            /** Name */
+            name: string;
+            /**
+             * Fee Rate
+             * @description 0.30 = 30 % of PVP
+             */
+            fee_rate: number | string;
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+        };
+        /** PlatformPriceIn */
+        PlatformPriceIn: {
+            /** Platform Id */
+            platform_id: number;
+            /** Price */
+            price: number | string;
+        };
+        /** PlatformPriceRead */
+        PlatformPriceRead: {
+            /** Platform Id */
+            platform_id: number;
+            /** Price */
+            price: string;
+        };
+        /** PlatformRead */
+        PlatformRead: {
+            /** Name */
+            name: string;
+            /**
+             * Fee Rate
+             * @description 0.30 = 30 % of PVP
+             */
+            fee_rate: string;
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Id */
+            id: number;
+        };
+        /** PlatformUpdate */
+        PlatformUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Fee Rate */
+            fee_rate?: number | string | null;
+            /** Active */
+            active?: boolean | null;
+        };
         /** PriceCreate */
         PriceCreate: {
             /** Amount */
@@ -416,6 +685,238 @@ export interface components {
              * @description Whether this price is part of the current cost.
              */
             in_effect: boolean;
+        };
+        /** ProductCostRead */
+        ProductCostRead: {
+            recipe: components["schemas"]["RecipeCostRead"] | null;
+            /** Recipe Portions */
+            recipe_portions: string;
+            /** Recipe Cost */
+            recipe_cost: string;
+            /** Items */
+            items: components["schemas"]["ItemCostRead"][];
+            /** Items Cost */
+            items_cost: string;
+            /** Packaging */
+            packaging: components["schemas"]["ItemCostRead"][];
+            /** Packaging Cost */
+            packaging_cost: string;
+            /** Total Cost */
+            total_cost: string;
+            /** Complete */
+            complete: boolean;
+            /** Issues */
+            issues: string[];
+        };
+        /** ProductCreate */
+        ProductCreate: {
+            /** Name */
+            name: string;
+            /** Menu Group Id */
+            menu_group_id: number;
+            /** Recipe Id */
+            recipe_id?: number | null;
+            /**
+             * Recipe Portions
+             * @default 1
+             */
+            recipe_portions: number | string;
+            /**
+             * Direct Price
+             * @description PVP, VAT included
+             */
+            direct_price?: number | string | null;
+            /**
+             * Target Cost
+             * @description Costo teórico
+             */
+            target_cost?: number | string | null;
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Items
+             * @default []
+             */
+            items: components["schemas"]["RecipeItemIn"][];
+            /**
+             * Packaging
+             * @default []
+             */
+            packaging: components["schemas"]["RecipeItemIn"][];
+            /**
+             * Platform Prices
+             * @default []
+             */
+            platform_prices: components["schemas"]["PlatformPriceIn"][];
+        };
+        /** ProductDetail */
+        ProductDetail: {
+            /** Name */
+            name: string;
+            /** Menu Group Id */
+            menu_group_id: number;
+            /** Recipe Id */
+            recipe_id?: number | null;
+            /**
+             * Recipe Portions
+             * @default 1
+             */
+            recipe_portions: string;
+            /**
+             * Direct Price
+             * @description PVP, VAT included
+             */
+            direct_price?: string | null;
+            /**
+             * Target Cost
+             * @description Costo teórico
+             */
+            target_cost?: string | null;
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Notes */
+            notes?: string | null;
+            /** Id */
+            id: number;
+            /** Menu Group Name */
+            menu_group_name: string;
+            /** Items */
+            items: components["schemas"]["RecipeItemRead"][];
+            /** Packaging */
+            packaging: components["schemas"]["RecipeItemRead"][];
+            /** Platform Prices */
+            platform_prices: components["schemas"]["PlatformPriceRead"][];
+            pricing: components["schemas"]["ProductPricingRead"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /**
+         * ProductPreview
+         * @description Unsaved product to cost and price live from the editor.
+         */
+        ProductPreview: {
+            /** Menu Group Id */
+            menu_group_id?: number | null;
+            /** Recipe Id */
+            recipe_id?: number | null;
+            /**
+             * Recipe Portions
+             * @default 1
+             */
+            recipe_portions: number | string;
+            /** Direct Price */
+            direct_price?: number | string | null;
+            /** Target Cost */
+            target_cost?: number | string | null;
+            /**
+             * Items
+             * @default []
+             */
+            items: components["schemas"]["RecipeItemIn"][];
+            /**
+             * Packaging
+             * @default []
+             */
+            packaging: components["schemas"]["RecipeItemIn"][];
+            /**
+             * Platform Prices
+             * @default []
+             */
+            platform_prices: components["schemas"]["PlatformPriceIn"][];
+        };
+        /** ProductPricingRead */
+        ProductPricingRead: {
+            cost: components["schemas"]["ProductCostRead"];
+            /** Target Food Cost Rate */
+            target_food_cost_rate: string;
+            /** Suggested Price */
+            suggested_price: string | null;
+            /** Target Cost */
+            target_cost: string | null;
+            /** Deviation */
+            deviation: string | null;
+            deviation_status: components["schemas"]["AlertLevel"];
+            /** Channels */
+            channels: components["schemas"]["ChannelPricingRead"][];
+            /** @description Worst alert across channels and deviation */
+            status: components["schemas"]["AlertLevel"];
+        };
+        /** ProductSummary */
+        ProductSummary: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Menu Group Id */
+            menu_group_id: number;
+            /** Menu Group Name */
+            menu_group_name: string;
+            /** Recipe Id */
+            recipe_id: number | null;
+            /** Recipe Name */
+            recipe_name: string | null;
+            /** Active */
+            active: boolean;
+            /** Total Cost */
+            total_cost: string;
+            /** Complete */
+            complete: boolean;
+            /** Target Food Cost Rate */
+            target_food_cost_rate: string;
+            /** Suggested Price */
+            suggested_price: string | null;
+            /** Target Cost */
+            target_cost: string | null;
+            /** Deviation */
+            deviation: string | null;
+            deviation_status: components["schemas"]["AlertLevel"];
+            /** Channels */
+            channels: components["schemas"]["ChannelPricingRead"][];
+            status: components["schemas"]["AlertLevel"];
+        };
+        /**
+         * ProductUpdate
+         * @description Partial update. `items`, `packaging` and `platform_prices` replace their list when sent.
+         */
+        ProductUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Menu Group Id */
+            menu_group_id?: number | null;
+            /** Recipe Id */
+            recipe_id?: number | null;
+            /** Recipe Portions */
+            recipe_portions?: number | string | null;
+            /** Direct Price */
+            direct_price?: number | string | null;
+            /** Target Cost */
+            target_cost?: number | string | null;
+            /** Active */
+            active?: boolean | null;
+            /** Notes */
+            notes?: string | null;
+            /** Items */
+            items?: components["schemas"]["RecipeItemIn"][] | null;
+            /** Packaging */
+            packaging?: components["schemas"]["RecipeItemIn"][] | null;
+            /** Platform Prices */
+            platform_prices?: components["schemas"]["PlatformPriceIn"][] | null;
         };
         /** RecipeCostRead */
         RecipeCostRead: {
@@ -662,24 +1163,63 @@ export interface components {
             /** Items */
             items?: components["schemas"]["RecipeItemIn"][] | null;
         };
-        /** RecipeUsage */
+        /**
+         * RecipeUsage
+         * @description Where something is used: a recipe or a sale product.
+         */
         RecipeUsage: {
+            /**
+             * Kind
+             * @default recipe
+             * @enum {string}
+             */
+            kind: "recipe" | "product";
             /** Id */
             id: number;
             /** Name */
             name: string;
-            /** Category */
+            /**
+             * Category
+             * @description Recipe category, or menu group for products.
+             */
             category: string;
-            /** Is Subrecipe */
+            /**
+             * Is Subrecipe
+             * @default false
+             */
             is_subrecipe: boolean;
         };
         /** SettingsRead */
         SettingsRead: {
             cost_mode: components["schemas"]["CostMode"];
+            /** Vat Rate */
+            vat_rate: string;
+            /** Bank Fee Rate */
+            bank_fee_rate: string;
+            /** Margin Alert Rate */
+            margin_alert_rate: string;
+            /** Target Food Cost Rate */
+            target_food_cost_rate: string;
+            /** Deviation Upper Rate */
+            deviation_upper_rate: string;
+            /** Deviation Lower Rate */
+            deviation_lower_rate: string;
         };
         /** SettingsUpdate */
         SettingsUpdate: {
             cost_mode?: components["schemas"]["CostMode"] | null;
+            /** Vat Rate */
+            vat_rate?: number | string | null;
+            /** Bank Fee Rate */
+            bank_fee_rate?: number | string | null;
+            /** Margin Alert Rate */
+            margin_alert_rate?: number | string | null;
+            /** Target Food Cost Rate */
+            target_food_cost_rate?: number | string | null;
+            /** Deviation Upper Rate */
+            deviation_upper_rate?: number | string | null;
+            /** Deviation Lower Rate */
+            deviation_lower_rate?: number | string | null;
         };
         /** SupplyCreate */
         SupplyCreate: {
@@ -888,6 +1428,435 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthRead"];
+                };
+            };
+        };
+    };
+    list_platforms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformRead"][];
+                };
+            };
+        };
+    };
+    create_platform: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_platform: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                platform_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_platform: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                platform_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_menu_groups: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MenuGroupRead"][];
+                };
+            };
+        };
+    };
+    create_menu_group: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MenuGroupIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MenuGroupRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_menu_group: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                group_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_menu_group: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                group_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MenuGroupUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MenuGroupRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_products: {
+        parameters: {
+            query?: {
+                /** @description Search in name. */
+                q?: string | null;
+                menu_group_id?: number | null;
+                active?: boolean | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_product: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_product: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductPreview"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductPricingRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_product: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_product: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_product: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

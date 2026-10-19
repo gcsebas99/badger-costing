@@ -23,7 +23,7 @@ from app.services.settings import get_settings
 from app.services.supply_cost import prices_in_effect, sort_newest_first, supply_cost
 from app.services.text import fold
 from app.services.units import PieceEquivalence, UnitConversionError
-from app.services.usages import recipes_using_supply
+from app.services.usages import products_using_supply, recipes_using_supply
 
 router = APIRouter(prefix="/supplies", tags=["supplies"])
 
@@ -162,7 +162,7 @@ def update_supply(supply_id: int, payload: SupplyUpdate, session: SessionDep):
 @router.delete("/{supply_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_supply(supply_id: int, session: SessionDep):
     supply = _get_supply(session, supply_id)
-    users = recipes_using_supply(session, supply_id)
+    users = _usages(session, supply_id)
     if users:
         names = ", ".join(r.name for r in users)
         raise HTTPException(
@@ -177,7 +177,16 @@ def delete_supply(supply_id: int, session: SessionDep):
 @router.get("/{supply_id}/usages", response_model=list[RecipeUsage])
 def supply_usages(supply_id: int, session: SessionDep):
     _get_supply(session, supply_id)
-    return [RecipeUsage.model_validate(r) for r in recipes_using_supply(session, supply_id)]
+    return _usages(session, supply_id)
+
+
+def _usages(session: Session, supply_id: int) -> list[RecipeUsage]:
+    recipes = [RecipeUsage.model_validate(r) for r in recipes_using_supply(session, supply_id)]
+    products = [
+        RecipeUsage(kind="product", id=p.id, name=p.name, category=group)
+        for p, group in products_using_supply(session, supply_id)
+    ]
+    return recipes + products
 
 
 @router.get("/{supply_id}/prices", response_model=list[PriceRead])

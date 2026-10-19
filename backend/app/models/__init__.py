@@ -2,6 +2,14 @@
 
 from sqlmodel import SQLModel
 
+from app.models.product import (
+    MenuGroup,
+    Product,
+    ProductItem,
+    ProductItemRole,
+    ProductPlatformPrice,
+    SalesPlatform,
+)
 from app.models.recipe import Recipe, RecipeItem, RecipeItemType
 from app.models.settings import AppSettings, CostMode
 from app.models.supply import Supply, SupplyPrice, UnitEquivalence
@@ -9,10 +17,16 @@ from app.models.supply import Supply, SupplyPrice, UnitEquivalence
 __all__ = [
     "AppSettings",
     "CostMode",
+    "MenuGroup",
+    "Product",
+    "ProductItem",
+    "ProductItemRole",
+    "ProductPlatformPrice",
     "Recipe",
     "RecipeItem",
     "RecipeItemType",
     "SQLModel",
+    "SalesPlatform",
     "Supply",
     "SupplyPrice",
     "UnitEquivalence",

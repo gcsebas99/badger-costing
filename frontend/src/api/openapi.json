@@ -26,6 +26,599 @@
         }
       }
     },
+    "/api/platforms": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "List Platforms",
+        "operationId": "list_platforms",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlatformRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Platforms"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Create Platform",
+        "operationId": "create_platform",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/platforms/{platform_id}": {
+      "patch": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Update Platform",
+        "operationId": "update_platform",
+        "parameters": [
+          {
+            "name": "platform_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Platform Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Delete Platform",
+        "description": "Deleting a platform also deletes the product prices set for it.",
+        "operationId": "delete_platform",
+        "parameters": [
+          {
+            "name": "platform_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Platform Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/menu-groups": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "List Menu Groups",
+        "operationId": "list_menu_groups",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MenuGroupRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Menu Groups"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Create Menu Group",
+        "operationId": "create_menu_group",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuGroupIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MenuGroupRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/menu-groups/{group_id}": {
+      "patch": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Update Menu Group",
+        "operationId": "update_menu_group",
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Group Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuGroupUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MenuGroupRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Delete Menu Group",
+        "operationId": "delete_menu_group",
+        "parameters": [
+          {
+            "name": "group_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Group Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "List Products",
+        "description": "Products with cost, per-channel pricing and alerts (the \"Análisis de precios\" table).",
+        "operationId": "list_products",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Search in name.",
+              "title": "Q"
+            },
+            "description": "Search in name."
+          },
+          {
+            "name": "menu_group_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Menu Group Id"
+            }
+          },
+          {
+            "name": "active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Active"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductSummary"
+                  },
+                  "title": "Response List Products"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Create Product",
+        "operationId": "create_product",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/preview": {
+      "post": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Preview Product",
+        "description": "Cost and price an unsaved product; used by the editor to recalculate live.",
+        "operationId": "preview_product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductPreview"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductPricingRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/{product_id}": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Read Product",
+        "operationId": "read_product",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Update Product",
+        "operationId": "update_product",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Delete Product",
+        "operationId": "delete_product",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recipes": {
       "get": {
         "tags": [
@@ -1031,6 +1624,114 @@
   },
   "components": {
     "schemas": {
+      "AlertLevel": {
+        "type": "string",
+        "enum": [
+          "ok",
+          "warn",
+          "bad"
+        ],
+        "title": "AlertLevel"
+      },
+      "ChannelKind": {
+        "type": "string",
+        "enum": [
+          "direct",
+          "platform"
+        ],
+        "title": "ChannelKind"
+      },
+      "ChannelPricingRead": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/ChannelKind"
+          },
+          "platform_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "price": {
+            "type": "string",
+            "title": "Price"
+          },
+          "price_ex_vat": {
+            "type": "string",
+            "title": "Price Ex Vat"
+          },
+          "fee_rate": {
+            "type": "string",
+            "title": "Fee Rate"
+          },
+          "fee": {
+            "type": "string",
+            "title": "Fee"
+          },
+          "cost": {
+            "type": "string",
+            "title": "Cost"
+          },
+          "food_cost_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Food Cost Rate"
+          },
+          "margin": {
+            "type": "string",
+            "title": "Margin"
+          },
+          "margin_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin Rate"
+          },
+          "margin_status": {
+            "$ref": "#/components/schemas/AlertLevel"
+          },
+          "food_cost_status": {
+            "$ref": "#/components/schemas/AlertLevel"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "platform_id",
+          "name",
+          "price",
+          "price_ex_vat",
+          "fee_rate",
+          "fee",
+          "cost",
+          "food_cost_rate",
+          "margin",
+          "margin_rate",
+          "margin_status",
+          "food_cost_status"
+        ],
+        "title": "ChannelPricingRead"
+      },
       "CostMode": {
         "type": "string",
         "enum": [
@@ -1369,6 +2070,287 @@
         ],
         "title": "ItemStatus"
       },
+      "MenuGroupIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "position": {
+            "type": "integer",
+            "title": "Position",
+            "default": 0
+          },
+          "target_food_cost_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Food Cost Rate",
+            "description": "None = use the default from settings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "MenuGroupIn"
+      },
+      "MenuGroupRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "position": {
+            "type": "integer",
+            "title": "Position",
+            "default": 0
+          },
+          "target_food_cost_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Food Cost Rate",
+            "description": "None = use the default from settings"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "product_count": {
+            "type": "integer",
+            "title": "Product Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "id",
+          "product_count"
+        ],
+        "title": "MenuGroupRead"
+      },
+      "MenuGroupUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
+          "target_food_cost_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Food Cost Rate"
+          }
+        },
+        "type": "object",
+        "title": "MenuGroupUpdate"
+      },
+      "PlatformIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "fee_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Fee Rate",
+            "description": "0.30 = 30 % of PVP"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "fee_rate"
+        ],
+        "title": "PlatformIn"
+      },
+      "PlatformPriceIn": {
+        "properties": {
+          "platform_id": {
+            "type": "integer",
+            "title": "Platform Id"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "platform_id",
+          "price"
+        ],
+        "title": "PlatformPriceIn"
+      },
+      "PlatformPriceRead": {
+        "properties": {
+          "platform_id": {
+            "type": "integer",
+            "title": "Platform Id"
+          },
+          "price": {
+            "type": "string",
+            "title": "Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "platform_id",
+          "price"
+        ],
+        "title": "PlatformPriceRead"
+      },
+      "PlatformRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "fee_rate": {
+            "type": "string",
+            "title": "Fee Rate",
+            "description": "0.30 = 30 % of PVP"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "fee_rate",
+          "id"
+        ],
+        "title": "PlatformRead"
+      },
+      "PlatformUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "fee_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fee Rate"
+          },
+          "active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active"
+          }
+        },
+        "type": "object",
+        "title": "PlatformUpdate"
+      },
       "PriceCreate": {
         "properties": {
           "amount": {
@@ -1454,6 +2436,765 @@
           "in_effect"
         ],
         "title": "PriceRead"
+      },
+      "ProductCostRead": {
+        "properties": {
+          "recipe": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RecipeCostRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recipe_portions": {
+            "type": "string",
+            "title": "Recipe Portions"
+          },
+          "recipe_cost": {
+            "type": "string",
+            "title": "Recipe Cost"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ItemCostRead"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "items_cost": {
+            "type": "string",
+            "title": "Items Cost"
+          },
+          "packaging": {
+            "items": {
+              "$ref": "#/components/schemas/ItemCostRead"
+            },
+            "type": "array",
+            "title": "Packaging"
+          },
+          "packaging_cost": {
+            "type": "string",
+            "title": "Packaging Cost"
+          },
+          "total_cost": {
+            "type": "string",
+            "title": "Total Cost"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Issues"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recipe",
+          "recipe_portions",
+          "recipe_cost",
+          "items",
+          "items_cost",
+          "packaging",
+          "packaging_cost",
+          "total_cost",
+          "complete",
+          "issues"
+        ],
+        "title": "ProductCostRead"
+      },
+      "ProductCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "menu_group_id": {
+            "type": "integer",
+            "title": "Menu Group Id"
+          },
+          "recipe_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Id"
+          },
+          "recipe_portions": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Recipe Portions",
+            "default": "1"
+          },
+          "direct_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direct Price",
+            "description": "PVP, VAT included"
+          },
+          "target_cost": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Cost",
+            "description": "Costo teórico"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemIn"
+            },
+            "type": "array",
+            "title": "Items",
+            "default": []
+          },
+          "packaging": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemIn"
+            },
+            "type": "array",
+            "title": "Packaging",
+            "default": []
+          },
+          "platform_prices": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformPriceIn"
+            },
+            "type": "array",
+            "title": "Platform Prices",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "menu_group_id"
+        ],
+        "title": "ProductCreate"
+      },
+      "ProductDetail": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "menu_group_id": {
+            "type": "integer",
+            "title": "Menu Group Id"
+          },
+          "recipe_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Id"
+          },
+          "recipe_portions": {
+            "type": "string",
+            "title": "Recipe Portions",
+            "default": "1"
+          },
+          "direct_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direct Price",
+            "description": "PVP, VAT included"
+          },
+          "target_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Cost",
+            "description": "Costo teórico"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "menu_group_name": {
+            "type": "string",
+            "title": "Menu Group Name"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemRead"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "packaging": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemRead"
+            },
+            "type": "array",
+            "title": "Packaging"
+          },
+          "platform_prices": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformPriceRead"
+            },
+            "type": "array",
+            "title": "Platform Prices"
+          },
+          "pricing": {
+            "$ref": "#/components/schemas/ProductPricingRead"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "menu_group_id",
+          "id",
+          "menu_group_name",
+          "items",
+          "packaging",
+          "platform_prices",
+          "pricing",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ProductDetail"
+      },
+      "ProductPreview": {
+        "properties": {
+          "menu_group_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Menu Group Id"
+          },
+          "recipe_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Id"
+          },
+          "recipe_portions": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Recipe Portions",
+            "default": "1"
+          },
+          "direct_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direct Price"
+          },
+          "target_cost": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Cost"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemIn"
+            },
+            "type": "array",
+            "title": "Items",
+            "default": []
+          },
+          "packaging": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemIn"
+            },
+            "type": "array",
+            "title": "Packaging",
+            "default": []
+          },
+          "platform_prices": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformPriceIn"
+            },
+            "type": "array",
+            "title": "Platform Prices",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "ProductPreview",
+        "description": "Unsaved product to cost and price live from the editor."
+      },
+      "ProductPricingRead": {
+        "properties": {
+          "cost": {
+            "$ref": "#/components/schemas/ProductCostRead"
+          },
+          "target_food_cost_rate": {
+            "type": "string",
+            "title": "Target Food Cost Rate"
+          },
+          "suggested_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Price"
+          },
+          "target_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Cost"
+          },
+          "deviation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deviation"
+          },
+          "deviation_status": {
+            "$ref": "#/components/schemas/AlertLevel"
+          },
+          "channels": {
+            "items": {
+              "$ref": "#/components/schemas/ChannelPricingRead"
+            },
+            "type": "array",
+            "title": "Channels"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AlertLevel",
+            "description": "Worst alert across channels and deviation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cost",
+          "target_food_cost_rate",
+          "suggested_price",
+          "target_cost",
+          "deviation",
+          "deviation_status",
+          "channels",
+          "status"
+        ],
+        "title": "ProductPricingRead"
+      },
+      "ProductSummary": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "menu_group_id": {
+            "type": "integer",
+            "title": "Menu Group Id"
+          },
+          "menu_group_name": {
+            "type": "string",
+            "title": "Menu Group Name"
+          },
+          "recipe_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Id"
+          },
+          "recipe_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Name"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          },
+          "total_cost": {
+            "type": "string",
+            "title": "Total Cost"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          },
+          "target_food_cost_rate": {
+            "type": "string",
+            "title": "Target Food Cost Rate"
+          },
+          "suggested_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Price"
+          },
+          "target_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Cost"
+          },
+          "deviation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deviation"
+          },
+          "deviation_status": {
+            "$ref": "#/components/schemas/AlertLevel"
+          },
+          "channels": {
+            "items": {
+              "$ref": "#/components/schemas/ChannelPricingRead"
+            },
+            "type": "array",
+            "title": "Channels"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AlertLevel"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "menu_group_id",
+          "menu_group_name",
+          "recipe_id",
+          "recipe_name",
+          "active",
+          "total_cost",
+          "complete",
+          "target_food_cost_rate",
+          "suggested_price",
+          "target_cost",
+          "deviation",
+          "deviation_status",
+          "channels",
+          "status"
+        ],
+        "title": "ProductSummary"
+      },
+      "ProductUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "menu_group_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Menu Group Id"
+          },
+          "recipe_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Id"
+          },
+          "recipe_portions": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Portions"
+          },
+          "direct_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direct Price"
+          },
+          "target_cost": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Cost"
+          },
+          "active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RecipeItemIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Items"
+          },
+          "packaging": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RecipeItemIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Packaging"
+          },
+          "platform_prices": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PlatformPriceIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform Prices"
+          }
+        },
+        "type": "object",
+        "title": "ProductUpdate",
+        "description": "Partial update. `items`, `packaging` and `platform_prices` replace their list when sent."
       },
       "RecipeCostRead": {
         "properties": {
@@ -2164,6 +3905,15 @@
       },
       "RecipeUsage": {
         "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "recipe",
+              "product"
+            ],
+            "title": "Kind",
+            "default": "recipe"
+          },
           "id": {
             "type": "integer",
             "title": "Id"
@@ -2174,31 +3924,63 @@
           },
           "category": {
             "type": "string",
-            "title": "Category"
+            "title": "Category",
+            "description": "Recipe category, or menu group for products."
           },
           "is_subrecipe": {
             "type": "boolean",
-            "title": "Is Subrecipe"
+            "title": "Is Subrecipe",
+            "default": false
           }
         },
         "type": "object",
         "required": [
           "id",
           "name",
-          "category",
-          "is_subrecipe"
+          "category"
         ],
-        "title": "RecipeUsage"
+        "title": "RecipeUsage",
+        "description": "Where something is used: a recipe or a sale product."
       },
       "SettingsRead": {
         "properties": {
           "cost_mode": {
             "$ref": "#/components/schemas/CostMode"
+          },
+          "vat_rate": {
+            "type": "string",
+            "title": "Vat Rate"
+          },
+          "bank_fee_rate": {
+            "type": "string",
+            "title": "Bank Fee Rate"
+          },
+          "margin_alert_rate": {
+            "type": "string",
+            "title": "Margin Alert Rate"
+          },
+          "target_food_cost_rate": {
+            "type": "string",
+            "title": "Target Food Cost Rate"
+          },
+          "deviation_upper_rate": {
+            "type": "string",
+            "title": "Deviation Upper Rate"
+          },
+          "deviation_lower_rate": {
+            "type": "string",
+            "title": "Deviation Lower Rate"
           }
         },
         "type": "object",
         "required": [
-          "cost_mode"
+          "cost_mode",
+          "vat_rate",
+          "bank_fee_rate",
+          "margin_alert_rate",
+          "target_food_cost_rate",
+          "deviation_upper_rate",
+          "deviation_lower_rate"
         ],
         "title": "SettingsRead"
       },
@@ -2213,6 +3995,102 @@
                 "type": "null"
               }
             ]
+          },
+          "vat_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vat Rate"
+          },
+          "bank_fee_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bank Fee Rate"
+          },
+          "margin_alert_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin Alert Rate"
+          },
+          "target_food_cost_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Food Cost Rate"
+          },
+          "deviation_upper_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deviation Upper Rate"
+          },
+          "deviation_lower_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 0.0,
+                "minimum": -1.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deviation Lower Rate"
           }
         },
         "type": "object",
