@@ -8,7 +8,7 @@ NODE := if [ -s "$(NVM_DIR)/nvm.sh" ]; then . "$(NVM_DIR)/nvm.sh" && nvm use --s
 API := cd backend && uv run
 WEB := $(NODE) cd frontend && npm run -s
 
-.PHONY: help install dev dev-api dev-web test test-api test-web lint format migrate migration types backup
+.PHONY: help install dev dev-api dev-web test test-api test-web lint format migrate migration types backup import-supplies
 
 help: ## Show available commands
 	@grep -hE '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  \033[1m%-10s\033[0m %s\n", $$1, $$2}'
@@ -62,3 +62,7 @@ types: ## Regenerate frontend API types from the backend OpenAPI schema
 
 backup: ## Timestamped DB copy into data/backups (override with BACKUP_DIR=/path)
 	$(API) python -m scripts.backup "$(BACKUP_DIR)"
+
+import-supplies: ## Import supplies from a template .xlsx: make import-supplies file=path.xlsx [args=--dry-run]
+	@test -n "$(file)" || (echo 'Usage: make import-supplies file=path/to/file.xlsx [args="--dry-run"]' && exit 1)
+	$(API) python -W ignore -m scripts.import_supplies "$(abspath $(file))" $(args)

@@ -1,4 +1,3 @@
-import unicodedata
 from collections.abc import Sequence
 
 from fastapi import APIRouter, HTTPException, Query, Response, status
@@ -21,15 +20,10 @@ from app.schemas.supply import (
 )
 from app.services.settings import get_settings
 from app.services.supply_cost import prices_in_effect, sort_newest_first, supply_cost
+from app.services.text import fold
 from app.services.units import PieceEquivalence, UnitConversionError
 
 router = APIRouter(prefix="/supplies", tags=["supplies"])
-
-
-def _fold(text: str | None) -> str:
-    """Case- and accent-insensitive form for searching and sorting ('Orégano' → 'oregano')."""
-    decomposed = unicodedata.normalize("NFKD", text or "")
-    return "".join(c for c in decomposed if not unicodedata.combining(c)).casefold()
 
 
 def _to_read(supply: Supply, mode: CostMode) -> SupplyRead:
@@ -107,11 +101,11 @@ def list_supplies(
     supplies = list(session.exec(query).all())
 
     if q and q.strip():
-        needle = _fold(q.strip())
-        supplies = [s for s in supplies if needle in _fold(f"{s.name} {s.brand or ''}")]
+        needle = fold(q.strip())
+        supplies = [s for s in supplies if needle in fold(f"{s.name} {s.brand or ''}")]
 
     mode = get_settings(session).cost_mode
-    supplies.sort(key=lambda s: _fold(s.name))
+    supplies.sort(key=lambda s: fold(s.name))
     return [_to_read(s, mode) for s in supplies]
 
 
@@ -123,7 +117,7 @@ def supply_facets(session: SessionDep):
     price_suppliers = session.exec(select(SupplyPrice.supplier).distinct()).all()
     groups = {*DEFAULT_SUPPLY_GROUPS, *used_groups}
     suppliers = {s for s in [*supply_suppliers, *price_suppliers] if s}
-    return SupplyFacets(groups=sorted(groups, key=_fold), suppliers=sorted(suppliers, key=_fold))
+    return SupplyFacets(groups=sorted(groups, key=fold), suppliers=sorted(suppliers, key=fold))
 
 
 @router.post("", response_model=SupplyDetail, status_code=status.HTTP_201_CREATED)
