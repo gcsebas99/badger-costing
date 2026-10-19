@@ -17,3 +17,6 @@ frontend/dist/
 .DS_Store
 *.log
 .env
+
+# Sample/reference spreadsheets (not real data)
+samples_xlsx/
