@@ -71,11 +71,15 @@ export function CostSummary({ cost, isStale, error, usedIn }: CostSummaryProps) 
           <h3 className="mb-2 font-semibold">Se usa en</h3>
           <ul className="space-y-1">
             {usedIn.map((recipe) => (
-              <li key={recipe.id} className="flex items-center gap-2">
-                <Link to={`/recetas/${recipe.id}`} className="text-primary hover:underline">
+              <li key={`${recipe.kind}-${recipe.id}`} className="flex items-center gap-2">
+                <Link
+                  to={recipe.kind === 'product' ? `/productos/${recipe.id}` : `/recetas/${recipe.id}`}
+                  className="text-primary hover:underline"
+                >
                   {recipe.name}
                 </Link>
                 {recipe.is_subrecipe && <Badge variant="craft">Sub-receta</Badge>}
+                {recipe.kind === 'product' && <Badge variant="outline">Producto</Badge>}
               </li>
             ))}
           </ul>

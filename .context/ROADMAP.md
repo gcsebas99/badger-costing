@@ -70,13 +70,16 @@ Supply catalog with price history.
 **Done when:** a burger with bun, protein, two sauces and packaging shows margin in direct sale
 and Uber Eats, red when below threshold.
 
-- [ ] **M3.1 Settings** — model + API + Ajustes page: VAT, bank fee, platforms (name, %), thresholds,
+- [x] **M3.1 Settings** — model + API + Ajustes page: VAT, bank fee, platforms (name, %), thresholds,
       target food cost %, deviation range
-- [ ] **M3.2 Product model + migration** — recipe or direct items, packaging, PVP per channel, target cost
-- [ ] **M3.3 Pricing service** — price ex VAT, fee, margin, food cost %, suggested price; tests
-- [ ] **M3.4 Products API** — CRUD + pricing analysis endpoint
-- [ ] **M3.5 Price analysis table** — like "Análisis Coste Platos", alert badges by thresholds
-- [ ] **M3.6 Product detail** — expandable cost tree
+- [x] **M3.2 Product model + migration** — recipe or direct items, packaging, PVP per channel, target cost
+- [x] **M3.3 Pricing service** — price ex VAT, fee, margin, food cost %, suggested price; tests
+- [x] **M3.4 Products API** — CRUD + pricing analysis endpoint
+- [x] **M3.5 Price analysis table** — like "Análisis Coste Platos", alert badges by thresholds
+- [x] **M3.6 Product detail** — expandable cost tree
+- [x] **M3.7 Extras** — menu groups with per-group target food cost, platforms table (empty until
+      used), cost deviation vs. theoretical cost, live product preview, accent-insensitive pickers,
+      route error page, plain-notation decimals in all API responses
 
 ## M4 — Dashboard & backup (`m4-dashboard`)
 

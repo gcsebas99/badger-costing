@@ -4,11 +4,41 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 ## Current status
 
-- **Milestone:** M2 complete on branch `m2-recipes` (committed locally, not pushed) — awaiting
-  Sebas's browser review. M0 and M1 are merged and pushed to `main`.
-- **Next:** M3 — Products & pricing (branch `m3-products`), the MVP gate. Needs: platforms and their %
-  (Uber Eats, Rappi, DiDi Food?) and whether target food cost % is global or per menu group.
+- **Milestone:** M3 complete on branch `m3-products` (committed locally, not pushed) — **MVP gate**,
+  awaiting Sebas's browser review. M0–M2 are merged and pushed to `main`.
+- **Next:** M4 — Dashboard & backup (branch `m4-dashboard`). M4 and M5 can go in either order.
+- **Setup for real use:** Ajustes → create menu groups (and platforms when used); bank fee is 0 % by
+  default.
 - **Remote:** `origin` = https://github.com/gcsebas99/badger-costing.git
+
+---
+
+## 2026-10-18 · M3 — Products & pricing (`m3-products`) · MVP gate
+
+**Done**
+- Migration `0004`: `menu_group`, `sales_platform`, `product`, `product_item` (item | packaging),
+  `product_platform_price`; settings columns (VAT 13 %, bank fee 0 %, margin alert 40 %, target
+  food cost 30 %, deviation +5 % / −10 %) with server defaults.
+- Services: `product_cost.py` (recipe × portions + components + packaging), `pricing.py` (per-channel
+  formulas, suggested price, deviation, alert levels), `product_pricing.py` (PricingContext loads
+  settings/groups/platforms/costing once).
+- API: `/api/settings` (extended), `/api/platforms`, `/api/menu-groups` CRUD; `/api/products` CRUD,
+  list = analysis rows with channels, `/preview`; usages and delete guards include products.
+- Frontend: Ajustes page (settings form, inline-editable menu groups and platforms); Productos
+  analysis table (grouped by menu group, one row per channel, badges, suggested price, deviation,
+  filters incl. "solo con alertas"); product editor (recipe picker, components, packaging, prices
+  per channel, theoretical cost, live pricing panel with channel cards and expandable cost tree).
+- Verified in Chrome on the scratch DB: burger (bun, beef, two mayos) + box → direct 62,2 % margin,
+  test "Uber Eats 30 %" 37,7 % flagged red, +9,1 % deviation; analysis table matches.
+- Tests: backend 113, frontend 33.
+
+**Gotchas**
+- `str(Decimal)` can produce "4.0E+3" (e.g. 4520 / 1.13) → crashed the formatter. Fixed in API
+  serialization (D35) and the formatter now also accepts exponents.
+- cmdk's default filter is accent-sensitive ("clasica" ≠ "clásica") → `commandFilter`.
+- Editing router/deps can trigger a Vite full reload mid-interaction during browser checks.
+- openapi-typescript marks fields with defaults as required in shared in/out schemas (e.g. platform
+  `active`) — send them explicitly.
 
 ---
 

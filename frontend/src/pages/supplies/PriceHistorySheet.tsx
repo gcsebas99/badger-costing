@@ -101,9 +101,12 @@ export function PriceHistorySheet({ supplyId, onOpenChange, onEdit }: PriceHisto
               <p className="text-xs text-muted-foreground">
                 Se usa en:{' '}
                 {usages.map((recipe, index) => (
-                  <span key={recipe.id}>
+                  <span key={`${recipe.kind}-${recipe.id}`}>
                     {index > 0 && ', '}
-                    <Link to={`/recetas/${recipe.id}`} className="text-primary hover:underline">
+                    <Link
+                      to={recipe.kind === 'product' ? `/productos/${recipe.id}` : `/recetas/${recipe.id}`}
+                      className="text-primary hover:underline"
+                    >
                       {recipe.name}
                     </Link>
                   </span>

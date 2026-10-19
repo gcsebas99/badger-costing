@@ -84,6 +84,7 @@ function useRecipeMutation<TVariables, TResult>(mutationFn: (variables: TVariabl
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: recipeKeys.all })
       await queryClient.invalidateQueries({ queryKey: supplyKeys.all })
+      await queryClient.invalidateQueries({ queryKey: ['products'] })
     },
   })
 }

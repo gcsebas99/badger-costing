@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react'
-import { type Control, Controller, type FieldErrors, useFieldArray, useWatch } from 'react-hook-form'
+import { type Control, Controller, useFieldArray, useWatch } from 'react-hook-form'
 
-import type { IngredientOption, ItemCost, RecipeCost } from '@/api/recipes'
+import type { IngredientOption, ItemCost } from '@/api/recipes'
 import { IngredientCombobox } from '@/components/forms/IngredientCombobox'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -31,29 +31,45 @@ import {
   percentInputToRate,
 } from '@/lib/format'
 
-import { emptyRow, type RecipeFormValues, type RecipeRowValues } from './recipeFormSchema'
+import { emptyRow, type IngredientRowValues } from './ingredientRow'
+
+type RowErrors = Partial<Record<keyof IngredientRowValues, { message?: string }>>
 
 interface IngredientRowsProps {
-  control: Control<RecipeFormValues>
-  errors: FieldErrors<RecipeFormValues>
+  /** Any form with an array of IngredientRowValues at `name`. */
+  control: Control<any>
+  name: string
+  errors: (RowErrors | undefined)[] | undefined
   options: IngredientOption[]
-  cost: RecipeCost | undefined
+  /** Costed lines, aligned through `previewIndex` (row index → index in costItems). */
+  costItems: ItemCost[] | undefined
   previewIndex: (number | null)[]
+  addLabel?: string
+  emptyMessage?: string
 }
 
-const optionFor = (options: IngredientOption[], row: RecipeRowValues) =>
+const optionFor = (options: IngredientOption[], row: IngredientRowValues) =>
   options.find((o) => o.item_type === row.itemType && o.id === row.refId)
 
-function grossQuantity(row: RecipeRowValues): string | null {
+function grossQuantity(row: IngredientRowValues): string | null {
   const quantity = parseDecimalInput(row.quantity)
   const waste = percentInputToRate(row.waste)
   if (quantity === null || waste === null) return null
   return String(Number(quantity) * (1 + Number(waste)))
 }
 
-export function IngredientRows({ control, errors, options, cost, previewIndex }: IngredientRowsProps) {
-  const { fields, append, remove, move, update } = useFieldArray({ control, name: 'items', keyName: 'fieldKey' })
-  const rows = useWatch({ control, name: 'items' })
+export function IngredientRows({
+  control,
+  name,
+  errors,
+  options,
+  costItems,
+  previewIndex,
+  addLabel = 'Agregar ingrediente',
+  emptyMessage = 'Sin ingredientes.',
+}: IngredientRowsProps) {
+  const { fields, append, remove, move, update } = useFieldArray({ control, name, keyName: 'fieldKey' })
+  const rows = useWatch({ control, name }) as IngredientRowValues[] | undefined
 
   return (
     <div className="space-y-3">
@@ -77,16 +93,16 @@ export function IngredientRows({ control, errors, options, cost, previewIndex }:
             {fields.length === 0 && (
               <TableRow className="hover:bg-transparent">
                 <TableCell colSpan={10} className="h-16 text-center text-muted-foreground">
-                  Sin ingredientes.
+                  {emptyMessage}
                 </TableCell>
               </TableRow>
             )}
             {fields.map((field, index) => {
-              const row = rows?.[index] ?? field
+              const row = rows?.[index] ?? (field as unknown as IngredientRowValues)
               const option = optionFor(options, row)
-              const rowErrors = errors.items?.[index]
+              const rowErrors = errors?.[index]
               const costIndex = previewIndex[index]
-              const itemCost = costIndex == null ? undefined : cost?.items[costIndex]
+              const itemCost = costIndex == null ? undefined : costItems?.[costIndex]
               const gross = grossQuantity(row)
               return (
                 <TableRow key={field.fieldKey} className="h-11 hover:bg-transparent">
@@ -96,7 +112,7 @@ export function IngredientRows({ control, errors, options, cost, previewIndex }:
                   <TableCell>
                     <Controller
                       control={control}
-                      name={`items.${index}.refId`}
+                      name={`${name}.${index}.refId`}
                       render={() => (
                         <IngredientCombobox
                           options={options}
@@ -118,7 +134,7 @@ export function IngredientRows({ control, errors, options, cost, previewIndex }:
                   <TableCell>
                     <Controller
                       control={control}
-                      name={`items.${index}.quantity`}
+                      name={`${name}.${index}.quantity`}
                       render={({ field: input }) => (
                         <Input
                           {...input}
@@ -133,7 +149,7 @@ export function IngredientRows({ control, errors, options, cost, previewIndex }:
                   <TableCell>
                     <Controller
                       control={control}
-                      name={`items.${index}.unit`}
+                      name={`${name}.${index}.unit`}
                       render={({ field: input }) => (
                         <Select value={input.value ?? ''} onValueChange={input.onChange} disabled={!option}>
                           <SelectTrigger
@@ -158,7 +174,7 @@ export function IngredientRows({ control, errors, options, cost, previewIndex }:
                   <TableCell>
                     <Controller
                       control={control}
-                      name={`items.${index}.waste`}
+                      name={`${name}.${index}.waste`}
                       render={({ field: input }) => (
                         <Input
                           {...input}
@@ -214,7 +230,7 @@ export function IngredientRows({ control, errors, options, cost, previewIndex }:
       </div>
       <Button type="button" variant="outline" size="sm" onClick={() => append(emptyRow())}>
         <Plus />
-        Agregar ingrediente
+        {addLabel}
       </Button>
     </div>
   )

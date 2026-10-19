@@ -10,7 +10,7 @@ const EMPTY = '—'
 
 /** Round a decimal value half-up to `decimals` places. Returns a plain decimal string ("1234.50"). */
 export function roundDecimal(value: string | number, decimals: number): string {
-  const raw = typeof value === 'number' ? numberToPlainString(value) : value.trim()
+  const raw = typeof value === 'number' ? numberToPlainString(value) : expandExponent(value.trim())
   const match = /^([+-])?(\d*)(?:\.(\d*))?$/.exec(raw)
   if (!match || (match[2] === '' && (match[3] ?? '') === '')) {
     throw new Error(`Invalid decimal value: ${value}`)
@@ -28,6 +28,20 @@ export function roundDecimal(value: string | number, decimals: number): string {
   const frac = decimals > 0 ? digits.slice(-decimals) : ''
   const isZero = scaled === 0n
   return `${negative && !isZero ? '-' : ''}${whole}${frac ? `.${frac}` : ''}`
+}
+
+/** "4.0E+3" → "4000", "1.5e-2" → "0.015"; other strings pass through unchanged. */
+function expandExponent(value: string): string {
+  const match = /^([+-])?(\d*)(?:\.(\d*))?[eE]([+-]?\d+)$/.exec(value)
+  if (!match) return value
+  const [, sign = '', whole = '', frac = '', exp] = match
+  const digits = (whole + frac).replace(/^0+(?=\d)/, '') || '0'
+  const point = whole.length + Number(exp)
+  let result: string
+  if (point <= 0) result = `0.${'0'.repeat(-point)}${digits}`
+  else if (point >= digits.length) result = digits + '0'.repeat(point - digits.length)
+  else result = `${digits.slice(0, point)}.${digits.slice(point)}`
+  return `${sign === '-' ? '-' : ''}${result}`
 }
 
 function numberToPlainString(value: number): string {

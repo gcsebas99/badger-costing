@@ -7,6 +7,7 @@ from pydantic import Field, model_validator
 from app.models.recipe import RecipeItemType
 from app.schemas.common import (
     ApiModel,
+    DecimalOut,
     LongOptionalText,
     PositiveDecimal,
     RequiredText,
@@ -14,8 +15,8 @@ from app.schemas.common import (
 from app.services.costing import ItemStatus
 from app.services.units import Unit
 
-WasteRate = Annotated[Decimal, Field(ge=0, le=10, description="0.13 = 13 %")]
-MarginRate = Annotated[Decimal, Field(ge=0, le=1, description="0.05 = 5 %")]
+WasteRate = Annotated[DecimalOut, Field(ge=0, le=10, description="0.13 = 13 %")]
+MarginRate = Annotated[DecimalOut, Field(ge=0, le=1, description="0.05 = 5 %")]
 
 
 class RecipeItemIn(ApiModel):
@@ -31,9 +32,9 @@ class RecipeItemRead(ApiModel):
     position: int
     item_type: RecipeItemType
     ref_id: int
-    quantity: Decimal
+    quantity: DecimalOut
     unit: Unit
-    waste_rate: Decimal
+    waste_rate: DecimalOut
 
 
 class RecipeBase(ApiModel):
@@ -100,37 +101,37 @@ class ItemCostRead(ApiModel):
     item_type: RecipeItemType
     ref_id: int
     name: str
-    quantity: Decimal
+    quantity: DecimalOut
     unit: Unit
-    waste_rate: Decimal
-    gross_quantity: Decimal
+    waste_rate: DecimalOut
+    gross_quantity: DecimalOut
     status: ItemStatus
     message: str | None
     base_unit: Unit | None
-    base_quantity: Decimal | None
-    unit_cost: Decimal | None
+    base_quantity: DecimalOut | None
+    unit_cost: DecimalOut | None
     reference_unit: Unit | None
-    reference_unit_cost: Decimal | None
-    cost: Decimal | None
-    share: Decimal | None
+    reference_unit_cost: DecimalOut | None
+    cost: DecimalOut | None
+    share: DecimalOut | None
     subrecipe: "RecipeCostRead | None"
 
 
 class RecipeCostRead(ApiModel):
     recipe_id: int | None
     name: str
-    yield_qty: Decimal
+    yield_qty: DecimalOut
     yield_unit: Unit
-    portions: Decimal
-    safety_margin_rate: Decimal
-    ingredients_cost: Decimal
-    safety_margin_cost: Decimal
-    total_cost: Decimal
+    portions: DecimalOut
+    safety_margin_rate: DecimalOut
+    ingredients_cost: DecimalOut
+    safety_margin_cost: DecimalOut
+    total_cost: DecimalOut
     base_unit: Unit
-    cost_per_base_unit: Decimal
+    cost_per_base_unit: DecimalOut
     reference_unit: Unit
-    cost_per_reference_unit: Decimal
-    cost_per_portion: Decimal
+    cost_per_reference_unit: DecimalOut
+    cost_per_portion: DecimalOut
     complete: bool
     items: list[ItemCostRead]
 
@@ -148,10 +149,10 @@ class RecipeUsage(ApiModel):
 class RecipeSummary(RecipeBase):
     id: int
     item_count: int
-    total_cost: Decimal
-    cost_per_portion: Decimal
+    total_cost: DecimalOut
+    cost_per_portion: DecimalOut
     reference_unit: Unit
-    cost_per_reference_unit: Decimal
+    cost_per_reference_unit: DecimalOut
     complete: bool
     updated_at: datetime
 
@@ -173,7 +174,7 @@ class IngredientOption(ApiModel):
     base_unit: Unit
     allowed_units: list[Unit]
     reference_unit: Unit
-    reference_unit_cost: Decimal | None
+    reference_unit_cost: DecimalOut | None
     active: bool
 
 

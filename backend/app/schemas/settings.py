@@ -1,24 +1,23 @@
-from decimal import Decimal
 from typing import Annotated
 
 from pydantic import Field
 
 from app.models.settings import CostMode
-from app.schemas.common import ApiModel
+from app.schemas.common import ApiModel, DecimalOut
 
-Rate = Annotated[Decimal, Field(ge=0, le=1)]
-PositiveRate = Annotated[Decimal, Field(gt=0, le=1)]
-NegativeRate = Annotated[Decimal, Field(ge=-1, le=0)]
+Rate = Annotated[DecimalOut, Field(ge=0, le=1)]
+PositiveRate = Annotated[DecimalOut, Field(gt=0, le=1)]
+NegativeRate = Annotated[DecimalOut, Field(ge=-1, le=0)]
 
 
 class SettingsRead(ApiModel):
     cost_mode: CostMode
-    vat_rate: Decimal
-    bank_fee_rate: Decimal
-    margin_alert_rate: Decimal
-    target_food_cost_rate: Decimal
-    deviation_upper_rate: Decimal
-    deviation_lower_rate: Decimal
+    vat_rate: DecimalOut
+    bank_fee_rate: DecimalOut
+    margin_alert_rate: DecimalOut
+    target_food_cost_rate: DecimalOut
+    deviation_upper_rate: DecimalOut
+    deviation_lower_rate: DecimalOut
 
 
 class SettingsUpdate(ApiModel):

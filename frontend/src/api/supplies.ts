@@ -67,6 +67,7 @@ function useSupplyMutation<TVariables>(
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: supplyKeys.all })
       await queryClient.invalidateQueries({ queryKey: ['recipes'] })
+      await queryClient.invalidateQueries({ queryKey: ['products'] })
     },
   })
 }

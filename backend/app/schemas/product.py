@@ -6,6 +6,7 @@ from pydantic import Field, model_validator
 
 from app.schemas.common import (
     ApiModel,
+    DecimalOut,
     LongOptionalText,
     NonNegativeDecimal,
     PositiveDecimal,
@@ -125,13 +126,13 @@ class ProductPreview(ApiModel):
 
 class ProductCostRead(ApiModel):
     recipe: RecipeCostRead | None
-    recipe_portions: Decimal
-    recipe_cost: Decimal
+    recipe_portions: DecimalOut
+    recipe_cost: DecimalOut
     items: list[ItemCostRead]
-    items_cost: Decimal
+    items_cost: DecimalOut
     packaging: list[ItemCostRead]
-    packaging_cost: Decimal
-    total_cost: Decimal
+    packaging_cost: DecimalOut
+    total_cost: DecimalOut
     complete: bool
     issues: list[str]
 
@@ -140,24 +141,24 @@ class ChannelPricingRead(ApiModel):
     kind: ChannelKind
     platform_id: int | None
     name: str
-    price: Decimal
-    price_ex_vat: Decimal
-    fee_rate: Decimal
-    fee: Decimal
-    cost: Decimal
-    food_cost_rate: Decimal | None
-    margin: Decimal
-    margin_rate: Decimal | None
+    price: DecimalOut
+    price_ex_vat: DecimalOut
+    fee_rate: DecimalOut
+    fee: DecimalOut
+    cost: DecimalOut
+    food_cost_rate: DecimalOut | None
+    margin: DecimalOut
+    margin_rate: DecimalOut | None
     margin_status: AlertLevel
     food_cost_status: AlertLevel
 
 
 class ProductPricingRead(ApiModel):
     cost: ProductCostRead
-    target_food_cost_rate: Decimal
-    suggested_price: Decimal | None
-    target_cost: Decimal | None
-    deviation: Decimal | None
+    target_food_cost_rate: DecimalOut
+    suggested_price: DecimalOut | None
+    target_cost: DecimalOut | None
+    deviation: DecimalOut | None
     deviation_status: AlertLevel
     channels: list[ChannelPricingRead]
     status: AlertLevel = Field(description="Worst alert across channels and deviation")
@@ -171,12 +172,12 @@ class ProductSummary(ApiModel):
     recipe_id: int | None
     recipe_name: str | None
     active: bool
-    total_cost: Decimal
+    total_cost: DecimalOut
     complete: bool
-    target_food_cost_rate: Decimal
-    suggested_price: Decimal | None
-    target_cost: Decimal | None
-    deviation: Decimal | None
+    target_food_cost_rate: DecimalOut
+    suggested_price: DecimalOut | None
+    target_cost: DecimalOut | None
+    deviation: DecimalOut | None
     deviation_status: AlertLevel
     channels: list[ChannelPricingRead]
     status: AlertLevel
@@ -184,7 +185,7 @@ class ProductSummary(ApiModel):
 
 class PlatformPriceRead(ApiModel):
     platform_id: int
-    price: Decimal
+    price: DecimalOut
 
 
 class ProductDetail(ProductBase):

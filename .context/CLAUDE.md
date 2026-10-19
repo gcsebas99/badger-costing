@@ -53,9 +53,10 @@ Always run `make test` and `make types` before calling a task done.
 4. Costs are **never stored**: computed on read by walking the recipe tree.
 5. Recipes must not form cycles; validate before saving.
 6. Cost responses always include a per-item breakdown.
-7. Channel margin: `price_ex_vat = pvp / (1 + vat)`; `margin = price_ex_vat − cost − fee`.
-   Bank fee applies to direct sales; on platforms only the platform fee applies.
-   `suggested_price = cost / target_food_cost% × (1 + vat)`.
+7. Channel margin: `price_ex_vat = pvp / (1 + vat)`; `fee = pvp × rate`;
+   `margin = price_ex_vat − cost − fee`. Bank fee applies to direct sales; on platforms only the
+   platform fee applies. `suggested_price = cost / target_food_cost% × (1 + vat)`; target food cost
+   comes from the product's menu group, else the global default (`services/pricing.py`).
 8. Recipe total = ingredients + optional safety margin (`safety_margin_rate`); a sub-recipe's cost
    per unit includes its margin. Missing price / bad unit → item flagged, recipe `complete=false`.
 9. Current supply cost = average of the latest up-to-3 prices (1 → that price, 2 → avg of 2), or
@@ -71,6 +72,8 @@ Always run `make test` and `make types` before calling a task done.
   numbers use `tabular-nums` and are right-aligned.
 - Backend layout: `models/` (SQLModel tables), `schemas/` (API in/out), `routers/`,
   `services/` (`units.py`, `supply_cost.py`, `costing.py`). All routes are mounted under `/api`.
+- API schemas: never annotate outputs with bare `Decimal`; use `DecimalOut` / `PositiveDecimal` /
+  `NonNegativeDecimal` from `schemas/common.py` (plain-notation serialization).
 - DB columns: money/quantities use `DecimalText` (exact TEXT), enums use `value_enum()`. After
   model changes run `make migration m="..."`; `tests/test_migrations.py` fails on drift.
 - API `detail` error messages are Spanish (shown in toasts); everything else in code is English.
@@ -83,7 +86,9 @@ Always run `make test` and `make types` before calling a task done.
 - Forms: React Hook Form + Zod; numeric inputs accept `1,36` or `1.36` (`parseDecimalInput`); loaded
   values use `toDecimalInput`. Percent inputs ↔ API rates via `percentInputToRate` / `rateToPercentInput`.
 - Full-page editors (recipes) live at `/<area>/nueva` and `/<area>/:id`; "Nuevo" uses `NavItem.newPath`.
-- Recipe editor live cost: debounced form snapshot → `POST /api/recipes/preview`.
+- Editors' live cost: debounced form snapshot → `POST /api/recipes/preview` / `/api/products/preview`.
+- Comboboxes (cmdk) use `commandFilter` (accent-insensitive). Shared row editor:
+  `components/forms/IngredientRows.tsx` + `ingredientRow.ts`.
 - One branch per milestone (`m0-base`, `m1-supplies`, …); small commits per task.
 
 ## Visual guidelines

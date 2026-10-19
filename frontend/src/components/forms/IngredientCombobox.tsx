@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { formatUnitCost } from '@/lib/format'
-import { cn } from '@/lib/utils'
+import { cn, commandFilter } from '@/lib/utils'
 
 export interface IngredientRef {
   item_type: IngredientOption['item_type']
@@ -87,7 +87,7 @@ export function IngredientCombobox({ options, value, onChange, invalid, id }: In
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[28rem] p-0" align="start">
-        <Command>
+        <Command filter={commandFilter}>
           <CommandInput placeholder="Buscar suministro o sub-receta…" />
           <CommandList>
             <CommandEmpty>Sin resultados.</CommandEmpty>

@@ -26,6 +26,13 @@ describe('roundDecimal', () => {
     expect(roundDecimal(12.5, 0)).toBe('13')
   })
 
+  it('accepts exponent notation', () => {
+    expect(roundDecimal('4.0E+3', 2)).toBe('4000.00')
+    expect(roundDecimal('1.5e-2', 3)).toBe('0.015')
+    expect(roundDecimal('-2.5E+1', 0)).toBe('-25')
+    expect(formatCRC('4.0E+3')).toBe('₡ 4.000,00')
+  })
+
   it('rejects invalid input', () => {
     expect(() => roundDecimal('abc', 2)).toThrow()
     expect(() => roundDecimal('', 2)).toThrow()

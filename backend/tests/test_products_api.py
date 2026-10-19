@@ -225,3 +225,11 @@ def test_usages_and_delete_guards_include_products(client, setup):
 
     assert client.delete(f"/api/products/{product['id']}").status_code == 204
     assert client.delete(f"/api/supplies/{setup['box']['id']}").status_code == 204
+
+
+def test_decimals_are_never_in_exponent_notation(client, setup):
+    # 4520 / 1.13 is exactly 4000, which str(Decimal) renders as "4.0E+3".
+    product = create_product(client, setup)
+    response = client.get(f"/api/products/{product['id']}")
+    assert "E+" not in response.text
+    assert response.json()["pricing"]["channels"][0]["price_ex_vat"] == "4000"

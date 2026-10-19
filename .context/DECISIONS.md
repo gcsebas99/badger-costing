@@ -32,13 +32,19 @@
 | D26 | 2026-10-18 | Editor live cost comes from `POST /api/recipes/preview` (debounced), not client-side math | One costing engine (Python) as source of truth |
 | D27 | 2026-10-18 | Ingredient picker offers only sub-recipes (`is_subrecipe`), excluding any that contain the recipe being edited | Prevents cycles up front; backend still validates |
 | D28 | 2026-10-18 | Recipe relationship is `Recipe.ingredients` (table `recipe_item`) | `items` collides with `dict.items` in `SQLModel.model_validate` |
+| D29 | 2026-10-18 | Fees = PVP × rate (bank on direct sales; only the platform fee on platforms). Template used PVP − PVP/(1+rate) | That's how banks/platforms actually charge; template understated fees |
+| D30 | 2026-10-18 | `sales_platform` table (name, fee_rate, active), empty by default; one PVP per product per platform | Sebas hasn't analyzed platforms yet; ready when needed |
+| D31 | 2026-10-18 | `menu_group.target_food_cost_rate` (nullable) overrides `AppSettings.target_food_cost_rate` | Answered: target can differ per group |
+| D32 | 2026-10-18 | Product = optional main recipe × portions + direct components + packaging; one row per product with prices per channel | Spreadsheet duplicated rows per channel ("Pizza Margarita Uber") |
+| D33 | 2026-10-18 | Deviation = (cost − theoretical) / theoretical; bad above upper, warn below lower | Standard "% over target"; thresholds from template (+5 % / −10 %) |
+| D34 | 2026-10-18 | Alerts: margin < threshold → bad; food cost > group target → warn; incomplete cost → warn | Margin is the hard limit; food cost is guidance |
+| D35 | 2026-10-18 | All API decimals serialized with `format(d, "f")` (`DecimalOut` / annotated types) | `str(Decimal)` can emit "4.0E+3" and broke the UI |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 
 - [x] **Current cost** → D11.
-- [ ] **Platforms and %** (Uber Eats, Rappi, DiDi Food) — *needed in M3*.
-- [ ] **Target food cost %**: global or per menu group? — *needed in M3*.
-      Default plan: global with optional per-group override.
+- [x] **Platforms and %** → none analyzed yet; platforms table ready to fill in Ajustes (D30).
+- [x] **Target food cost %** → per menu group, falling back to a global default (D31).
 - [ ] Are manual portions (g/ml) the sale unit of sub-recipes? — default applied (D23); revisit if
       sub-recipes should also be usable "per portion".
 - [x] Dark mode in M0? → deferred (D8).

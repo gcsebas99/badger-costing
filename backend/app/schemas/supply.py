@@ -1,11 +1,11 @@
 from datetime import date, datetime
-from decimal import Decimal
 from typing import Self
 
 from pydantic import Field, field_validator, model_validator
 
 from app.schemas.common import (
     ApiModel,
+    DecimalOut,
     LongOptionalText,
     NonNegativeDecimal,
     OptionalText,
@@ -30,7 +30,7 @@ class EquivalenceIn(ApiModel):
 
 
 class EquivalenceRead(ApiModel):
-    quantity: Decimal
+    quantity: DecimalOut
     unit: Unit
 
 
@@ -42,7 +42,7 @@ class PriceCreate(ApiModel):
 
 class PriceRead(ApiModel):
     id: int
-    amount: Decimal
+    amount: DecimalOut
     supplier: str | None
     purchased_on: date
     created_at: datetime
@@ -90,10 +90,10 @@ class SupplyRead(SupplyBase):
     id: int
     equivalence: EquivalenceRead | None
     base_unit: Unit
-    current_price: Decimal | None = Field(description="Current ₡ per pack.")
-    unit_cost: Decimal | None = Field(description="₡ per base unit (g, ml or pz).")
+    current_price: DecimalOut | None = Field(description="Current ₡ per pack.")
+    unit_cost: DecimalOut | None = Field(description="₡ per base unit (g, ml or pz).")
     reference_unit: Unit
-    reference_unit_cost: Decimal | None = Field(description="₡ per kg, L or pz.")
+    reference_unit_cost: DecimalOut | None = Field(description="₡ per kg, L or pz.")
     last_price_date: date | None
     price_count: int
     created_at: datetime

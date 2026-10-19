@@ -16,6 +16,7 @@ import {
   useUpdateRecipe,
 } from '@/api/recipes'
 import { FormField } from '@/components/forms/FormField'
+import { IngredientRows } from '@/components/forms/IngredientRows'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,7 +42,6 @@ import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { UNITS } from '@/lib/units'
 
 import { CostSummary } from './CostSummary'
-import { IngredientRows } from './IngredientRows'
 import {
   detailToForm,
   emptyRecipeForm,
@@ -240,9 +240,10 @@ export function RecipeEditorPage() {
             <h3 className="mb-3 text-sm font-semibold">Ingredientes</h3>
             <IngredientRows
               control={control}
-              errors={errors}
+              name="items"
+              errors={errors.items as never}
               options={options}
-              cost={cost}
+              costItems={cost?.items}
               previewIndex={previewIndex}
             />
           </section>

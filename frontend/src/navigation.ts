@@ -36,7 +36,14 @@ export const NAV_ITEMS: NavItem[] = [
     newPath: '/recetas/nueva',
     searchPlaceholder: 'Buscar receta…',
   },
-  { path: '/productos', label: 'Productos', icon: UtensilsCrossed },
+  {
+    path: '/productos',
+    label: 'Productos',
+    icon: UtensilsCrossed,
+    newLabel: 'Nuevo producto',
+    newPath: '/productos/nuevo',
+    searchPlaceholder: 'Buscar producto…',
+  },
   { path: '/ajustes', label: 'Ajustes', icon: Settings },
 ]
 
