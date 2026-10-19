@@ -6,6 +6,7 @@ from pydantic import Field, field_validator, model_validator
 
 from app.schemas.common import (
     ApiModel,
+    LongOptionalText,
     NonNegativeDecimal,
     OptionalText,
     PositiveDecimal,
@@ -56,7 +57,7 @@ class SupplyBase(ApiModel):
     pack_qty: PositiveDecimal
     pack_unit: Unit
     active: bool = True
-    notes: OptionalText = None
+    notes: LongOptionalText = None
 
 
 class SupplyCreate(SupplyBase):
@@ -74,7 +75,7 @@ class SupplyUpdate(ApiModel):
     pack_qty: PositiveDecimal | None = None
     pack_unit: Unit | None = None
     active: bool | None = None
-    notes: OptionalText = None
+    notes: LongOptionalText = None
     equivalence: EquivalenceIn | None = None
 
     @model_validator(mode="after")

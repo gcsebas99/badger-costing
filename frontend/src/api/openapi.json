@@ -25,10 +25,572 @@
           }
         }
       }
+    },
+    "/api/settings": {
+      "get": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Read Settings",
+        "operationId": "read_settings",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsRead"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Update Settings",
+        "operationId": "update_settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/supplies": {
+      "get": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "List Supplies",
+        "operationId": "list_supplies",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Search in name and brand.",
+              "title": "Q"
+            },
+            "description": "Search in name and brand."
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Group"
+            }
+          },
+          {
+            "name": "supplier",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Supplier"
+            }
+          },
+          {
+            "name": "active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Omit to include all.",
+              "title": "Active"
+            },
+            "description": "Omit to include all."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SupplyRead"
+                  },
+                  "title": "Response List Supplies"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "Create Supply",
+        "operationId": "create_supply",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupplyCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplyDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/supplies/facets": {
+      "get": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "Supply Facets",
+        "description": "Known groups (defaults + used) and suppliers, for filters and autocomplete.",
+        "operationId": "supply_facets",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplyFacets"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/supplies/{supply_id}": {
+      "get": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "Read Supply",
+        "operationId": "read_supply",
+        "parameters": [
+          {
+            "name": "supply_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Supply Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplyDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "Update Supply",
+        "operationId": "update_supply",
+        "parameters": [
+          {
+            "name": "supply_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Supply Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupplyUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplyDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "Delete Supply",
+        "operationId": "delete_supply",
+        "parameters": [
+          {
+            "name": "supply_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Supply Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/supplies/{supply_id}/prices": {
+      "get": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "List Prices",
+        "operationId": "list_prices",
+        "parameters": [
+          {
+            "name": "supply_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Supply Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PriceRead"
+                  },
+                  "title": "Response List Prices"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "Add Price",
+        "operationId": "add_price",
+        "parameters": [
+          {
+            "name": "supply_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Supply Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PriceCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplyDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/supplies/{supply_id}/prices/{price_id}": {
+      "delete": {
+        "tags": [
+          "supplies"
+        ],
+        "summary": "Delete Price",
+        "operationId": "delete_price",
+        "parameters": [
+          {
+            "name": "supply_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Supply Id"
+            }
+          },
+          {
+            "name": "price_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Price Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplyDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "CostMode": {
+        "type": "string",
+        "enum": [
+          "average_last_3",
+          "latest"
+        ],
+        "title": "CostMode"
+      },
+      "EquivalenceIn": {
+        "properties": {
+          "quantity": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Quantity"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/Unit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantity",
+          "unit"
+        ],
+        "title": "EquivalenceIn",
+        "description": "1 pz = quantity unit (unit must be mass or volume)."
+      },
+      "EquivalenceRead": {
+        "properties": {
+          "quantity": {
+            "type": "string",
+            "title": "Quantity"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/Unit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantity",
+          "unit"
+        ],
+        "title": "EquivalenceRead"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
       "HealthRead": {
         "properties": {
           "status": {
@@ -56,6 +618,748 @@
           "database"
         ],
         "title": "HealthRead"
+      },
+      "PriceCreate": {
+        "properties": {
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Amount"
+          },
+          "purchased_on": {
+            "type": "string",
+            "format": "date",
+            "title": "Purchased On"
+          },
+          "supplier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount"
+        ],
+        "title": "PriceCreate"
+      },
+      "PriceRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount"
+          },
+          "supplier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier"
+          },
+          "purchased_on": {
+            "type": "string",
+            "format": "date",
+            "title": "Purchased On"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "in_effect": {
+            "type": "boolean",
+            "title": "In Effect",
+            "description": "Whether this price is part of the current cost."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "amount",
+          "supplier",
+          "purchased_on",
+          "created_at",
+          "in_effect"
+        ],
+        "title": "PriceRead"
+      },
+      "SettingsRead": {
+        "properties": {
+          "cost_mode": {
+            "$ref": "#/components/schemas/CostMode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cost_mode"
+        ],
+        "title": "SettingsRead"
+      },
+      "SettingsUpdate": {
+        "properties": {
+          "cost_mode": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CostMode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "SettingsUpdate"
+      },
+      "SupplyCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "group": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Group"
+          },
+          "supplier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier"
+          },
+          "pack_qty": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Pack Qty"
+          },
+          "pack_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "equivalence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EquivalenceIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "initial_price": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PriceCreate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "group",
+          "pack_qty",
+          "pack_unit"
+        ],
+        "title": "SupplyCreate"
+      },
+      "SupplyDetail": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "group": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Group"
+          },
+          "supplier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier"
+          },
+          "pack_qty": {
+            "type": "string",
+            "title": "Pack Qty"
+          },
+          "pack_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "equivalence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EquivalenceRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "base_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "current_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Price",
+            "description": "Current ₡ per pack."
+          },
+          "unit_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Cost",
+            "description": "₡ per base unit (g, ml or pz)."
+          },
+          "reference_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "reference_unit_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Unit Cost",
+            "description": "₡ per kg, L or pz."
+          },
+          "last_price_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Price Date"
+          },
+          "price_count": {
+            "type": "integer",
+            "title": "Price Count"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "prices": {
+            "items": {
+              "$ref": "#/components/schemas/PriceRead"
+            },
+            "type": "array",
+            "title": "Prices"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "group",
+          "pack_qty",
+          "pack_unit",
+          "id",
+          "equivalence",
+          "base_unit",
+          "current_price",
+          "unit_cost",
+          "reference_unit",
+          "reference_unit_cost",
+          "last_price_date",
+          "price_count",
+          "created_at",
+          "updated_at",
+          "prices"
+        ],
+        "title": "SupplyDetail"
+      },
+      "SupplyFacets": {
+        "properties": {
+          "groups": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Groups"
+          },
+          "suppliers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Suppliers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "groups",
+          "suppliers"
+        ],
+        "title": "SupplyFacets"
+      },
+      "SupplyRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "group": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Group"
+          },
+          "supplier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier"
+          },
+          "pack_qty": {
+            "type": "string",
+            "title": "Pack Qty"
+          },
+          "pack_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "equivalence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EquivalenceRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "base_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "current_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Price",
+            "description": "Current ₡ per pack."
+          },
+          "unit_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Cost",
+            "description": "₡ per base unit (g, ml or pz)."
+          },
+          "reference_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "reference_unit_cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Unit Cost",
+            "description": "₡ per kg, L or pz."
+          },
+          "last_price_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Price Date"
+          },
+          "price_count": {
+            "type": "integer",
+            "title": "Price Count"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "group",
+          "pack_qty",
+          "pack_unit",
+          "id",
+          "equivalence",
+          "base_unit",
+          "current_price",
+          "unit_cost",
+          "reference_unit",
+          "reference_unit_cost",
+          "last_price_date",
+          "price_count",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "SupplyRead"
+      },
+      "SupplyUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "group": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group"
+          },
+          "supplier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier"
+          },
+          "pack_qty": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pack Qty"
+          },
+          "pack_unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "equivalence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EquivalenceIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "SupplyUpdate",
+        "description": "Partial update. Sending `equivalence: null` removes the equivalence."
+      },
+      "Unit": {
+        "type": "string",
+        "enum": [
+          "g",
+          "kg",
+          "ml",
+          "L",
+          "pz"
+        ],
+        "title": "Unit"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     }
   }

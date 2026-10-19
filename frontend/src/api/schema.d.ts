@@ -21,10 +21,145 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Settings */
+        get: operations["read_settings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Settings */
+        patch: operations["update_settings"];
+        trace?: never;
+    };
+    "/api/supplies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Supplies */
+        get: operations["list_supplies"];
+        put?: never;
+        /** Create Supply */
+        post: operations["create_supply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/supplies/facets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Supply Facets
+         * @description Known groups (defaults + used) and suppliers, for filters and autocomplete.
+         */
+        get: operations["supply_facets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/supplies/{supply_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Supply */
+        get: operations["read_supply"];
+        put?: never;
+        post?: never;
+        /** Delete Supply */
+        delete: operations["delete_supply"];
+        options?: never;
+        head?: never;
+        /** Update Supply */
+        patch: operations["update_supply"];
+        trace?: never;
+    };
+    "/api/supplies/{supply_id}/prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Prices */
+        get: operations["list_prices"];
+        put?: never;
+        /** Add Price */
+        post: operations["add_price"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/supplies/{supply_id}/prices/{price_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Price */
+        delete: operations["delete_price"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * CostMode
+         * @enum {string}
+         */
+        CostMode: "average_last_3" | "latest";
+        /**
+         * EquivalenceIn
+         * @description 1 pz = quantity unit (unit must be mass or volume).
+         */
+        EquivalenceIn: {
+            /** Quantity */
+            quantity: number | string;
+            unit: components["schemas"]["Unit"];
+        };
+        /** EquivalenceRead */
+        EquivalenceRead: {
+            /** Quantity */
+            quantity: string;
+            unit: components["schemas"]["Unit"];
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /** HealthRead */
         HealthRead: {
             /**
@@ -39,6 +174,232 @@ export interface components {
              * @enum {string}
              */
             database: "ok" | "error";
+        };
+        /** PriceCreate */
+        PriceCreate: {
+            /** Amount */
+            amount: number | string;
+            /**
+             * Purchased On
+             * Format: date
+             */
+            purchased_on?: string;
+            /** Supplier */
+            supplier?: string | null;
+        };
+        /** PriceRead */
+        PriceRead: {
+            /** Id */
+            id: number;
+            /** Amount */
+            amount: string;
+            /** Supplier */
+            supplier: string | null;
+            /**
+             * Purchased On
+             * Format: date
+             */
+            purchased_on: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * In Effect
+             * @description Whether this price is part of the current cost.
+             */
+            in_effect: boolean;
+        };
+        /** SettingsRead */
+        SettingsRead: {
+            cost_mode: components["schemas"]["CostMode"];
+        };
+        /** SettingsUpdate */
+        SettingsUpdate: {
+            cost_mode?: components["schemas"]["CostMode"] | null;
+        };
+        /** SupplyCreate */
+        SupplyCreate: {
+            /** Name */
+            name: string;
+            /** Brand */
+            brand?: string | null;
+            /** Group */
+            group: string;
+            /** Supplier */
+            supplier?: string | null;
+            /** Pack Qty */
+            pack_qty: number | string;
+            pack_unit: components["schemas"]["Unit"];
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Notes */
+            notes?: string | null;
+            equivalence?: components["schemas"]["EquivalenceIn"] | null;
+            initial_price?: components["schemas"]["PriceCreate"] | null;
+        };
+        /** SupplyDetail */
+        SupplyDetail: {
+            /** Name */
+            name: string;
+            /** Brand */
+            brand?: string | null;
+            /** Group */
+            group: string;
+            /** Supplier */
+            supplier?: string | null;
+            /** Pack Qty */
+            pack_qty: string;
+            pack_unit: components["schemas"]["Unit"];
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Notes */
+            notes?: string | null;
+            /** Id */
+            id: number;
+            equivalence: components["schemas"]["EquivalenceRead"] | null;
+            base_unit: components["schemas"]["Unit"];
+            /**
+             * Current Price
+             * @description Current ₡ per pack.
+             */
+            current_price: string | null;
+            /**
+             * Unit Cost
+             * @description ₡ per base unit (g, ml or pz).
+             */
+            unit_cost: string | null;
+            reference_unit: components["schemas"]["Unit"];
+            /**
+             * Reference Unit Cost
+             * @description ₡ per kg, L or pz.
+             */
+            reference_unit_cost: string | null;
+            /** Last Price Date */
+            last_price_date: string | null;
+            /** Price Count */
+            price_count: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Prices */
+            prices: components["schemas"]["PriceRead"][];
+        };
+        /** SupplyFacets */
+        SupplyFacets: {
+            /** Groups */
+            groups: string[];
+            /** Suppliers */
+            suppliers: string[];
+        };
+        /** SupplyRead */
+        SupplyRead: {
+            /** Name */
+            name: string;
+            /** Brand */
+            brand?: string | null;
+            /** Group */
+            group: string;
+            /** Supplier */
+            supplier?: string | null;
+            /** Pack Qty */
+            pack_qty: string;
+            pack_unit: components["schemas"]["Unit"];
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Notes */
+            notes?: string | null;
+            /** Id */
+            id: number;
+            equivalence: components["schemas"]["EquivalenceRead"] | null;
+            base_unit: components["schemas"]["Unit"];
+            /**
+             * Current Price
+             * @description Current ₡ per pack.
+             */
+            current_price: string | null;
+            /**
+             * Unit Cost
+             * @description ₡ per base unit (g, ml or pz).
+             */
+            unit_cost: string | null;
+            reference_unit: components["schemas"]["Unit"];
+            /**
+             * Reference Unit Cost
+             * @description ₡ per kg, L or pz.
+             */
+            reference_unit_cost: string | null;
+            /** Last Price Date */
+            last_price_date: string | null;
+            /** Price Count */
+            price_count: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /**
+         * SupplyUpdate
+         * @description Partial update. Sending `equivalence: null` removes the equivalence.
+         */
+        SupplyUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Brand */
+            brand?: string | null;
+            /** Group */
+            group?: string | null;
+            /** Supplier */
+            supplier?: string | null;
+            /** Pack Qty */
+            pack_qty?: number | string | null;
+            pack_unit?: components["schemas"]["Unit"] | null;
+            /** Active */
+            active?: boolean | null;
+            /** Notes */
+            notes?: string | null;
+            equivalence?: components["schemas"]["EquivalenceIn"] | null;
+        };
+        /**
+         * Unit
+         * @enum {string}
+         */
+        Unit: "g" | "kg" | "ml" | "L" | "pz";
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
         };
     };
     responses: never;
@@ -65,6 +426,341 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthRead"];
+                };
+            };
+        };
+    };
+    read_settings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsRead"];
+                };
+            };
+        };
+    };
+    update_settings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingsUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_supplies: {
+        parameters: {
+            query?: {
+                /** @description Search in name and brand. */
+                q?: string | null;
+                group?: string | null;
+                supplier?: string | null;
+                /** @description Omit to include all. */
+                active?: boolean | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupplyRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_supply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SupplyCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupplyDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    supply_facets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupplyFacets"];
+                };
+            };
+        };
+    };
+    read_supply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                supply_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupplyDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_supply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                supply_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_supply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                supply_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SupplyUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupplyDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_prices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                supply_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PriceRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_price: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                supply_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PriceCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupplyDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_price: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                supply_id: number;
+                price_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupplyDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

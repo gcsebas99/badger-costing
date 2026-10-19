@@ -1,4 +1,13 @@
-import { formatCRC, formatNumber, formatPercent, roundDecimal } from './format'
+import {
+  formatCRC,
+  formatDate,
+  formatNumber,
+  formatPercent,
+  formatQuantity,
+  formatUnitCost,
+  parseDecimalInput,
+  roundDecimal,
+} from './format'
 
 describe('roundDecimal', () => {
   it('rounds half up without float errors', () => {
@@ -49,5 +58,47 @@ describe('formatPercent', () => {
     expect(formatPercent('0.13', 0)).toBe('13 %')
     expect(formatPercent(1.5)).toBe('150,0 %')
     expect(formatPercent('-0.05')).toBe('-5,0 %')
+  })
+})
+
+describe('formatQuantity', () => {
+  it('trims trailing zeros', () => {
+    expect(formatQuantity('1.360')).toBe('1,36')
+    expect(formatQuantity('6')).toBe('6')
+    expect(formatQuantity('0.454')).toBe('0,454')
+    expect(formatQuantity('10000')).toBe('10.000')
+    expect(formatQuantity('2.50')).toBe('2,5')
+  })
+})
+
+describe('formatDate', () => {
+  it('formats ISO dates as dd/mm/yyyy', () => {
+    expect(formatDate('2026-10-18')).toBe('18/10/2026')
+    expect(formatDate('2026-10-18T12:00:00Z')).toBe('18/10/2026')
+    expect(formatDate(null)).toBe('—')
+  })
+})
+
+describe('parseDecimalInput', () => {
+  it('accepts comma or dot decimals', () => {
+    expect(parseDecimalInput('1,36')).toBe('1.36')
+    expect(parseDecimalInput(' 1300 ')).toBe('1300')
+    expect(parseDecimalInput('0.454')).toBe('0.454')
+  })
+
+  it('rejects invalid input', () => {
+    expect(parseDecimalInput('')).toBeNull()
+    expect(parseDecimalInput('1.234,5')).toBeNull()
+    expect(parseDecimalInput('-3')).toBeNull()
+    expect(parseDecimalInput('abc')).toBeNull()
+  })
+})
+
+describe('formatUnitCost', () => {
+  it('shows 4 decimals below ₡ 1 and 2 otherwise', () => {
+    expect(formatUnitCost('0.036537')).toBe('₡ 0,0365')
+    expect(formatUnitCost('216.6666')).toBe('₡ 216,67')
+    expect(formatUnitCost('0.99996')).toBe('₡ 1,00')
+    expect(formatUnitCost(null)).toBe('—')
   })
 })

@@ -38,17 +38,17 @@ Supply catalog with price history.
 
 **Done when:** 30 real supplies loaded, change a price and see unit cost update.
 
-- [ ] **M1.1 Models + migration** — `supply`, `supply_price`, `unit_equivalence`; `settings` row
+- [x] **M1.1 Models + migration** — `supply`, `supply_price`, `unit_equivalence`; `settings` row
       for current-cost mode (latest vs avg of last 3)
-- [ ] **M1.2 Units service** — `services/units.py`: g↔kg, ml↔L, pz via equivalence; clear errors; tests
-- [ ] **M1.3 Supply cost** — current price (latest / avg-3), unit cost = price ÷ pack qty in base unit; tests
-- [ ] **M1.4 API** — CRUD supplies, filters (group, supplier, active), name search; prices
+- [x] **M1.2 Units service** — `services/units.py`: g↔kg, ml↔L, pz via equivalence; clear errors; tests
+- [x] **M1.3 Supply cost** — current price (latest / avg-3), unit cost = price ÷ pack qty in base unit; tests
+- [x] **M1.4 API** — CRUD supplies, filters (group, supplier, active), name search; prices
       sub-resource (list/add/delete); equivalences sub-resource; tests
-- [ ] **M1.5 Supplies table** — TanStack Table: name, brand, group, supplier, pack, cost/pack,
+- [x] **M1.5 Supplies table** — TanStack Table: name, brand, group, supplier, pack, cost/pack,
       unit cost, last update; filters + search; sortable
-- [ ] **M1.6 Supply form** — create/edit dialog (RHF + Zod), deactivate
-- [ ] **M1.7 Price history panel** — side sheet with history and "add price"
-- [ ] **M1.8 Excel import** — `scripts/import_supplies.py` for sheet "Base Datos Productos" (openpyxl), dry-run mode
+- [x] **M1.6 Supply form** — create/edit dialog (RHF + Zod), deactivate
+- [x] **M1.7 Price history panel** — side sheet with history and "add price"
+- [x] **M1.8 Excel import** — `scripts/import_supplies.py` for sheet "Base Datos Productos" (openpyxl), dry-run mode
 
 ## M2 — Recipes & costing engine (`m2-recipes`)
 

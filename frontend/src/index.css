@@ -2,6 +2,9 @@
 @import '@fontsource-variable/inter';
 @import './theme/tokens.css';
 
+/* Dark mode is opt-in via a `.dark` class (not the OS setting) until a dark token set exists. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 

@@ -39,6 +39,7 @@ in `ROADMAP.md`. **At the end:** tick checkboxes in `ROADMAP.md` and append an e
 | `make migration m="msg"` | autogenerate a new Alembic revision |
 | `make types` | dump OpenAPI from the app and regenerate TS types |
 | `make backup` | timestamped copy of the DB into `data/backups/` (or `$BACKUP_DIR`) |
+| `make import-supplies file=x.xlsx [args=--dry-run]` | import the template's "Base Datos Productos" sheet |
 
 Always run `make test` and `make types` before calling a task done.
 
@@ -55,7 +56,10 @@ Always run `make test` and `make types` before calling a task done.
 7. Channel margin: `price_ex_vat = pvp / (1 + vat)`; `margin = price_ex_vat − cost − fee`.
    Bank fee applies to direct sales; on platforms only the platform fee applies.
    `suggested_price = cost / target_food_cost% × (1 + vat)`.
-8. **Always add or update tests in `tests/test_costing.py` when touching cost calculation.**
+8. Current supply cost = average of the latest up-to-3 prices (1 → that price, 2 → avg of 2), or
+   latest only, per the `cost_mode` setting (`services/supply_cost.py`).
+9. **Always add or update tests in `tests/test_costing.py` / `tests/test_supply_cost.py` when touching
+   cost calculation.**
 
 ## Conventions
 
@@ -64,9 +68,17 @@ Always run `make test` and `make types` before calling a task done.
 - Money display: `₡ 1.234,50` via `formatCRC()` in `frontend/src/lib/format.ts`;
   numbers use `tabular-nums` and are right-aligned.
 - Backend layout: `models/` (SQLModel tables), `schemas/` (API in/out), `routers/`,
-  `services/` (`units.py`, `costing.py`). All routes are mounted under `/api`.
-- Frontend layout: `api/` (client + generated types), `components/{ui,layout,tables}`,
-  `pages/`, `theme/`.
+  `services/` (`units.py`, `supply_cost.py`, `costing.py`). All routes are mounted under `/api`.
+- DB columns: money/quantities use `DecimalText` (exact TEXT), enums use `value_enum()`. After
+  model changes run `make migration m="..."`; `tests/test_migrations.py` fails on drift.
+- API `detail` error messages are Spanish (shown in toasts); everything else in code is English.
+- `samples_xlsx/` holds **sample** spreadsheets only (gitignored) — never load them into
+  `data/costeo.db`. For visual checks use a scratch DB: `COSTEO_DATABASE_URL=sqlite:////tmp/x.db make dev`.
+- Frontend layout: `api/` (typed client + TanStack Query hooks per resource), `components/{ui,layout,
+  tables,forms}`, `pages/<area>/`, `theme/`, `lib/` (format, units).
+- Tables use TanStack Table **v9** (`useTable` + `tableFeatureSet` in `components/tables/features.ts`).
+- Page URL state: top bar search → `?q=`, "Nuevo" button → `?nuevo=1` (page opens its form).
+- Forms: React Hook Form + Zod; numeric inputs accept `1,36` or `1.36` (`parseDecimalInput`).
 - One branch per milestone (`m0-base`, `m1-supplies`, …); small commits per task.
 
 ## Visual guidelines

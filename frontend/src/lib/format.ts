@@ -56,6 +56,13 @@ export function formatCRC(value: NumericInput, decimals = 2): string {
   return formatted.startsWith('-') ? `-₡ ${formatted.slice(1)}` : `₡ ${formatted}`
 }
 
+/** Unit costs: 4 decimals below ₡ 1 so tiny costs (e.g. a napkin at ₡ 0,0365) stay visible. */
+export function formatUnitCost(value: NumericInput): string {
+  if (value === null || value === undefined || value === '') return EMPTY
+  const magnitude = roundDecimal(value, 4).replace('-', '')
+  return formatCRC(value, magnitude.startsWith('0.') ? 4 : 2)
+}
+
 /** Fraction to percent: 0.3456 → "34,6 %" */
 export function formatPercent(value: NumericInput, decimals = 1): string {
   if (value === null || value === undefined || value === '') return EMPTY
@@ -71,4 +78,31 @@ function shiftDecimal(value: string, places: number): string {
   const newWhole = (whole + paddedFrac.slice(0, places)).replace(/^0+(?=\d)/, '')
   const rest = paddedFrac.slice(places)
   return `${negative ? '-' : ''}${newWhole}${rest ? `.${rest}` : ''}`
+}
+
+/** Quantities: up to `maxDecimals`, trailing zeros trimmed. "1.360" → "1,36"; "6" → "6". */
+export function formatQuantity(value: NumericInput, maxDecimals = 3): string {
+  const formatted = formatNumber(value, maxDecimals)
+  if (formatted === EMPTY || !formatted.includes(',')) return formatted
+  return formatted.replace(/,?0+$/, '')
+}
+
+/** ISO date "2026-10-18" → "18/10/2026". */
+export function formatDate(value: string | null | undefined): string {
+  if (!value) return EMPTY
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value)
+  return match ? `${match[3]}/${match[2]}/${match[1]}` : value
+}
+
+/** Today's date as ISO "YYYY-MM-DD" in local time (for date inputs). */
+export function todayISO(): string {
+  const now = new Date()
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`
+}
+
+/** Parse user input that may use "," as decimal separator: "1,36" → "1.36". Returns null if invalid. */
+export function parseDecimalInput(value: string): string | null {
+  const normalized = value.trim().replace(/\s/g, '').replace(',', '.')
+  return /^\d+(\.\d+)?$/.test(normalized) ? normalized : null
 }

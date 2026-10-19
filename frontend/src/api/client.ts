@@ -25,3 +25,17 @@ export class ApiError extends Error {
     this.detail = detail
   }
 }
+
+/** Human-readable (Spanish) message from an API/network error, for toasts. */
+export function errorMessage(error: unknown): string {
+  if (error instanceof ApiError) {
+    const detail = (error.detail as { detail?: unknown } | undefined)?.detail
+    if (typeof detail === 'string') return detail
+    if (Array.isArray(detail) && detail.length > 0) {
+      const first = detail[0] as { msg?: string }
+      return first.msg ?? 'Datos inválidos.'
+    }
+    return `Error del servidor (${error.status}).`
+  }
+  return 'No se pudo conectar con la API.'
+}

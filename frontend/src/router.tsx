@@ -6,7 +6,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ProductsPage } from '@/pages/ProductsPage'
 import { RecipesPage } from '@/pages/RecipesPage'
 import { SettingsPage } from '@/pages/SettingsPage'
-import { SuppliesPage } from '@/pages/SuppliesPage'
+import { SuppliesPage } from '@/pages/supplies/SuppliesPage'
 
 export const router = createBrowserRouter([
   {

@@ -20,3 +20,8 @@ OptionalText = Annotated[
 
 class ApiModel(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, from_attributes=True)
+
+
+LongOptionalText = Annotated[
+    Annotated[str, Field(max_length=2000)] | None, BeforeValidator(_blank_to_none)
+]

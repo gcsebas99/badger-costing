@@ -1,37 +1,81 @@
 import { Plus, Search } from 'lucide-react'
-import { useLocation } from 'react-router'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation, useSearchParams } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { findNavItem } from '@/navigation'
+import { findNavItem, NEW_PARAM, SEARCH_PARAM } from '@/navigation'
 
 export function TopBar() {
   const { pathname } = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams()
   const current = findNavItem(pathname)
+  const urlSearch = searchParams.get(SEARCH_PARAM) ?? ''
+  // Typed text lives locally and reaches the URL debounced, so fast typing never drops characters.
+  const [search, setSearch] = useState(urlSearch)
+  const lastPushed = useRef(urlSearch)
+
+  useEffect(() => {
+    // URL changed from outside (navigation, back button): reflect it in the input.
+    if (urlSearch !== lastPushed.current) {
+      lastPushed.current = urlSearch
+      setSearch(urlSearch)
+    }
+  }, [urlSearch])
+
+  useEffect(() => {
+    if (search === lastPushed.current) return
+    const timer = setTimeout(() => {
+      lastPushed.current = search
+      setSearchParams(
+        (params) => {
+          if (search) params.set(SEARCH_PARAM, search)
+          else params.delete(SEARCH_PARAM)
+          return params
+        },
+        { replace: true },
+      )
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [search, setSearchParams])
+
+  function openNew() {
+    setSearchParams(
+      (params) => {
+        params.set(NEW_PARAM, '1')
+        return params
+      },
+      { replace: true },
+    )
+  }
 
   return (
     <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-surface-card px-6">
       <h1 className="text-base font-semibold">{current?.label ?? 'Página no encontrada'}</h1>
 
-      <div className="relative ml-auto w-full max-w-sm">
-        <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input type="search" placeholder="Buscar…" className="h-8 pl-8" aria-label="Buscar" />
-      </div>
+      {current?.searchPlaceholder && (
+        <div className="relative ml-auto w-full max-w-sm">
+          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder={current.searchPlaceholder}
+            className="h-8 pl-8"
+            aria-label="Buscar"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </div>
+      )}
 
       {current?.newLabel && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            {/* span wrapper keeps the tooltip working on a disabled button */}
-            <span tabIndex={0}>
-              <Button size="sm" disabled>
-                <Plus />
-                {current.newLabel}
-              </Button>
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>Disponible próximamente</TooltipContent>
-        </Tooltip>
+        <Button
+          size="sm"
+          className={current.searchPlaceholder ? undefined : 'ml-auto'}
+          onClick={openNew}
+        >
+          <Plus />
+          {current.newLabel}
+        </Button>
       )}
     </header>
   )
