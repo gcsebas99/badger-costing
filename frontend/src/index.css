@@ -71,3 +71,16 @@
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
+
+/* Printable cost sheets ("Ficha de costo"): save as PDF from the browser's print dialog. */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  body {
+    background: white;
+  }
+  .print-hidden {
+    display: none !important;
+  }
+}

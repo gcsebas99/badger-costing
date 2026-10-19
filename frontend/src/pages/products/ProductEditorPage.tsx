@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft, Trash2 } from 'lucide-react'
+import { ArrowLeft, FileText, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { Link, useBlocker, useNavigate, useParams } from 'react-router'
@@ -166,6 +166,14 @@ export function ProductEditorPage() {
         <h2 className="text-lg font-semibold">{isNew ? 'Nuevo producto' : (product?.name ?? 'Cargando…')}</h2>
         {isDirty && <span className="text-xs text-muted-foreground">Cambios sin guardar</span>}
         <div className="ml-auto flex gap-2">
+          {!isNew && (
+            <Button asChild variant="outline" size="sm">
+              <Link to={`/productos/${productId}/ficha`}>
+                <FileText />
+                Ficha PDF
+              </Link>
+            </Button>
+          )}
           {!isNew && (
             <Button type="button" variant="outline" size="sm" onClick={() => setConfirmDelete(true)}>
               <Trash2 />

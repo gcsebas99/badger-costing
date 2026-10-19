@@ -19,7 +19,7 @@ export function Sidebar() {
       </div>
 
       <nav className="mt-4 flex flex-1 flex-col gap-0.5 px-3" aria-label="Navegación principal">
-        {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
+        {NAV_ITEMS.filter((item) => !item.hidden).map(({ path, label, icon: Icon }) => (
           <NavLink
             key={path}
             to={path}

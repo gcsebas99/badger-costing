@@ -85,11 +85,12 @@ and Uber Eats, red when below threshold.
 
 **Done when:** opening the app shows which products need a price review.
 
-- [ ] **M4.1 Dashboard** — products under margin threshold, supplies with largest recent increase,
+- [x] **M4.1 Dashboard** — products under margin threshold, supplies with largest recent increase,
       recipes with unpriced items
-- [ ] **M4.2 Impact simulator** — "if cheese +10%, which products change and by how much"
-- [ ] **M4.3 Export** — cost sheet PDF, tables CSV
-- [ ] **M4.4 Backup** — backup button in Ajustes (reuses `make backup` logic), list/download backups
+- [x] **M4.2 Impact simulator** — "if cheese +10%, which products change and by how much"
+- [x] **M4.3 Export** — cost sheets as printable pages (browser "Guardar como PDF") for recipes and
+      products; CSV for supplies, recipes and the product analysis (Excel-friendly, `;` + `,`)
+- [x] **M4.4 Backup** — backup button in Ajustes (reuses `make backup` logic), list/download backups
 
 ## M5 — Menu engineering & manual (`m5-menu`)
 

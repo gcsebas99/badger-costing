@@ -10,6 +10,7 @@ import {
   useSupplies,
   useUpdateSupply,
 } from '@/api/supplies'
+import { ExportButton } from '@/components/ExportButton'
 import { DataTable } from '@/components/tables/DataTable'
 import {
   AlertDialog,
@@ -115,9 +116,12 @@ export function SuppliesPage() {
             )
           }
         />
-        <span className="text-xs text-muted-foreground tabular-nums">
-          {supplies ? `${supplies.length} suministro${supplies.length === 1 ? '' : 's'}` : ''}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground tabular-nums">
+            {supplies ? `${supplies.length} suministro${supplies.length === 1 ? '' : 's'}` : ''}
+          </span>
+          <ExportButton kind="suministros" />
+        </div>
       </div>
 
       <section className="overflow-hidden rounded-lg border bg-surface-card">

@@ -2,6 +2,7 @@ import { ChefHat } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router'
 
 import { type RecipeSummary, useRecipeFacets, useRecipes } from '@/api/recipes'
+import { ExportButton } from '@/components/ExportButton'
 import { EmptyState } from '@/components/layout/EmptyState'
 import { DataTable } from '@/components/tables/DataTable'
 import { Button } from '@/components/ui/button'
@@ -98,9 +99,12 @@ export function RecipesPage() {
             </Button>
           )}
         </div>
-        <span className="text-xs text-muted-foreground tabular-nums">
-          {recipes ? `${recipes.length} receta${recipes.length === 1 ? '' : 's'}` : ''}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground tabular-nums">
+            {recipes ? `${recipes.length} receta${recipes.length === 1 ? '' : 's'}` : ''}
+          </span>
+          <ExportButton kind="recetas" />
+        </div>
       </div>
 
       {isError ? (

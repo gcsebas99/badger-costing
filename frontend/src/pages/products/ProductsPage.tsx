@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router'
 import { useMenuGroups } from '@/api/catalog'
 import { type ProductSummary, useProducts } from '@/api/products'
 import { useSettings } from '@/api/settings'
+import { ExportButton } from '@/components/ExportButton'
 import { EmptyState } from '@/components/layout/EmptyState'
 import { StatusBadge, SuggestedPrice } from '@/components/StatusBadge'
 import { Badge } from '@/components/ui/badge'
@@ -93,6 +94,7 @@ export function ProductsPage() {
             </Link>
           </span>
         )}
+        <ExportButton kind="productos" />
       </div>
 
       {isError ? (

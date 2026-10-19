@@ -1,4 +1,4 @@
-import { Pencil, Trash2 } from 'lucide-react'
+import { FlaskConical, Pencil, Trash2 } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
@@ -73,10 +73,18 @@ export function PriceHistorySheet({ supplyId, onOpenChange, onEdit }: PriceHisto
                 .join(' · ')}
           </SheetDescription>
           {supply && (
-            <Button variant="outline" size="sm" className="mt-2 w-fit" onClick={onEdit}>
-              <Pencil />
-              Editar suministro
-            </Button>
+            <div className="mt-2 flex gap-2">
+              <Button variant="outline" size="sm" onClick={onEdit}>
+                <Pencil />
+                Editar suministro
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/simulador?suministro=${supply.id}`}>
+                  <FlaskConical />
+                  Simular cambio de precio
+                </Link>
+              </Button>
+            </div>
           )}
         </SheetHeader>
 

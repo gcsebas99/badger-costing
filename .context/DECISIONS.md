@@ -39,6 +39,12 @@
 | D33 | 2026-10-18 | Deviation = (cost − theoretical) / theoretical; bad above upper, warn below lower | Standard "% over target"; thresholds from template (+5 % / −10 %) |
 | D34 | 2026-10-18 | Alerts: margin < threshold → bad; food cost > group target → warn; incomplete cost → warn | Margin is the hard limit; food cost is guidance |
 | D35 | 2026-10-18 | All API decimals serialized with `format(d, "f")` (`DecimalOut` / annotated types) | `str(Decimal)` can emit "4.0E+3" and broke the UI |
+| D36 | 2026-10-18 | Cost sheets ("Ficha PDF") are print-optimized pages; PDF via the browser's print dialog | No PDF library, same styling as the app; nested sub-recipe rows scaled to the amount used |
+| D37 | 2026-10-18 | CSV: UTF-8 BOM, `;` delimiter, `,` decimals, rounded (2; unit costs 4) | Opens correctly in Excel configured in Spanish |
+| D38 | 2026-10-18 | Simulator multiplies a supply's *current* cost (`supply_factors` in CostingContext); nothing is saved | Reuses the real engine end to end |
+| D39 | 2026-10-18 | "Recent increase" = latest price vs. the previous one (by date), top 8 | Simple and explainable; no time window to configure |
+| D40 | 2026-10-18 | Backup logic lives in `services/backup.py` (used by `make backup` and `/api/backups`); downloads only accept generated names | One implementation; no path traversal |
+| D41 | 2026-10-18 | Simulator is a hidden route (`/simulador`) linked from Dashboard and the supply sheet, not in the sidebar | Keeps the spec's five sidebar sections |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 

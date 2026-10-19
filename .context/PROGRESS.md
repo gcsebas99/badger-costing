@@ -4,12 +4,38 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 ## Current status
 
-- **Milestone:** M3 complete on branch `m3-products` (committed locally, not pushed) — **MVP gate**,
-  awaiting Sebas's browser review. M0–M2 are merged and pushed to `main`.
-- **Next:** M4 — Dashboard & backup (branch `m4-dashboard`). M4 and M5 can go in either order.
+- **Milestone:** M4 complete on branch `m4-dashboard` (committed locally, not pushed) — awaiting
+  Sebas's browser review. M0–M3 (MVP) are merged and pushed to `main`.
+- **Next:** M5 — Menu engineering & manual (branch `m5-menu`). Needs: the recipe manual `.md` files
+  (location + a sample) and how sales data will be provided (CSV columns / period).
 - **Setup for real use:** Ajustes → create menu groups (and platforms when used); bank fee is 0 % by
   default.
 - **Remote:** `origin` = https://github.com/gcsebas99/badger-costing.git
+
+---
+
+## 2026-10-18 · M4 — Dashboard & backup (`m4-dashboard`)
+
+**Done**
+- Services: `dashboard.py` (KPIs, products to review with Spanish reasons, latest-vs-previous price
+  increases, incomplete recipes/products, unpriced supplies), `simulation.py` (what-if via
+  `supply_factors`), `csv_export.py`, `backup.py` (shared with `make backup`).
+- API: `GET /api/dashboard`, `POST /api/simulate`, `GET /api/export/{suministros|recetas|productos}.csv`,
+  `GET/POST /api/backups`, `GET /api/backups/{name}`.
+- Frontend: real Dashboard (KPIs, products to review, price increases with "Impacto" links,
+  incomplete costs); Simulador de impacto (`/simulador`, multi-supply, before/after cost and margins
+  per channel, new suggested price, affected recipes); CSV buttons on Suministros/Recetas/Productos;
+  printable "Ficha PDF" for recipes and products (sub-recipes expanded and scaled); Respaldos in Ajustes.
+- Verified in Chrome on the scratch DB (backups to a scratch dir): dashboard flags the burger
+  (Uber margin 36,2 %, +14,8 % vs. theoretical); beef +10 % → burger +₡106,43; ficha scaling sums
+  match; backup created and listed; CSV headers/content correct.
+- Tests: backend 124, frontend 33.
+
+**Gotchas**
+- The ficha first showed full sub-recipe batches under a 20 g line — now scaled by
+  `base_quantity / batch yield`.
+- `uv run uvicorn --reload` respawns its worker; stopping a background `make dev` may need killing
+  the worker PID too.
 
 ---
 

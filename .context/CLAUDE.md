@@ -78,14 +78,17 @@ Always run `make test` and `make types` before calling a task done.
   model changes run `make migration m="..."`; `tests/test_migrations.py` fails on drift.
 - API `detail` error messages are Spanish (shown in toasts); everything else in code is English.
 - `samples_xlsx/` holds **sample** spreadsheets only (gitignored) — never load them into
-  `data/costeo.db`. For visual checks use a scratch DB: `COSTEO_DATABASE_URL=sqlite:////tmp/x.db make dev`.
+  `data/costeo.db`. For visual checks use a scratch DB: `COSTEO_DATABASE_URL=sqlite:////tmp/x.db COSTEO_BACKUP_DIR=/tmp/b make dev`.
 - Frontend layout: `api/` (typed client + TanStack Query hooks per resource), `components/{ui,layout,
   tables,forms}`, `pages/<area>/`, `theme/`, `lib/` (format, units).
 - Tables use TanStack Table **v9** (`useTable` + `tableFeatureSet` in `components/tables/features.ts`).
 - Page URL state: top bar search → `?q=`, "Nuevo" button → `?nuevo=1` (page opens its form).
 - Forms: React Hook Form + Zod; numeric inputs accept `1,36` or `1.36` (`parseDecimalInput`); loaded
   values use `toDecimalInput`. Percent inputs ↔ API rates via `percentInputToRate` / `rateToPercentInput`.
-- Full-page editors (recipes) live at `/<area>/nueva` and `/<area>/:id`; "Nuevo" uses `NavItem.newPath`.
+- Full-page editors live at `/<area>/nueva|nuevo` and `/<area>/:id`; "Nuevo" uses `NavItem.newPath`.
+  Printable sheets at `/<area>/:id/ficha` (outside the layout). Hidden routes use `NavItem.hidden`.
+- Dashboard data: `GET /api/dashboard`; what-if: `POST /api/simulate`; CSV: `/api/export/{kind}.csv`;
+  backups: `/api/backups`.
 - Editors' live cost: debounced form snapshot → `POST /api/recipes/preview` / `/api/products/preview`.
 - Comboboxes (cmdk) use `commandFilter` (accent-insensitive). Shared row editor:
   `components/forms/IngredientRows.tsx` + `ingredientRow.ts`.

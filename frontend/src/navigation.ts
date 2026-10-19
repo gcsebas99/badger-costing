@@ -1,5 +1,6 @@
 import {
   ChefHat,
+  FlaskConical,
   LayoutDashboard,
   type LucideIcon,
   Package,
@@ -17,6 +18,8 @@ export interface NavItem {
   newPath?: string
   /** Placeholder for the top bar search; the page reads the term from `?q=`. */
   searchPlaceholder?: string
+  /** Not shown in the sidebar (reached from other pages), but titled in the top bar. */
+  hidden?: boolean
 }
 
 export const NAV_ITEMS: NavItem[] = [
@@ -45,6 +48,7 @@ export const NAV_ITEMS: NavItem[] = [
     searchPlaceholder: 'Buscar producto…',
   },
   { path: '/ajustes', label: 'Ajustes', icon: Settings },
+  { path: '/simulador', label: 'Simulador de impacto', icon: FlaskConical, hidden: true },
 ]
 
 export function findNavItem(pathname: string): NavItem | undefined {

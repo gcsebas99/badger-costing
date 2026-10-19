@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 
+import { BackupsSection } from './BackupsSection'
 import { MenuGroupsTable, PlatformsTable } from './CatalogTables'
 import { SettingsForm } from './SettingsForm'
 
@@ -14,6 +15,9 @@ export function SettingsPage() {
       </Section>
       <Section title="Plataformas de delivery" description="Su comisión se descuenta del margen en lugar de la comisión bancaria.">
         <PlatformsTable />
+      </Section>
+      <Section title="Respaldos" description="Copia completa de la base de datos (suministros, recetas, productos y ajustes).">
+        <BackupsSection />
       </Section>
     </div>
   )
