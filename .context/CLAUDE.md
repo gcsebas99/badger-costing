@@ -56,9 +56,11 @@ Always run `make test` and `make types` before calling a task done.
 7. Channel margin: `price_ex_vat = pvp / (1 + vat)`; `margin = price_ex_vat − cost − fee`.
    Bank fee applies to direct sales; on platforms only the platform fee applies.
    `suggested_price = cost / target_food_cost% × (1 + vat)`.
-8. Current supply cost = average of the latest up-to-3 prices (1 → that price, 2 → avg of 2), or
+8. Recipe total = ingredients + optional safety margin (`safety_margin_rate`); a sub-recipe's cost
+   per unit includes its margin. Missing price / bad unit → item flagged, recipe `complete=false`.
+9. Current supply cost = average of the latest up-to-3 prices (1 → that price, 2 → avg of 2), or
    latest only, per the `cost_mode` setting (`services/supply_cost.py`).
-9. **Always add or update tests in `tests/test_costing.py` / `tests/test_supply_cost.py` when touching
+10. **Always add or update tests in `tests/test_costing.py` / `tests/test_supply_cost.py` when touching
    cost calculation.**
 
 ## Conventions
@@ -78,7 +80,10 @@ Always run `make test` and `make types` before calling a task done.
   tables,forms}`, `pages/<area>/`, `theme/`, `lib/` (format, units).
 - Tables use TanStack Table **v9** (`useTable` + `tableFeatureSet` in `components/tables/features.ts`).
 - Page URL state: top bar search → `?q=`, "Nuevo" button → `?nuevo=1` (page opens its form).
-- Forms: React Hook Form + Zod; numeric inputs accept `1,36` or `1.36` (`parseDecimalInput`).
+- Forms: React Hook Form + Zod; numeric inputs accept `1,36` or `1.36` (`parseDecimalInput`); loaded
+  values use `toDecimalInput`. Percent inputs ↔ API rates via `percentInputToRate` / `rateToPercentInput`.
+- Full-page editors (recipes) live at `/<area>/nueva` and `/<area>/:id`; "Nuevo" uses `NavItem.newPath`.
+- Recipe editor live cost: debounced form snapshot → `POST /api/recipes/preview`.
 - One branch per milestone (`m0-base`, `m1-supplies`, …); small commits per task.
 
 ## Visual guidelines

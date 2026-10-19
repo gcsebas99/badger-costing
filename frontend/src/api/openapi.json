@@ -195,10 +195,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Recipe being edited (left out of the sub-recipe options).",
+              "description": "Recipe being edited: it and every recipe containing it are left out.",
               "title": "Exclude Recipe Id"
             },
-            "description": "Recipe being edited (left out of the sub-recipe options)."
+            "description": "Recipe being edited: it and every recipe containing it are left out."
           }
         ],
         "responses": {

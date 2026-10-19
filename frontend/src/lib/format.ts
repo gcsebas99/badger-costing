@@ -60,7 +60,13 @@ export function formatCRC(value: NumericInput, decimals = 2): string {
 export function formatUnitCost(value: NumericInput): string {
   if (value === null || value === undefined || value === '') return EMPTY
   const magnitude = roundDecimal(value, 4).replace('-', '')
-  return formatCRC(value, magnitude.startsWith('0.') ? 4 : 2)
+  const isSmall = magnitude.startsWith('0.') && magnitude !== '0.0000'
+  return formatCRC(value, isSmall ? 4 : 2)
+}
+
+/** API decimal → form input text in Spanish style: "0.5" → "0,5" (inputs accept both). */
+export function toDecimalInput(value: string | null | undefined): string {
+  return value ? value.replace('.', ',') : ''
 }
 
 /** Fraction to percent: 0.3456 → "34,6 %" */
@@ -105,4 +111,23 @@ export function todayISO(): string {
 export function parseDecimalInput(value: string): string | null {
   const normalized = value.trim().replace(/\s/g, '').replace(',', '.')
   return /^\d+(\.\d+)?$/.test(normalized) ? normalized : null
+}
+
+/** Fraction → percent input text: "0.13" → "13"; "0.055" → "5,5". */
+export function rateToPercentInput(rate: string | null | undefined): string {
+  if (!rate) return ''
+  const percent = Number(rate) * 100
+  return percent === 0 ? '' : formatQuantity(String(Math.round(percent * 1000) / 1000), 3)
+}
+
+/** Percent input text → fraction string: "13" → "0.13"; "5,5" → "0.055"; "" → "0". */
+export function percentInputToRate(value: string): string | null {
+  if (!value.trim()) return '0'
+  const parsed = parseDecimalInput(value)
+  if (parsed === null) return null
+  // Shift the decimal point two places left without floats.
+  const [whole, frac = ''] = parsed.split('.')
+  const padded = whole.padStart(3, '0')
+  const result = `${padded.slice(0, -2)}.${padded.slice(-2)}${frac}`.replace(/^0+(?=\d)/, '')
+  return result.replace(/\.?0+$/, '') || '0'
 }

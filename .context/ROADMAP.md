@@ -54,13 +54,16 @@ Supply catalog with price history.
 
 **Done when:** chipotle mayo uses homemade mayo as a sub-recipe, and changing the egg price changes both.
 
-- [ ] **M2.1 Models + migration** — `recipe`, `recipe_item` (type supply|recipe, ref_id, net qty, unit, waste%)
-- [ ] **M2.2 Tests first** — Pizza Margarita from the template; 3-level chain
+- [x] **M2.1 Models + migration** — `recipe`, `recipe_item` (type supply|recipe, ref_id, net qty, unit, waste%)
+- [x] **M2.2 Tests first** — Pizza Margarita from the template; 3-level chain
       (homemade mayo → chipotle mayo → burger); cycle; missing equivalence; missing price
-- [ ] **M2.3 `costing.py`** — recursive cost, gross qty, per-item breakdown, cycle detection, per-request cache
-- [ ] **M2.4 API** — recipe CRUD (cycle check on save), `GET /recipes/{id}/cost`, `GET /recipes/{id}/usages`
-- [ ] **M2.5 Recipes list** — grouped by manual category (Bases, Salsas, Proteínas…)
-- [ ] **M2.6 Recipe editor** — dynamic rows, supply/sub-recipe combobox, live total / per-unit / per-portion cost
+- [x] **M2.3 `costing.py`** — recursive cost, gross qty, per-item breakdown, cycle detection, per-request cache
+- [x] **M2.4 API** — recipe CRUD (cycle check on save), `GET /recipes/{id}/cost`, `GET /recipes/{id}/usages`
+- [x] **M2.5 Recipes list** — grouped by manual category (Bases, Salsas, Proteínas…)
+- [x] **M2.6 Recipe editor** — dynamic rows, supply/sub-recipe combobox, live total / per-unit / per-portion cost
+- [x] **M2.7 Extras** — safety margin per recipe (template's "Margen de seguridad"), ingredient options
+      endpoint (allowed units, cycle-safe), supply/recipe delete guards (409 when used), "Se usa en"
+      in the supply price sheet and recipe editor, unsaved-changes guard
 
 ## M3 — Products & pricing (`m3-products`)  · MVP gate
 

@@ -4,11 +4,42 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 ## Current status
 
-- **Milestone:** M1 complete on branch `m1-supplies` (committed locally, not pushed) — awaiting
-  Sebas's browser review. M0 is merged and pushed to `main`.
-- **Next:** M2 — Recipes & costing engine (branch `m2-recipes`). Open question for M2: are manual
-  portions (g/ml) the sale unit of sub-recipes? (see `DECISIONS.md`).
+- **Milestone:** M2 complete on branch `m2-recipes` (committed locally, not pushed) — awaiting
+  Sebas's browser review. M0 and M1 are merged and pushed to `main`.
+- **Next:** M3 — Products & pricing (branch `m3-products`), the MVP gate. Needs: platforms and their %
+  (Uber Eats, Rappi, DiDi Food?) and whether target food cost % is global or per menu group.
 - **Remote:** `origin` = https://github.com/gcsebas99/badger-costing.git
+
+---
+
+## 2026-10-18 · M2 — Recipes & costing engine (`m2-recipes`)
+
+**Done**
+- Models + migration `0003`: `recipe` (yield qty+unit, portions, category, is_subrecipe,
+  safety_margin_rate) and `recipe_item` (supply_id | subrecipe_id + CHECK, net qty, unit, waste_rate,
+  position).
+- `services/costing.py`: `CostingContext` (loads everything once, memoizes), gross-quantity costing,
+  sub-recipe recursion, per-item breakdown with status, nested sub-recipe tree, `check_no_cycle`,
+  `draft_cost` for unsaved recipes, `contains_recipe`.
+- Tests first: Masa de pizza matches the template exactly; Salsa Pomodoro / Pizza margarita match
+  the template plus the gross-vs-net waste difference; 3-level chain mayo → chipotle mayo → burger;
+  egg price change propagation; equivalence; missing price; bad units; cycles; preview.
+- API: `/api/recipes` CRUD (items replaced on PATCH), `/preview`, `/{id}/cost`, `/{id}/usages`,
+  `/facets`, `/ingredients`; `/api/supplies/{id}/usages`; 409 on deleting used supplies/recipes.
+- Frontend: Recetas list grouped by category (filters, search, status badges); full-page editor
+  with ingredient combobox (cmdk), allowed units per ingredient, waste %, gross qty, live per-row
+  cost and share, cost summary (ingredients, margin, total, per kg, per portion, portion size),
+  incomplete-cost warnings, "Se usa en", delete, unsaved-changes guard; "Se usa en" in supply sheet.
+- Verified in Chrome on a scratch DB: built chipotle mayo from homemade mayo via the UI
+  (₡744,50); egg price change moved both (₡1.039,01 → ₡1.061,51 and ₡744,50 → ₡755,75 with
+  avg-of-2); cycle shown live; unsaved-changes dialog. No console errors.
+- Tests: backend 89, frontend 26.
+
+**Gotchas**
+- `SQLModel.model_validate(dict)` reads relationships with `getattr` → a relationship named `items`
+  picks up `dict.items`. Hence `Recipe.ingredients`.
+- `useWatch({ control })` may return a new object every render; debounce a JSON snapshot instead.
+- Test DB needs `PRAGMA foreign_keys=ON` too (conftest) or RESTRICT FKs aren't enforced.
 
 ---
 

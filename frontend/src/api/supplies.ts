@@ -41,6 +41,15 @@ export function useSupply(id: number | null) {
   })
 }
 
+export function useSupplyUsages(id: number | null) {
+  return useQuery({
+    queryKey: [...supplyKeys.detail(id ?? 0), 'usages'],
+    queryFn: async () =>
+      unwrap(await api.GET('/api/supplies/{supply_id}/usages', { params: { path: { supply_id: id! } } })),
+    enabled: id !== null,
+  })
+}
+
 export function useSupplyFacets() {
   return useQuery({
     queryKey: supplyKeys.facets,
@@ -55,7 +64,10 @@ function useSupplyMutation<TVariables>(
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: supplyKeys.all }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: supplyKeys.all })
+      await queryClient.invalidateQueries({ queryKey: ['recipes'] })
+    },
   })
 }
 

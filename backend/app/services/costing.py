@@ -210,6 +210,24 @@ class CostingContext:
 
     # Cycles
 
+    def contains_recipe(self, recipe_id: int, target_id: int) -> bool:
+        """Whether `recipe_id` uses `target_id` anywhere in its tree (or is it)."""
+        seen: set[int] = set()
+
+        def visit(current: int) -> bool:
+            if current == target_id:
+                return True
+            if current in seen or current not in self._recipes:
+                return False
+            seen.add(current)
+            return any(
+                visit(line.ref_id)
+                for line in self._recipes[current].items
+                if line.item_type == RecipeItemType.RECIPE
+            )
+
+        return visit(recipe_id)
+
     def check_no_cycle(self, spec: RecipeSpec) -> None:
         """Raise CycleError if `spec` (replacing its saved version) would contain itself."""
         graph = dict(self._recipes)

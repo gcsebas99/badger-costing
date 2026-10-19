@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 import type { Supply, SupplyCreate, SupplyUpdate } from '@/api/supplies'
-import { parseDecimalInput, todayISO } from '@/lib/format'
+import { parseDecimalInput, toDecimalInput, todayISO } from '@/lib/format'
 
 const units = ['g', 'kg', 'ml', 'L', 'pz'] as const
 const equivalenceUnits = ['g', 'kg', 'ml', 'L'] as const
@@ -60,11 +60,11 @@ export function supplyToForm(supply: Supply): SupplyFormValues {
     brand: supply.brand ?? '',
     group: supply.group,
     supplier: supply.supplier ?? '',
-    packQty: supply.pack_qty,
+    packQty: toDecimalInput(supply.pack_qty),
     packUnit: supply.pack_unit,
     active: supply.active,
     notes: supply.notes ?? '',
-    equivalenceQty: supply.equivalence?.quantity ?? '',
+    equivalenceQty: toDecimalInput(supply.equivalence?.quantity),
     equivalenceUnit: (supply.equivalence?.unit as SupplyFormValues['equivalenceUnit']) ?? 'g',
   }
 }

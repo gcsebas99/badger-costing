@@ -164,7 +164,8 @@ def recipe_facets(session: SessionDep):
 def ingredient_options(
     session: SessionDep,
     exclude_recipe_id: int | None = Query(
-        default=None, description="Recipe being edited (left out of the sub-recipe options)."
+        default=None,
+        description="Recipe being edited: it and every recipe containing it are left out.",
     ),
 ):
     """Supplies and sub-recipes that can go into a recipe, with the units each accepts."""
@@ -199,7 +200,8 @@ def ingredient_options(
 
     subrecipes = session.exec(select(Recipe).where(Recipe.is_subrecipe == True)).all()  # noqa: E712
     for recipe in subrecipes:
-        if recipe.id == exclude_recipe_id:
+        # Offering a recipe that contains the one being edited would only create a cycle.
+        if exclude_recipe_id is not None and ctx.contains_recipe(recipe.id, exclude_recipe_id):
             continue
         cost = ctx.recipe_cost(recipe.id)
         options.append(

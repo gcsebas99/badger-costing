@@ -982,7 +982,7 @@ export interface operations {
     ingredient_options: {
         parameters: {
             query?: {
-                /** @description Recipe being edited (left out of the sub-recipe options). */
+                /** @description Recipe being edited: it and every recipe containing it are left out. */
                 exclude_recipe_id?: number | null;
             };
             header?: never;

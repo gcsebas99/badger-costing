@@ -321,6 +321,13 @@ def test_self_reference_is_a_cycle(session, chain):
         ctx.check_no_cycle(spec)
 
 
+def test_contains_recipe_is_transitive(session, chain):
+    ctx = context(session)
+    assert ctx.contains_recipe(chain["burger"].id, chain["mayo"].id)
+    assert ctx.contains_recipe(chain["mayo"].id, chain["mayo"].id)
+    assert not ctx.contains_recipe(chain["mayo"].id, chain["burger"].id)
+
+
 def test_draft_cost_preview_uses_unsaved_changes(session, chain):
     ctx = context(session)
     spec = ctx.spec_for(chain["chipotle_mayo"].id)

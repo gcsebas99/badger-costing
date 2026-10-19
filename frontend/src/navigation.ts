@@ -13,6 +13,8 @@ export interface NavItem {
   icon: LucideIcon
   /** Label for the top bar "Nuevo" action; the page opens its form on `?nuevo=1`. */
   newLabel?: string
+  /** If set, "Nuevo" navigates here instead of adding `?nuevo=1` (full-page editors). */
+  newPath?: string
   /** Placeholder for the top bar search; the page reads the term from `?q=`. */
   searchPlaceholder?: string
 }
@@ -26,7 +28,14 @@ export const NAV_ITEMS: NavItem[] = [
     newLabel: 'Nuevo suministro',
     searchPlaceholder: 'Buscar suministro o marca…',
   },
-  { path: '/recetas', label: 'Recetas', icon: ChefHat },
+  {
+    path: '/recetas',
+    label: 'Recetas',
+    icon: ChefHat,
+    newLabel: 'Nueva receta',
+    newPath: '/recetas/nueva',
+    searchPlaceholder: 'Buscar receta…',
+  },
   { path: '/productos', label: 'Productos', icon: UtensilsCrossed },
   { path: '/ajustes', label: 'Ajustes', icon: Settings },
 ]

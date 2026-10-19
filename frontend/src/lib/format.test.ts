@@ -6,6 +6,8 @@ import {
   formatQuantity,
   formatUnitCost,
   parseDecimalInput,
+  percentInputToRate,
+  rateToPercentInput,
   roundDecimal,
 } from './format'
 
@@ -100,5 +102,24 @@ describe('formatUnitCost', () => {
     expect(formatUnitCost('216.6666')).toBe('₡ 216,67')
     expect(formatUnitCost('0.99996')).toBe('₡ 1,00')
     expect(formatUnitCost(null)).toBe('—')
+    expect(formatUnitCost('0')).toBe('₡ 0,00')
+  })
+})
+
+describe('percent ↔ rate', () => {
+  it('converts rates to percent input text', () => {
+    expect(rateToPercentInput('0.13')).toBe('13')
+    expect(rateToPercentInput('0.055')).toBe('5,5')
+    expect(rateToPercentInput('0')).toBe('')
+    expect(rateToPercentInput(null)).toBe('')
+  })
+
+  it('converts percent input to exact rate strings', () => {
+    expect(percentInputToRate('13')).toBe('0.13')
+    expect(percentInputToRate('5,5')).toBe('0.055')
+    expect(percentInputToRate('100')).toBe('1')
+    expect(percentInputToRate('0,5')).toBe('0.005')
+    expect(percentInputToRate('')).toBe('0')
+    expect(percentInputToRate('abc')).toBeNull()
   })
 })

@@ -277,8 +277,12 @@ def test_ingredient_options(client, mayo_chain):
     by_name = {o["name"]: o for o in options}
 
     assert "Mayo casera" not in by_name  # the recipe being edited
-    assert by_name["Mayo chipotle"]["item_type"] == "recipe"
-    assert by_name["Mayo chipotle"]["allowed_units"] == ["g", "kg"]
+    assert "Mayo chipotle" not in by_name  # contains the recipe being edited → would be a cycle
+    assert by_name["Aceite"]["item_type"] == "supply"
+
+    unrestricted = {o["name"]: o for o in client.get("/api/recipes/ingredients").json()}
+    assert unrestricted["Mayo chipotle"]["item_type"] == "recipe"
+    assert unrestricted["Mayo chipotle"]["allowed_units"] == ["g", "kg"]
     assert by_name["Aceite"]["allowed_units"] == ["ml", "L"]
     # egg: bought in pz, 1 pz = 50 g → usable in pz and in g/kg
     assert by_name["Huevo"]["allowed_units"] == ["pz", "g", "kg"]

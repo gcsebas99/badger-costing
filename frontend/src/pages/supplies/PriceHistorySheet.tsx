@@ -1,10 +1,11 @@
 import { Pencil, Trash2 } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
+import { Link } from 'react-router'
 import { toast } from 'sonner'
 
 import { errorMessage } from '@/api/client'
 import { useSettings } from '@/api/settings'
-import { useAddPrice, useDeletePrice, useSupply } from '@/api/supplies'
+import { useAddPrice, useDeletePrice, useSupply, useSupplyUsages } from '@/api/supplies'
 import { FormField } from '@/components/forms/FormField'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -41,6 +42,7 @@ interface PriceHistorySheetProps {
 
 export function PriceHistorySheet({ supplyId, onOpenChange, onEdit }: PriceHistorySheetProps) {
   const { data: supply } = useSupply(supplyId)
+  const { data: usages = [] } = useSupplyUsages(supplyId)
   const { data: settings } = useSettings()
   const deletePrice = useDeletePrice()
 
@@ -92,6 +94,20 @@ export function PriceHistorySheet({ supplyId, onOpenChange, onEdit }: PriceHisto
             {supply.equivalence && (
               <p className="text-xs text-muted-foreground">
                 Equivalencia: 1 pz = {formatQuantity(supply.equivalence.quantity)} {supply.equivalence.unit}
+              </p>
+            )}
+
+            {usages.length > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Se usa en:{' '}
+                {usages.map((recipe, index) => (
+                  <span key={recipe.id}>
+                    {index > 0 && ', '}
+                    <Link to={`/recetas/${recipe.id}`} className="text-primary hover:underline">
+                      {recipe.name}
+                    </Link>
+                  </span>
+                ))}
               </p>
             )}
 
