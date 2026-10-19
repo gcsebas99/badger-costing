@@ -19,7 +19,7 @@ from app.schemas.product import (
 from app.schemas.recipe import RecipeItemIn, RecipeItemRead
 from app.services.costing import ItemSpec
 from app.services.product_cost import ProductSpec, spec_from_product
-from app.services.product_pricing import PricingContext, PricingInput
+from app.services.product_pricing import PricingContext, PricingInput, pricing_input
 from app.services.text import fold
 
 router = APIRouter(prefix="/products", tags=["products"])
@@ -106,16 +106,6 @@ def _component_rows(items: list[RecipeItemIn], packaging: list[RecipeItemIn]) ->
     return rows
 
 
-def _pricing_input(product: Product) -> PricingInput:
-    return PricingInput(
-        spec=spec_from_product(product),
-        menu_group_id=product.menu_group_id,
-        direct_price=product.direct_price,
-        platform_prices={p.platform_id: p.price for p in product.platform_prices},
-        target_cost=product.target_cost,
-    )
-
-
 def _item_read(line: ProductItem) -> RecipeItemRead:
     return RecipeItemRead(
         id=line.id,
@@ -131,7 +121,7 @@ def _item_read(line: ProductItem) -> RecipeItemRead:
 def _to_detail(session: Session, product_id: int) -> ProductDetail:
     product = _get_product(session, product_id)
     ctx = PricingContext(session)
-    pricing = ctx.price(_pricing_input(product))
+    pricing = ctx.price(pricing_input(product))
     components = sorted(product.components, key=lambda c: c.position)
     return ProductDetail.model_validate(
         {
@@ -175,7 +165,7 @@ def list_products(
 
     rows = []
     for product in sorted(products, key=sort_key):
-        pricing = ctx.price(_pricing_input(product))
+        pricing = ctx.price(pricing_input(product))
         rows.append(
             ProductSummary(
                 id=product.id,

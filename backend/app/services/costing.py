@@ -18,7 +18,7 @@ One CostingContext loads all supplies and recipes once and memoizes results (per
 """
 
 import copy
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from decimal import Decimal
 from enum import StrEnum
 
@@ -154,15 +154,28 @@ class RecipeCost:
 
 
 class CostingContext:
-    def __init__(self, supplies: dict[int, Supply], recipes: dict[int, RecipeSpec], mode: CostMode):
+    def __init__(
+        self,
+        supplies: dict[int, Supply],
+        recipes: dict[int, RecipeSpec],
+        mode: CostMode,
+        supply_factors: dict[int, Decimal] | None = None,
+    ):
         self._supplies = supplies
         self._recipes = recipes
         self._mode = mode
+        # What-if simulation: multiply a supply's current cost (1.10 = +10 %).
+        self._supply_factors = supply_factors or {}
         self._supply_costs: dict[int, SupplyCost] = {}
         self._recipe_costs: dict[int, RecipeCost] = {}
 
     @classmethod
-    def load(cls, session: Session, mode: CostMode) -> "CostingContext":
+    def load(
+        cls,
+        session: Session,
+        mode: CostMode,
+        supply_factors: dict[int, Decimal] | None = None,
+    ) -> "CostingContext":
         supplies = session.exec(
             select(Supply).options(selectinload(Supply.prices), selectinload(Supply.equivalence))
         ).all()
@@ -171,6 +184,7 @@ class CostingContext:
             {s.id: s for s in supplies},
             {r.id: spec_from_recipe(r) for r in recipes},
             mode,
+            supply_factors,
         )
 
     # Spec helpers (used by routers to build drafts and by tests)
@@ -195,9 +209,16 @@ class CostingContext:
     def supply_cost(self, supply_id: int) -> SupplyCost:
         if supply_id not in self._supply_costs:
             supply = self._supplies[supply_id]
-            self._supply_costs[supply_id] = supply_cost(
-                supply.pack_qty, supply.pack_unit, supply.prices, self._mode
-            )
+            cost = supply_cost(supply.pack_qty, supply.pack_unit, supply.prices, self._mode)
+            factor = self._supply_factors.get(supply_id)
+            if factor is not None and cost.pack_price is not None:
+                cost = replace(
+                    cost,
+                    pack_price=cost.pack_price * factor,
+                    unit_cost=cost.unit_cost * factor,
+                    reference_unit_cost=cost.reference_unit_cost * factor,
+                )
+            self._supply_costs[supply_id] = cost
         return self._supply_costs[supply_id]
 
     def recipe_cost(self, recipe_id: int) -> RecipeCost:

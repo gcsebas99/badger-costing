@@ -96,6 +96,95 @@ export interface paths {
         patch: operations["update_menu_group"];
         trace?: never;
     };
+    "/api/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Dashboard */
+        get: operations["dashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Simulate Price Change
+         * @description What-if: change supply costs by a % and see affected recipes and products.
+         */
+        post: operations["simulate_price_change"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/export/{kind}.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Csv */
+        get: operations["export_csv"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/backups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Backups */
+        get: operations["backups"];
+        put?: never;
+        /** Make Backup */
+        post: operations["make_backup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/backups/{name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download Backup */
+        get: operations["download_backup"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/products": {
         parameters: {
             query?: never;
@@ -420,6 +509,33 @@ export interface components {
          * @enum {string}
          */
         AlertLevel: "ok" | "warn" | "bad";
+        /** BackupRead */
+        BackupRead: {
+            /** Name */
+            name: string;
+            /** Size */
+            size: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** ChannelImpactRead */
+        ChannelImpactRead: {
+            /** Name */
+            name: string;
+            /** Margin Before */
+            margin_before: string;
+            /** Margin After */
+            margin_after: string;
+            /** Margin Rate Before */
+            margin_rate_before: string | null;
+            /** Margin Rate After */
+            margin_rate_after: string | null;
+            status_before: components["schemas"]["AlertLevel"];
+            status_after: components["schemas"]["AlertLevel"];
+        };
         /**
          * ChannelKind
          * @enum {string}
@@ -456,6 +572,25 @@ export interface components {
          * @enum {string}
          */
         CostMode: "average_last_3" | "latest";
+        /** DashboardRead */
+        DashboardRead: {
+            /** Active Products */
+            active_products: number;
+            /** Products Below Margin */
+            products_below_margin: number;
+            /** Incomplete Count */
+            incomplete_count: number;
+            /** Supplies Without Price */
+            supplies_without_price: number;
+            /** Products To Review */
+            products_to_review: components["schemas"]["ProductAlertRead"][];
+            /** Price Increases */
+            price_increases: components["schemas"]["PriceIncreaseRead"][];
+            /** Incomplete */
+            incomplete: components["schemas"]["IncompleteRead"][];
+            /** Unpriced Supplies */
+            unpriced_supplies: components["schemas"]["UnpricedSupplyRead"][];
+        };
         /**
          * EquivalenceIn
          * @description 1 pz = quantity unit (unit must be mass or volume).
@@ -490,6 +625,20 @@ export interface components {
              * @enum {string}
              */
             database: "ok" | "error";
+        };
+        /** IncompleteRead */
+        IncompleteRead: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "recipe" | "product";
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Issues */
+            issues: string[];
         };
         /** IngredientOption */
         IngredientOption: {
@@ -662,6 +811,29 @@ export interface components {
             /** Supplier */
             supplier?: string | null;
         };
+        /** PriceIncreaseRead */
+        PriceIncreaseRead: {
+            /** Supply Id */
+            supply_id: number;
+            /** Name */
+            name: string;
+            /** Previous Price */
+            previous_price: string;
+            /** Latest Price */
+            latest_price: string;
+            /** Change Rate */
+            change_rate: string;
+            /**
+             * Latest Date
+             * Format: date
+             */
+            latest_date: string;
+            /**
+             * Previous Date
+             * Format: date
+             */
+            previous_date: string;
+        };
         /** PriceRead */
         PriceRead: {
             /** Id */
@@ -685,6 +857,24 @@ export interface components {
              * @description Whether this price is part of the current cost.
              */
             in_effect: boolean;
+        };
+        /** ProductAlertRead */
+        ProductAlertRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Menu Group Name */
+            menu_group_name: string;
+            status: components["schemas"]["AlertLevel"];
+            /** Total Cost */
+            total_cost: string;
+            /** Worst Margin Rate */
+            worst_margin_rate: string | null;
+            /** Worst Channel */
+            worst_channel: string | null;
+            /** Reasons */
+            reasons: string[];
         };
         /** ProductCostRead */
         ProductCostRead: {
@@ -805,6 +995,29 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /** ProductImpactRead */
+        ProductImpactRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Menu Group Name */
+            menu_group_name: string;
+            /** Cost Before */
+            cost_before: string;
+            /** Cost After */
+            cost_after: string;
+            /** Delta */
+            delta: string;
+            /** Delta Rate */
+            delta_rate: string | null;
+            /** Suggested Price After */
+            suggested_price_after: string | null;
+            status_before: components["schemas"]["AlertLevel"];
+            status_after: components["schemas"]["AlertLevel"];
+            /** Channels */
+            channels: components["schemas"]["ChannelImpactRead"][];
         };
         /**
          * ProductPreview
@@ -1027,6 +1240,23 @@ export interface components {
             /** Categories */
             categories: string[];
         };
+        /** RecipeImpactRead */
+        RecipeImpactRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** Cost Before */
+            cost_before: string;
+            /** Cost After */
+            cost_after: string;
+            /** Delta */
+            delta: string;
+            /** Delta Rate */
+            delta_rate: string | null;
+        };
         /** RecipeItemIn */
         RecipeItemIn: {
             item_type: components["schemas"]["RecipeItemType"];
@@ -1221,6 +1451,45 @@ export interface components {
             /** Deviation Lower Rate */
             deviation_lower_rate?: number | string | null;
         };
+        /** SimulationIn */
+        SimulationIn: {
+            /** Changes */
+            changes: components["schemas"]["SupplyChangeIn"][];
+        };
+        /** SimulationRead */
+        SimulationRead: {
+            /** Changes */
+            changes: components["schemas"]["SupplyChangeRead"][];
+            /** Recipes */
+            recipes: components["schemas"]["RecipeImpactRead"][];
+            /** Products */
+            products: components["schemas"]["ProductImpactRead"][];
+        };
+        /** SupplyChangeIn */
+        SupplyChangeIn: {
+            /** Supply Id */
+            supply_id: number;
+            /**
+             * Change Rate
+             * @description 0.10 = +10 %
+             */
+            change_rate: number | string;
+        };
+        /** SupplyChangeRead */
+        SupplyChangeRead: {
+            /** Supply Id */
+            supply_id: number;
+            /** Name */
+            name: string;
+            /** Change Rate */
+            change_rate: string;
+            /** Reference Unit */
+            reference_unit: string;
+            /** Cost Before */
+            cost_before: string | null;
+            /** Cost After */
+            cost_after: string | null;
+        };
         /** SupplyCreate */
         SupplyCreate: {
             /** Name */
@@ -1390,6 +1659,13 @@ export interface components {
          * @enum {string}
          */
         Unit: "g" | "kg" | "ml" | "L" | "pz";
+        /** UnpricedSupplyRead */
+        UnpricedSupplyRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -1654,6 +1930,159 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["MenuGroupRead"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    dashboard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardRead"];
+                };
+            };
+        };
+    };
+    simulate_price_change: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimulationIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimulationRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_csv: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    backups: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BackupRead"][];
+                };
+            };
+        };
+    };
+    make_backup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BackupRead"];
+                };
+            };
+        };
+    };
+    download_backup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

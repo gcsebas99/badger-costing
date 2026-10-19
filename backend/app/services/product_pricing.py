@@ -3,9 +3,10 @@
 from dataclasses import dataclass
 from decimal import Decimal
 
+from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
-from app.models.product import MenuGroup, SalesPlatform
+from app.models.product import MenuGroup, Product, SalesPlatform
 from app.models.settings import AppSettings
 from app.services.costing import CostingContext
 from app.services.pricing import (
@@ -19,7 +20,7 @@ from app.services.pricing import (
     suggested_price,
     worst,
 )
-from app.services.product_cost import ProductCost, ProductSpec, product_cost
+from app.services.product_cost import ProductCost, ProductSpec, product_cost, spec_from_product
 from app.services.settings import get_settings
 
 
@@ -44,10 +45,29 @@ class PricingInput:
     target_cost: Decimal | None
 
 
+def load_products(session: Session, active: bool | None = None) -> list[Product]:
+    query = select(Product).options(
+        selectinload(Product.components), selectinload(Product.platform_prices)
+    )
+    if active is not None:
+        query = query.where(Product.active == active)
+    return list(session.exec(query).all())
+
+
+def pricing_input(product: Product) -> PricingInput:
+    return PricingInput(
+        spec=spec_from_product(product),
+        menu_group_id=product.menu_group_id,
+        direct_price=product.direct_price,
+        platform_prices={p.platform_id: p.price for p in product.platform_prices},
+        target_cost=product.target_cost,
+    )
+
+
 class PricingContext:
     """Settings, menu groups, platforms and the costing context, loaded once per request."""
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, supply_factors: dict[int, Decimal] | None = None):
         settings: AppSettings = get_settings(session)
         self.settings = PricingSettings(
             vat_rate=settings.vat_rate,
@@ -61,7 +81,7 @@ class PricingContext:
         self.platforms = {
             p.id: p for p in session.exec(select(SalesPlatform).order_by(SalesPlatform.name)).all()
         }
-        self.costing = CostingContext.load(session, settings.cost_mode)
+        self.costing = CostingContext.load(session, settings.cost_mode, supply_factors)
 
     def target_for(self, menu_group_id: int | None) -> Decimal:
         group = self.groups.get(menu_group_id) if menu_group_id is not None else None

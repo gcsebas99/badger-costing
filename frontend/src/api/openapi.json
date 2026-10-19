@@ -325,6 +325,186 @@
         }
       }
     },
+    "/api/dashboard": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Dashboard",
+        "operationId": "dashboard",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardRead"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/simulate": {
+      "post": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Simulate Price Change",
+        "description": "What-if: change supply costs by a % and see affected recipes and products.",
+        "operationId": "simulate_price_change",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/export/{kind}.csv": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Export Csv",
+        "operationId": "export_csv",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Kind"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/csv": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/backups": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Backups",
+        "operationId": "backups",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BackupRead"
+                  },
+                  "type": "array",
+                  "title": "Response Backups"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Make Backup",
+        "operationId": "make_backup",
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRead"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/backups/{name}": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Download Backup",
+        "operationId": "download_backup",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/products": {
       "get": {
         "tags": [
@@ -1633,6 +1813,85 @@
         ],
         "title": "AlertLevel"
       },
+      "BackupRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "size": {
+            "type": "integer",
+            "title": "Size"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "size",
+          "created_at"
+        ],
+        "title": "BackupRead"
+      },
+      "ChannelImpactRead": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "margin_before": {
+            "type": "string",
+            "title": "Margin Before"
+          },
+          "margin_after": {
+            "type": "string",
+            "title": "Margin After"
+          },
+          "margin_rate_before": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin Rate Before"
+          },
+          "margin_rate_after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin Rate After"
+          },
+          "status_before": {
+            "$ref": "#/components/schemas/AlertLevel"
+          },
+          "status_after": {
+            "$ref": "#/components/schemas/AlertLevel"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "margin_before",
+          "margin_after",
+          "margin_rate_before",
+          "margin_rate_after",
+          "status_before",
+          "status_after"
+        ],
+        "title": "ChannelImpactRead"
+      },
       "ChannelKind": {
         "type": "string",
         "enum": [
@@ -1740,6 +1999,66 @@
         ],
         "title": "CostMode"
       },
+      "DashboardRead": {
+        "properties": {
+          "active_products": {
+            "type": "integer",
+            "title": "Active Products"
+          },
+          "products_below_margin": {
+            "type": "integer",
+            "title": "Products Below Margin"
+          },
+          "incomplete_count": {
+            "type": "integer",
+            "title": "Incomplete Count"
+          },
+          "supplies_without_price": {
+            "type": "integer",
+            "title": "Supplies Without Price"
+          },
+          "products_to_review": {
+            "items": {
+              "$ref": "#/components/schemas/ProductAlertRead"
+            },
+            "type": "array",
+            "title": "Products To Review"
+          },
+          "price_increases": {
+            "items": {
+              "$ref": "#/components/schemas/PriceIncreaseRead"
+            },
+            "type": "array",
+            "title": "Price Increases"
+          },
+          "incomplete": {
+            "items": {
+              "$ref": "#/components/schemas/IncompleteRead"
+            },
+            "type": "array",
+            "title": "Incomplete"
+          },
+          "unpriced_supplies": {
+            "items": {
+              "$ref": "#/components/schemas/UnpricedSupplyRead"
+            },
+            "type": "array",
+            "title": "Unpriced Supplies"
+          }
+        },
+        "type": "object",
+        "required": [
+          "active_products",
+          "products_below_margin",
+          "incomplete_count",
+          "supplies_without_price",
+          "products_to_review",
+          "price_increases",
+          "incomplete",
+          "unpriced_supplies"
+        ],
+        "title": "DashboardRead"
+      },
       "EquivalenceIn": {
         "properties": {
           "quantity": {
@@ -1823,6 +2142,41 @@
           "database"
         ],
         "title": "HealthRead"
+      },
+      "IncompleteRead": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "recipe",
+              "product"
+            ],
+            "title": "Kind"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Issues"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "id",
+          "name",
+          "issues"
+        ],
+        "title": "IncompleteRead"
       },
       "IngredientOption": {
         "properties": {
@@ -2389,6 +2743,51 @@
         ],
         "title": "PriceCreate"
       },
+      "PriceIncreaseRead": {
+        "properties": {
+          "supply_id": {
+            "type": "integer",
+            "title": "Supply Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "previous_price": {
+            "type": "string",
+            "title": "Previous Price"
+          },
+          "latest_price": {
+            "type": "string",
+            "title": "Latest Price"
+          },
+          "change_rate": {
+            "type": "string",
+            "title": "Change Rate"
+          },
+          "latest_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Latest Date"
+          },
+          "previous_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Previous Date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "supply_id",
+          "name",
+          "previous_price",
+          "latest_price",
+          "change_rate",
+          "latest_date",
+          "previous_date"
+        ],
+        "title": "PriceIncreaseRead"
+      },
       "PriceRead": {
         "properties": {
           "id": {
@@ -2436,6 +2835,70 @@
           "in_effect"
         ],
         "title": "PriceRead"
+      },
+      "ProductAlertRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "menu_group_name": {
+            "type": "string",
+            "title": "Menu Group Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AlertLevel"
+          },
+          "total_cost": {
+            "type": "string",
+            "title": "Total Cost"
+          },
+          "worst_margin_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worst Margin Rate"
+          },
+          "worst_channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worst Channel"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "menu_group_name",
+          "status",
+          "total_cost",
+          "worst_margin_rate",
+          "worst_channel",
+          "reasons"
+        ],
+        "title": "ProductAlertRead"
       },
       "ProductCostRead": {
         "properties": {
@@ -2753,6 +3216,84 @@
           "updated_at"
         ],
         "title": "ProductDetail"
+      },
+      "ProductImpactRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "menu_group_name": {
+            "type": "string",
+            "title": "Menu Group Name"
+          },
+          "cost_before": {
+            "type": "string",
+            "title": "Cost Before"
+          },
+          "cost_after": {
+            "type": "string",
+            "title": "Cost After"
+          },
+          "delta": {
+            "type": "string",
+            "title": "Delta"
+          },
+          "delta_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delta Rate"
+          },
+          "suggested_price_after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Price After"
+          },
+          "status_before": {
+            "$ref": "#/components/schemas/AlertLevel"
+          },
+          "status_after": {
+            "$ref": "#/components/schemas/AlertLevel"
+          },
+          "channels": {
+            "items": {
+              "$ref": "#/components/schemas/ChannelImpactRead"
+            },
+            "type": "array",
+            "title": "Channels"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "menu_group_name",
+          "cost_before",
+          "cost_after",
+          "delta",
+          "delta_rate",
+          "suggested_price_after",
+          "status_before",
+          "status_after",
+          "channels"
+        ],
+        "title": "ProductImpactRead"
       },
       "ProductPreview": {
         "properties": {
@@ -3495,6 +4036,56 @@
         ],
         "title": "RecipeFacets"
       },
+      "RecipeImpactRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "cost_before": {
+            "type": "string",
+            "title": "Cost Before"
+          },
+          "cost_after": {
+            "type": "string",
+            "title": "Cost After"
+          },
+          "delta": {
+            "type": "string",
+            "title": "Delta"
+          },
+          "delta_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delta Rate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "cost_before",
+          "cost_after",
+          "delta",
+          "delta_rate"
+        ],
+        "title": "RecipeImpactRead"
+      },
       "RecipeItemIn": {
         "properties": {
           "item_type": {
@@ -4096,6 +4687,136 @@
         "type": "object",
         "title": "SettingsUpdate"
       },
+      "SimulationIn": {
+        "properties": {
+          "changes": {
+            "items": {
+              "$ref": "#/components/schemas/SupplyChangeIn"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "minItems": 1,
+            "title": "Changes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "changes"
+        ],
+        "title": "SimulationIn"
+      },
+      "SimulationRead": {
+        "properties": {
+          "changes": {
+            "items": {
+              "$ref": "#/components/schemas/SupplyChangeRead"
+            },
+            "type": "array",
+            "title": "Changes"
+          },
+          "recipes": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeImpactRead"
+            },
+            "type": "array",
+            "title": "Recipes"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/ProductImpactRead"
+            },
+            "type": "array",
+            "title": "Products"
+          }
+        },
+        "type": "object",
+        "required": [
+          "changes",
+          "recipes",
+          "products"
+        ],
+        "title": "SimulationRead"
+      },
+      "SupplyChangeIn": {
+        "properties": {
+          "supply_id": {
+            "type": "integer",
+            "title": "Supply Id"
+          },
+          "change_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 10.0,
+                "exclusiveMinimum": -1.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Change Rate",
+            "description": "0.10 = +10 %"
+          }
+        },
+        "type": "object",
+        "required": [
+          "supply_id",
+          "change_rate"
+        ],
+        "title": "SupplyChangeIn"
+      },
+      "SupplyChangeRead": {
+        "properties": {
+          "supply_id": {
+            "type": "integer",
+            "title": "Supply Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "change_rate": {
+            "type": "string",
+            "title": "Change Rate"
+          },
+          "reference_unit": {
+            "type": "string",
+            "title": "Reference Unit"
+          },
+          "cost_before": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Before"
+          },
+          "cost_after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost After"
+          }
+        },
+        "type": "object",
+        "required": [
+          "supply_id",
+          "name",
+          "change_rate",
+          "reference_unit",
+          "cost_before",
+          "cost_after"
+        ],
+        "title": "SupplyChangeRead"
+      },
       "SupplyCreate": {
         "properties": {
           "name": {
@@ -4683,6 +5404,24 @@
           "pz"
         ],
         "title": "Unit"
+      },
+      "UnpricedSupplyRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "UnpricedSupplyRead"
       },
       "ValidationError": {
         "properties": {
