@@ -17,13 +17,22 @@ import { cn } from '@/lib/utils'
 
 const today = new Intl.DateTimeFormat('es-CR', { dateStyle: 'long' }).format(new Date())
 
-/** Print-friendly page frame: brand header, print button, back link (hidden when printing). */
-export function SheetLayout({ title, subtitle, backTo, children }: {
-  title: string; subtitle?: string; backTo: string; children: ReactNode
+/**
+ * Print-friendly page frame: brand header, print button, back link (hidden when printing).
+ * `embedded` drops the toolbar too: the print preview dialog shows the page in an iframe.
+ */
+export function SheetLayout({ title, subtitle, backTo, kicker = 'Ficha de costo', badge, embedded = false, children }: {
+  title: string
+  subtitle?: string
+  backTo: string
+  kicker?: string
+  badge?: ReactNode
+  embedded?: boolean
+  children: ReactNode
 }) {
   return (
     <div className="mx-auto max-w-4xl space-y-5 bg-white p-8 print:max-w-none print:p-0">
-      <div className="print-hidden flex items-center justify-between">
+      <div className={cn('print-hidden flex items-center justify-between', embedded && 'hidden')}>
         <Button asChild variant="ghost" size="sm">
           <Link to={backTo}>
             <ArrowLeft />
@@ -37,11 +46,14 @@ export function SheetLayout({ title, subtitle, backTo, children }: {
       </div>
       <header className="flex items-end justify-between border-b-2 border-brand-black pb-3">
         <div>
-          <div className="text-xs font-semibold tracking-wide text-brand-burgundy uppercase">Badger Grub · Ficha de costo</div>
+          <div className="text-xs font-semibold tracking-wide text-brand-burgundy uppercase">Badger Grub · {kicker}</div>
           <h1 className="text-2xl font-semibold">{title}</h1>
           {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
         </div>
-        <div className="text-right text-xs text-muted-foreground">{today}</div>
+        <div className="space-y-1 text-right">
+          {badge}
+          <div className="text-xs text-muted-foreground">{today}</div>
+        </div>
       </header>
       {children}
     </div>

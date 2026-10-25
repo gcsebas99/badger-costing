@@ -107,6 +107,23 @@ export function formatQuantity(value: NumericInput, maxDecimals = 3): string {
   return formatted.replace(/,?0+$/, '')
 }
 
+/**
+ * Kitchen quantities, rounded to what a cook can weigh or count:
+ * g / ml → whole from 10 up, 1 decimal from 1, 2 below 1; kg / L → up to 3 decimals;
+ * pz → up to 2 decimals, prefixed "≈" when not a whole number. Display only.
+ */
+export function formatKitchenQuantity(value: NumericInput, unit: string): string {
+  if (value === null || value === undefined || value === '') return EMPTY
+  if (unit === 'pz') {
+    const formatted = formatQuantity(value, 2)
+    return `${formatted.includes(',') ? '≈ ' : ''}${formatted} pz`
+  }
+  if (unit === 'kg' || unit === 'L') return `${formatQuantity(value, 3)} ${unit}`
+  const magnitude = Math.abs(Number(roundDecimal(value, 2)))
+  const decimals = magnitude >= 10 ? 0 : magnitude >= 1 ? 1 : 2
+  return `${formatQuantity(value, decimals)} ${unit}`
+}
+
 /** ISO date "2026-10-18" → "18/10/2026". */
 export function formatDate(value: string | null | undefined): string {
   if (!value) return EMPTY

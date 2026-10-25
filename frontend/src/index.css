@@ -80,6 +80,11 @@
   body {
     background: white;
   }
+  /* Keep dark table headers and badges: browsers drop backgrounds by default (white-on-white). */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
   .print-hidden {
     display: none !important;
   }

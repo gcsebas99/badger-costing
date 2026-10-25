@@ -42,6 +42,7 @@ import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { UNITS } from '@/lib/units'
 
 import { CostSummary } from './CostSummary'
+import { KitchenTools } from './KitchenTools'
 import { PreparationSteps } from './PreparationSteps'
 import {
   detailToForm,
@@ -157,7 +158,8 @@ export function RecipeEditorPage() {
           {isNew ? 'Nueva receta' : (recipe?.name ?? 'Cargando…')}
         </h2>
         {isDirty && <span className="text-xs text-muted-foreground">Cambios sin guardar</span>}
-        <div className="ml-auto flex gap-2">
+        <div className="ml-auto flex flex-wrap gap-2">
+          {!isNew && <KitchenTools recipeId={recipeId} disabled={isDirty} />}
           {!isNew && (
             <Button asChild variant="outline" size="sm">
               <Link to={`/recetas/${recipeId}/ficha`}>

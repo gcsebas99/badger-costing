@@ -1,6 +1,7 @@
 import {
   formatCRC,
   formatDate,
+  formatKitchenQuantity,
   formatNumber,
   formatPercent,
   formatQuantity,
@@ -128,5 +129,28 @@ describe('percent ↔ rate', () => {
     expect(percentInputToRate('0,5')).toBe('0.005')
     expect(percentInputToRate('')).toBe('0')
     expect(percentInputToRate('abc')).toBeNull()
+  })
+})
+
+describe('formatKitchenQuantity', () => {
+  it('rounds grams and millilitres to weighable amounts', () => {
+    expect(formatKitchenQuantity('288.00', 'g')).toBe('288 g')
+    expect(formatKitchenQuantity('316.8', 'g')).toBe('317 g')
+    expect(formatKitchenQuantity('2.54', 'g')).toBe('2,5 g')
+    expect(formatKitchenQuantity('0.375', 'ml')).toBe('0,38 ml')
+  })
+
+  it('keeps up to 3 decimals for kg and L', () => {
+    expect(formatKitchenQuantity('1.44', 'kg')).toBe('1,44 kg')
+    expect(formatKitchenQuantity('0.0625', 'L')).toBe('0,063 L')
+  })
+
+  it('marks fractional pieces as approximate', () => {
+    expect(formatKitchenQuantity('3', 'pz')).toBe('3 pz')
+    expect(formatKitchenQuantity('2.88', 'pz')).toBe('≈ 2,88 pz')
+  })
+
+  it('shows a dash for missing values', () => {
+    expect(formatKitchenQuantity(null, 'g')).toBe('—')
   })
 })
