@@ -4,13 +4,30 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 ## Current status
 
-- **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) on branch
-  `imp1-kitchen`: I1–I4 done (I1/I2 pushed; I3/I4 awaiting Sebas's review).
+- **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) **complete** on
+  branch `imp1-kitchen` (pushed); awaiting Sebas's review before merging to `main`.
   M0–M5.2 are merged and pushed to `main`.
-- **Next:** I5 "Ajustar a ingrediente" dialog (I5.1/I5.2; the sheet side, I5.3, is done), then I6 wrap-up.
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
 - **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work on this branch.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
+
+---
+
+## 2026-10-25 · Improvements 1 — I5 adjust to ingredient + I6 wrap-up (`imp1-kitchen`)
+
+**Done**
+- "Ajustar a ingrediente" button + dialog: base-ingredient select (recipe lines with their quantity),
+  "Cantidad disponible" (`1,44` or `1.44`), unit limited to the line's allowed units (piece
+  equivalence included); debounced live factor / yield / portions / batch cost; raw-weight hint when the
+  line has waste (net-quantity rule, D50); inline errors keep the last valid preview (D56).
+- `KitchenTools` refactor: `MultiplyControls`, `AdjustControls` → `AnchorForm` (mounts with initial
+  values), shared `ScaledSummary`.
+- Verified in Chrome on the scratch DB: 1,44 kg meat → ×1,44; 500 g onion → ×2,5 with "550 g en bruto";
+  0 → error, preview unchanged; egg 300 g → ×3 = 6 pz; dialog resets on reopen.
+- Tests: backend 158, frontend 43.
+
+**Gotchas**
+- Escape inside a Radix Select inside a Dialog can close the whole dialog.
 
 ---
 

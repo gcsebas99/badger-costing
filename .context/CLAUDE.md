@@ -92,7 +92,8 @@ Always run `make test` and `make types` before calling a task done.
   Printable sheets at `/<area>/:id/ficha` (outside the layout). Hidden routes use `NavItem.hidden`.
 - Kitchen sheet `/recetas/:id/cocina?factor=` or `?ingrediente=&cantidad=&unidad=` (no prices;
   `pages/recipes/kitchenScale.ts`). `components/PrintPreviewDialog.tsx` previews any sheet in an iframe
-  (`?embed=1`) and prints it; recipe editor buttons live in `pages/recipes/KitchenTools.tsx`.
+  (`?embed=1`) and prints it; recipe editor buttons (Ficha para cocina, Multiplicar, Ajustar a ingrediente) live in
+  `pages/recipes/KitchenTools.tsx`; they are disabled while the editor has unsaved changes.
 - Menu engineering: `/api/sales-periods` (+ `/entries`, `/import`, `/menu-engineering`), page `/menu`.
 - Dashboard data: `GET /api/dashboard`; what-if: `POST /api/simulate`; CSV: `/api/export/{kind}.csv`;
   backups: `/api/backups`.

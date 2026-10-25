@@ -59,6 +59,7 @@
 | D53 | 2026-10-25 | Kitchen sheet shows no prices; scaled batch cost appears only in the dialog | Sheet is for the line, not for costing |
 | D54 | 2026-10-25 | Kitchen rounding: g/ml whole ≥ 10, 1 dec ≥ 1, 2 dec < 1; kg/L 3 dec; pz 2 dec with "≈" | What a cook can weigh or count; exact values stay in the API |
 | D55 | 2026-10-25 | Sheets print with `print-color-adjust: exact` | Browsers drop backgrounds by default, hiding the white text on black table headers |
+| D56 | 2026-10-25 | "Ajustar a ingrediente" restarts on the first line at ×1 each time it opens; units offered = the line's allowed units; invalid input shows an inline error and the preview keeps the last valid selection | Predictable; never prints a stale or invalid adjustment |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 

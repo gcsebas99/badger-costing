@@ -6,6 +6,8 @@ ingredient's available quantity).
 
 Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
+**Status:** ✅ complete (2026-10-25).
+
 **Branch:** `imp1-kitchen` (small commits per task). Each block ends with `make test` and
 `make types` passing, plus a browser check against a scratch DB.
 
@@ -125,12 +127,12 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## I5 — Ajustar a ingrediente (feature 2)
 
-- [ ] **I5.1 "Ajustar a ingrediente" button** opens `PrintPreviewDialog` with these controls:
+- [x] **I5.1 "Ajustar a ingrediente" button** opens `PrintPreviewDialog` with these controls:
   - Ingredient select, listing the recipe's lines.
   - "Cantidad disponible" input, accepting `1,44` or `1.44`.
   - Unit select, limited to units compatible with that line (from the ingredient options
     endpoint).
-- [ ] **I5.2 Live calculation**: input is debounced, then the iframe reloads. The resulting factor
+- [x] **I5.2 Live calculation**: input is debounced, then the iframe reloads. The resulting factor
       shows ("Factor ×1,44"), with the new yield and portions. Errors (incompatible unit, empty
       qty) appear inline and the last valid preview stays visible.
 - [x] **I5.3 Highlight the anchor line** in the sheet ("ingrediente base"). *(Done with I3: the sheet
@@ -138,9 +140,9 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## I6 — Wrap-up
 
-- [ ] Update `.context/CLAUDE.md` (routes, `recipe_step`, scaling endpoint), `DECISIONS.md`
+- [x] Update `.context/CLAUDE.md` (routes, `recipe_step`, scaling endpoint), `DECISIONS.md`
       (D48+) and `PROGRESS.md`.
-- [ ] Full browser pass on a scratch DB: create steps, print the kitchen sheet, ×0.5 / ×4, and
+- [x] Full browser pass on a scratch DB: create steps, print the kitchen sheet, ×0.5 / ×4, and
       adjust to 1.44 kg.
 
 ---
