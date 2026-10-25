@@ -42,6 +42,7 @@ import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { UNITS } from '@/lib/units'
 
 import { CostSummary } from './CostSummary'
+import { PreparationSteps } from './PreparationSteps'
 import {
   detailToForm,
   emptyRecipeForm,
@@ -254,6 +255,11 @@ export function RecipeEditorPage() {
               costItems={cost?.items}
               previewIndex={previewIndex}
             />
+          </section>
+
+          <section className="rounded-lg border bg-surface-card p-4">
+            <h3 className="mb-3 text-sm font-semibold">Preparación</h3>
+            <PreparationSteps control={control} register={register} errors={errors.steps} />
           </section>
         </div>
 

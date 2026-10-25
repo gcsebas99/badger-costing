@@ -10,6 +10,16 @@ import {
   recipeFormSchema,
 } from './recipeFormSchema'
 
+function detailFixture(): RecipeDetail {
+  return {
+    id: 7, name: 'Mayo', category: 'Salsas', is_subrecipe: true, yield_qty: '600',
+    yield_unit: 'g', portions: '20', safety_margin_rate: '0.05', notes: null,
+    items: [{ id: 1, position: 0, item_type: 'recipe', ref_id: 3, quantity: '300', unit: 'g',
+              waste_rate: '0.1' }],
+    steps: [],
+  } as unknown as RecipeDetail
+}
+
 function filled(): RecipeFormValues {
   return {
     ...emptyRecipeForm(),
@@ -69,14 +79,21 @@ describe('form → API', () => {
   })
 
   it('loads an existing recipe into the form', () => {
-    const detail = {
-      id: 7, name: 'Mayo', category: 'Salsas', is_subrecipe: true, yield_qty: '600',
-      yield_unit: 'g', portions: '20', safety_margin_rate: '0.05', notes: null,
-      items: [{ id: 1, position: 0, item_type: 'recipe', ref_id: 3, quantity: '300', unit: 'g',
-                waste_rate: '0.1' }],
-    } as unknown as RecipeDetail
+    const detail = detailFixture()
     const values = detailToForm(detail)
     expect(values).toMatchObject({ safetyMargin: '5', isSubrecipe: true })
     expect(values.items[0]).toMatchObject({ itemType: 'recipe', refId: 3, waste: '10' })
+  })
+})
+
+describe('steps', () => {
+  it('trims and drops blank steps on save', () => {
+    const values = { ...filled(), steps: [{ text: ' Batir ' }, { text: '   ' }, { text: 'Refrigerar' }] }
+    expect(formToCreate(values).steps).toEqual(['Batir', 'Refrigerar'])
+  })
+
+  it('loads steps as rows', () => {
+    const detail = { ...detailFixture(), steps: ['Uno', 'Dos'] }
+    expect(detailToForm(detail).steps).toEqual([{ text: 'Uno' }, { text: 'Dos' }])
   })
 })

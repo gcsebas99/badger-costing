@@ -356,6 +356,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/recipes/{recipe_id}/scaled": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Scaled Recipe
+         * @description Scale a saved recipe live for the kitchen sheet; nothing is stored.
+         */
+        get: operations["scaled_recipe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/recipes/{recipe_id}/usages": {
         parameters: {
             query?: never;
@@ -1333,6 +1353,11 @@ export interface components {
              * @default []
              */
             items: components["schemas"]["RecipeItemIn"][];
+            /**
+             * Steps
+             * @default []
+             */
+            steps: string[];
         };
         /** RecipeDetail */
         RecipeDetail: {
@@ -1362,6 +1387,8 @@ export interface components {
             id: number;
             /** Items */
             items: components["schemas"]["RecipeItemRead"][];
+            /** Steps */
+            steps: string[];
             cost: components["schemas"]["RecipeCostRead"];
             /** Used In */
             used_in: components["schemas"]["RecipeUsage"][];
@@ -1468,6 +1495,20 @@ export interface components {
              */
             items: components["schemas"]["RecipeItemIn"][];
         };
+        /**
+         * RecipeScaledRead
+         * @description A saved recipe scaled by `factor` (nothing is stored). Costs are for the scaled batch.
+         */
+        RecipeScaledRead: {
+            /** Factor */
+            factor: string;
+            /**
+             * Anchor Item Id
+             * @description Line the factor was derived from, if any.
+             */
+            anchor_item_id: number | null;
+            cost: components["schemas"]["RecipeCostRead"];
+        };
         /** RecipeSummary */
         RecipeSummary: {
             /** Name */
@@ -1513,7 +1554,7 @@ export interface components {
         };
         /**
          * RecipeUpdate
-         * @description Partial update. When `items` is sent, it replaces all ingredient lines.
+         * @description Partial update. `items` / `steps`, when sent, replace all ingredient lines / steps.
          */
         RecipeUpdate: {
             /** Name */
@@ -1533,6 +1574,8 @@ export interface components {
             notes?: string | null;
             /** Items */
             items?: components["schemas"]["RecipeItemIn"][] | null;
+            /** Steps */
+            steps?: string[] | null;
         };
         /**
          * RecipeUsage
@@ -2833,6 +2876,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecipeCostRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scaled_recipe: {
+        parameters: {
+            query?: {
+                /** @description Multiplier, e.g. 0.5 or 3. */
+                factor?: number | string | null;
+                /** @description Fit the batch to this line's available quantity. */
+                anchor_item_id?: number | null;
+                anchor_qty?: number | string | null;
+                anchor_unit?: components["schemas"]["Unit"] | null;
+            };
+            header?: never;
+            path: {
+                recipe_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeScaledRead"];
                 };
             };
             /** @description Validation Error */

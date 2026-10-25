@@ -37,6 +37,15 @@ export function RecipeSheetPage() {
       <SheetSection title="Ingredientes">
         <ItemsTable items={cost.items} total={cost.ingredients_cost} />
       </SheetSection>
+      {recipe.steps.length > 0 && (
+        <SheetSection title="Preparación">
+          <ol className="list-decimal space-y-1 pl-5 text-sm marker:font-semibold">
+            {recipe.steps.map((step, index) => (
+              <li key={index} className="whitespace-pre-line">{step}</li>
+            ))}
+          </ol>
+        </SheetSection>
+      )}
       {recipe.notes && (
         <SheetSection title="Notas">
           <p className="text-sm whitespace-pre-line">{recipe.notes}</p>

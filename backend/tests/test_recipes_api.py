@@ -298,3 +298,123 @@ def test_recipe_facets(client, mayo_chain):
 def test_unknown_recipe_404(client):
     assert client.get("/api/recipes/999").status_code == 404
     assert client.delete("/api/recipes/999").status_code == 404
+
+
+# --- Preparation steps ---------------------------------------------------------------------
+
+
+def test_steps_are_saved_in_order_and_blank_ones_dropped(client, mayo_chain):
+    egg = mayo_chain["egg"]
+    created = recipe(
+        client,
+        "Huevo frito",
+        "1",
+        "pz",
+        [line("supply", egg, "1", "pz")],
+        steps=["Calentar la sartén", "  ", "Freír el huevo 2 min  "],
+    )
+    assert created["steps"] == ["Calentar la sartén", "Freír el huevo 2 min"]
+
+    detail = client.get(f"/api/recipes/{created['id']}").json()
+    assert detail["steps"] == ["Calentar la sartén", "Freír el huevo 2 min"]
+
+
+def test_patch_steps_replaces_reorders_and_clears(client, mayo_chain):
+    mayo = mayo_chain["mayo"]
+    url = f"/api/recipes/{mayo['id']}"
+    assert mayo["steps"] == []
+
+    response = client.patch(url, json={"steps": ["Uno", "Dos", "Tres"]})
+    assert response.json()["steps"] == ["Uno", "Dos", "Tres"]
+
+    response = client.patch(url, json={"steps": ["Tres", "Uno"]})
+    assert response.json()["steps"] == ["Tres", "Uno"]
+
+    # Patching other fields leaves steps alone
+    response = client.patch(url, json={"notes": "Refrigerar"})
+    assert response.json()["steps"] == ["Tres", "Uno"]
+
+    response = client.patch(url, json={"steps": []})
+    assert response.json()["steps"] == []
+
+    assert client.patch(url, json={"steps": None}).status_code == 422
+
+
+def test_step_text_is_limited(client, mayo_chain):
+    url = f"/api/recipes/{mayo_chain['mayo']['id']}"
+    assert client.patch(url, json={"steps": ["x" * 1001]}).status_code == 422
+
+
+def test_deleting_recipe_deletes_its_steps(client, session):
+    from sqlmodel import select
+
+    from app.models import RecipeStep
+
+    created = recipe(client, "Agua", "1", "L", [], steps=["Servir"])
+    assert client.delete(f"/api/recipes/{created['id']}").status_code == 204
+    assert session.exec(select(RecipeStep)).all() == []
+
+
+# --- Scaling -------------------------------------------------------------------------------
+
+
+def test_scaled_by_factor(client, mayo_chain):
+    mayo = mayo_chain["mayo"]
+    response = client.get(f"/api/recipes/{mayo['id']}/scaled", params={"factor": "0.5"})
+    assert response.status_code == 200, response.text
+    body = response.json()
+
+    assert body["factor"] == "0.5"
+    assert body["anchor_item_id"] is None
+    assert D(body["cost"]["yield_qty"]) == D("300")
+    assert D(body["cost"]["portions"]) == D("10")
+    assert D(body["cost"]["total_cost"]) == D("517.5")
+    assert [D(i["quantity"]) for i in body["cost"]["items"]] == [D("1.5"), D("0.25")]
+    # Nothing was stored
+    assert D(client.get(f"/api/recipes/{mayo['id']}").json()["cost"]["total_cost"]) == D("1035")
+
+
+def test_scaled_by_anchor_ingredient(client, mayo_chain):
+    mayo = mayo_chain["mayo"]
+    oil_line = mayo["items"][1]  # 0.5 L
+    response = client.get(
+        f"/api/recipes/{mayo['id']}/scaled",
+        params={"anchor_item_id": oil_line["id"], "anchor_qty": "750", "anchor_unit": "ml"},
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+
+    assert D(body["factor"]) == D("1.5")
+    assert body["anchor_item_id"] == oil_line["id"]
+    assert D(body["cost"]["items"][0]["quantity"]) == D("4.5")  # eggs
+
+
+@pytest.mark.parametrize(
+    "params",
+    [
+        {},
+        {"factor": "2", "anchor_item_id": 1, "anchor_qty": "1", "anchor_unit": "g"},
+        {"anchor_item_id": 1, "anchor_qty": "1"},
+        {"factor": "0"},
+        {"factor": "101"},
+        {"factor": "abc"},
+    ],
+)
+def test_scaled_rejects_bad_params(client, mayo_chain, params):
+    response = client.get(f"/api/recipes/{mayo_chain['mayo']['id']}/scaled", params=params)
+    assert response.status_code == 422
+
+
+def test_scaled_anchor_errors_are_spanish(client, mayo_chain):
+    mayo = mayo_chain["mayo"]
+    oil_line = mayo["items"][1]
+    response = client.get(
+        f"/api/recipes/{mayo['id']}/scaled",
+        params={"anchor_item_id": oil_line["id"], "anchor_qty": "500", "anchor_unit": "g"},
+    )
+    assert response.status_code == 422
+    assert "No se puede convertir" in response.json()["detail"]
+
+
+def test_scaled_unknown_recipe(client):
+    assert client.get("/api/recipes/999/scaled", params={"factor": "2"}).status_code == 404

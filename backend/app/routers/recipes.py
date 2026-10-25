@@ -1,10 +1,19 @@
+from decimal import Decimal
+from typing import Annotated
+
 from fastapi import APIRouter, HTTPException, Query, Response, status
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
 from app.db import SessionDep
 from app.models.common import utcnow
-from app.models.recipe import DEFAULT_RECIPE_CATEGORIES, Recipe, RecipeItem, RecipeItemType
+from app.models.recipe import (
+    DEFAULT_RECIPE_CATEGORIES,
+    Recipe,
+    RecipeItem,
+    RecipeItemType,
+    RecipeStep,
+)
 from app.models.supply import Supply
 from app.schemas.recipe import (
     IngredientOption,
@@ -15,14 +24,16 @@ from app.schemas.recipe import (
     RecipeItemIn,
     RecipeItemRead,
     RecipePreview,
+    RecipeScaledRead,
     RecipeSummary,
     RecipeUpdate,
     RecipeUsage,
 )
 from app.services.costing import CostingContext, CycleError, ItemSpec, RecipeSpec
+from app.services.scaling import ScalingError, anchor_factor, check_factor, scale_spec
 from app.services.settings import get_settings
 from app.services.text import fold
-from app.services.units import UnitFamily, family, units_in_family
+from app.services.units import Unit, UnitConversionError, UnitFamily, family, units_in_family
 from app.services.usages import products_using_recipe, recipes_using_recipe
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -34,7 +45,9 @@ def _context(session: Session) -> CostingContext:
 
 def _get_recipe(session: Session, recipe_id: int) -> Recipe:
     recipe = session.exec(
-        select(Recipe).where(Recipe.id == recipe_id).options(selectinload(Recipe.ingredients))
+        select(Recipe)
+        .where(Recipe.id == recipe_id)
+        .options(selectinload(Recipe.ingredients), selectinload(Recipe.steps))
     ).first()
     if recipe is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Receta no encontrada.")
@@ -88,6 +101,10 @@ def _to_item_rows(items: list[RecipeItemIn]) -> list[RecipeItem]:
     ]
 
 
+def _to_step_rows(steps: list[str]) -> list[RecipeStep]:
+    return [RecipeStep(position=position, text=text) for position, text in enumerate(steps)]
+
+
 def _usage(recipe: Recipe) -> RecipeUsage:
     return RecipeUsage.model_validate(recipe)
 
@@ -119,6 +136,7 @@ def _to_detail(session: Session, recipe_id: int) -> RecipeDetail:
                 )
                 for line in recipe.ingredients
             ],
+            "steps": [step.text for step in recipe.steps],
             "cost": RecipeCostRead.model_validate(cost),
             "used_in": _usages(session, recipe_id),
         }
@@ -258,8 +276,9 @@ def create_recipe(payload: RecipeCreate, session: SessionDep):
         items=_item_specs(payload.items),
     )
     _validate_items(_context(session), spec)
-    recipe = Recipe.model_validate(payload.model_dump(exclude={"items"}))
+    recipe = Recipe.model_validate(payload.model_dump(exclude={"items", "steps"}))
     recipe.ingredients = _to_item_rows(payload.items)
+    recipe.steps = _to_step_rows(payload.steps)
     session.add(recipe)
     session.commit()
     return _to_detail(session, recipe.id)
@@ -274,6 +293,41 @@ def read_recipe(recipe_id: int, session: SessionDep):
 def recipe_cost(recipe_id: int, session: SessionDep):
     _get_recipe(session, recipe_id)
     return RecipeCostRead.model_validate(_context(session).recipe_cost(recipe_id))
+
+
+@router.get("/{recipe_id}/scaled", response_model=RecipeScaledRead)
+def scaled_recipe(
+    recipe_id: int,
+    session: SessionDep,
+    factor: Annotated[Decimal | None, Query(description="Multiplier, e.g. 0.5 or 3.")] = None,
+    anchor_item_id: int | None = Query(
+        default=None, description="Fit the batch to this line's available quantity."
+    ),
+    anchor_qty: Decimal | None = None,
+    anchor_unit: Unit | None = None,
+):
+    """Scale a saved recipe live for the kitchen sheet; nothing is stored."""
+    _get_recipe(session, recipe_id)
+    anchor = (anchor_item_id, anchor_qty, anchor_unit)
+    by_anchor = any(value is not None for value in anchor)
+    if (factor is None) == (not by_anchor) or (by_anchor and None in anchor):
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            "Indica un factor, o un ingrediente con su cantidad y unidad.",
+        )
+    ctx = _context(session)
+    spec = ctx.spec_for(recipe_id)
+    try:
+        if factor is not None:
+            used = check_factor(factor)
+        else:
+            used = anchor_factor(ctx, spec, anchor_item_id, anchor_qty, anchor_unit)
+    except (ScalingError, UnitConversionError) as exc:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(exc)) from exc
+    cost = ctx.draft_cost(scale_spec(spec, used))
+    return RecipeScaledRead(
+        factor=used, anchor_item_id=anchor_item_id, cost=RecipeCostRead.model_validate(cost)
+    )
 
 
 @router.get("/{recipe_id}/usages", response_model=list[RecipeUsage])
@@ -296,12 +350,17 @@ def update_recipe(recipe_id: int, payload: RecipeUpdate, session: SessionDep):
             "No se puede desmarcar como sub-receta: otras recetas la usan.",
         )
 
-    for name, value in payload.model_dump(exclude_unset=True, exclude={"items"}).items():
+    fields = payload.model_dump(exclude_unset=True, exclude={"items", "steps"})
+    for name, value in fields.items():
         setattr(recipe, name, value)
     if payload.items is not None:
         recipe.ingredients.clear()
         session.flush()  # delete old lines before inserting the new ones
         recipe.ingredients.extend(_to_item_rows(payload.items))
+    if payload.steps is not None:
+        recipe.steps.clear()
+        session.flush()
+        recipe.steps.extend(_to_step_rows(payload.steps))
     recipe.updated_at = utcnow()
     session.add(recipe)
     session.commit()

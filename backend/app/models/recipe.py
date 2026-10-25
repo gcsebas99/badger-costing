@@ -52,6 +52,10 @@ class Recipe(SQLModel, table=True):
             "foreign_keys": "RecipeItem.recipe_id",
         },
     )
+    steps: list["RecipeStep"] = Relationship(
+        back_populates="recipe",
+        sa_relationship_kwargs={"cascade": "all, delete-orphan", "order_by": "RecipeStep.position"},
+    )
 
 
 class RecipeItem(SQLModel, table=True):
@@ -91,3 +95,20 @@ class RecipeItem(SQLModel, table=True):
         back_populates="ingredients",
         sa_relationship_kwargs={"foreign_keys": "RecipeItem.recipe_id"},
     )
+
+
+class RecipeStep(SQLModel, table=True):
+    """One preparation instruction; `position` orders them (0 = first)."""
+
+    __tablename__ = "recipe_step"
+
+    id: int | None = Field(default=None, primary_key=True)
+    recipe_id: int = Field(
+        sa_column=Column(
+            Integer, ForeignKey("recipe.id", ondelete="CASCADE"), index=True, nullable=False
+        )
+    )
+    position: int = 0
+    text: str
+
+    recipe: Recipe = Relationship(back_populates="steps")

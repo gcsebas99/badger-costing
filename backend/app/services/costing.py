@@ -204,6 +204,12 @@ class CostingContext:
     def recipe_ids(self) -> list[int]:
         return list(self._recipes)
 
+    def piece_equivalence(self, supply_id: int) -> PieceEquivalence | None:
+        supply = self._supplies[supply_id]
+        if supply.equivalence is None:
+            return None
+        return PieceEquivalence(supply.equivalence.quantity, supply.equivalence.unit)
+
     # Costs
 
     def supply_cost(self, supply_id: int) -> SupplyCost:
@@ -330,11 +336,7 @@ class CostingContext:
         cost = self.supply_cost(supply.id)
         result.base_unit, result.reference_unit = cost.base_unit, cost.reference_unit
         result.unit_cost, result.reference_unit_cost = cost.unit_cost, cost.reference_unit_cost
-        equivalence = (
-            PieceEquivalence(supply.equivalence.quantity, supply.equivalence.unit)
-            if supply.equivalence
-            else None
-        )
+        equivalence = self.piece_equivalence(supply.id)
         try:
             result.base_quantity = convert(gross, line.unit, cost.base_unit, equivalence)
         except UnitConversionError as exc:

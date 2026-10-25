@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Literal, Self
 
-from pydantic import Field, model_validator
+from pydantic import BeforeValidator, Field, model_validator
 
 from app.models.recipe import RecipeItemType
 from app.schemas.common import (
@@ -17,6 +17,19 @@ from app.services.units import Unit
 
 WasteRate = Annotated[DecimalOut, Field(ge=0, le=10, description="0.13 = 13 %")]
 MarginRate = Annotated[DecimalOut, Field(ge=0, le=1, description="0.05 = 5 %")]
+
+
+def _drop_blank_steps(value: object) -> object:
+    if isinstance(value, list):
+        return [v for v in value if not (isinstance(v, str) and not v.strip())]
+    return value
+
+
+# Preparation steps in order; blank entries (an empty row left in the editor) are dropped.
+Steps = Annotated[
+    list[Annotated[str, Field(min_length=1, max_length=1000)]],
+    BeforeValidator(_drop_blank_steps),
+]
 
 
 class RecipeItemIn(ApiModel):
@@ -50,10 +63,11 @@ class RecipeBase(ApiModel):
 
 class RecipeCreate(RecipeBase):
     items: list[RecipeItemIn] = []
+    steps: Steps = []
 
 
 class RecipeUpdate(ApiModel):
-    """Partial update. When `items` is sent, it replaces all ingredient lines."""
+    """Partial update. `items` / `steps`, when sent, replace all ingredient lines / steps."""
 
     name: RequiredText | None = None
     category: RequiredText | None = None
@@ -64,6 +78,7 @@ class RecipeUpdate(ApiModel):
     safety_margin_rate: MarginRate | None = None
     notes: LongOptionalText = None
     items: list[RecipeItemIn] | None = None
+    steps: Steps | None = None
 
     @model_validator(mode="after")
     def required_fields_not_null(self) -> Self:
@@ -76,6 +91,7 @@ class RecipeUpdate(ApiModel):
             "portions",
             "safety_margin_rate",
             "items",
+            "steps",
         )
         for name in required:
             if name in self.model_fields_set and getattr(self, name) is None:
@@ -160,6 +176,7 @@ class RecipeSummary(RecipeBase):
 class RecipeDetail(RecipeBase):
     id: int
     items: list[RecipeItemRead]
+    steps: list[str]
     cost: RecipeCostRead
     used_in: list[RecipeUsage]
     created_at: datetime
@@ -180,3 +197,11 @@ class IngredientOption(ApiModel):
 
 class RecipeFacets(ApiModel):
     categories: list[str]
+
+
+class RecipeScaledRead(ApiModel):
+    """A saved recipe scaled by `factor` (nothing is stored). Costs are for the scaled batch."""
+
+    factor: DecimalOut
+    anchor_item_id: int | None = Field(description="Line the factor was derived from, if any.")
+    cost: RecipeCostRead

@@ -1211,6 +1211,123 @@
         }
       }
     },
+    "/api/recipes/{recipe_id}/scaled": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Scaled Recipe",
+        "description": "Scale a saved recipe live for the kitchen sheet; nothing is stored.",
+        "operationId": "scaled_recipe",
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Recipe Id"
+            }
+          },
+          {
+            "name": "factor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Multiplier, e.g. 0.5 or 3.",
+              "title": "Factor"
+            },
+            "description": "Multiplier, e.g. 0.5 or 3."
+          },
+          {
+            "name": "anchor_item_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Fit the batch to this line's available quantity.",
+              "title": "Anchor Item Id"
+            },
+            "description": "Fit the batch to this line's available quantity."
+          },
+          {
+            "name": "anchor_qty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Anchor Qty"
+            }
+          },
+          {
+            "name": "anchor_unit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Unit"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Anchor Unit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeScaledRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/recipes/{recipe_id}/usages": {
       "get": {
         "tags": [
@@ -4406,6 +4523,16 @@
             "type": "array",
             "title": "Items",
             "default": []
+          },
+          "steps": {
+            "items": {
+              "type": "string",
+              "maxLength": 1000,
+              "minLength": 1
+            },
+            "type": "array",
+            "title": "Steps",
+            "default": []
           }
         },
         "type": "object",
@@ -4477,6 +4604,13 @@
             "type": "array",
             "title": "Items"
           },
+          "steps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
           "cost": {
             "$ref": "#/components/schemas/RecipeCostRead"
           },
@@ -4507,6 +4641,7 @@
           "portions",
           "id",
           "items",
+          "steps",
           "cost",
           "used_in",
           "created_at",
@@ -4758,6 +4893,37 @@
         "title": "RecipePreview",
         "description": "Unsaved recipe to cost live from the editor. `id` = recipe being edited, if any."
       },
+      "RecipeScaledRead": {
+        "properties": {
+          "factor": {
+            "type": "string",
+            "title": "Factor"
+          },
+          "anchor_item_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Anchor Item Id",
+            "description": "Line the factor was derived from, if any."
+          },
+          "cost": {
+            "$ref": "#/components/schemas/RecipeCostRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "factor",
+          "anchor_item_id",
+          "cost"
+        ],
+        "title": "RecipeScaledRead",
+        "description": "A saved recipe scaled by `factor` (nothing is stored). Costs are for the scaled batch."
+      },
       "RecipeSummary": {
         "properties": {
           "name": {
@@ -4982,11 +5148,27 @@
               }
             ],
             "title": "Items"
+          },
+          "steps": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "maxLength": 1000,
+                  "minLength": 1
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Steps"
           }
         },
         "type": "object",
         "title": "RecipeUpdate",
-        "description": "Partial update. When `items` is sent, it replaces all ingredient lines."
+        "description": "Partial update. `items` / `steps`, when sent, replace all ingredient lines / steps."
       },
       "RecipeUsage": {
         "properties": {

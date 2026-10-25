@@ -33,6 +33,8 @@ export const recipeFormSchema = z.object({
   }, 'Entre 0 y 100 %.'),
   notes: z.string().trim().max(2000),
   items: ingredientRowsSchema,
+  // Objects, not strings: useFieldArray needs them. Blank steps are dropped on save.
+  steps: z.array(z.object({ text: z.string().max(1000, 'Máximo 1000 caracteres.') })),
 })
 
 export type RecipeFormValues = z.infer<typeof recipeFormSchema>
@@ -48,6 +50,7 @@ export function emptyRecipeForm(): RecipeFormValues {
     safetyMargin: '',
     notes: '',
     items: [emptyRow()],
+    steps: [],
   }
 }
 
@@ -62,6 +65,7 @@ export function detailToForm(recipe: RecipeDetail): RecipeFormValues {
     safetyMargin: rateToPercentInput(recipe.safety_margin_rate),
     notes: recipe.notes ?? '',
     items: recipe.items.map(rowFromItem),
+    steps: recipe.steps.map((text) => ({ text })),
   }
 }
 
@@ -80,7 +84,11 @@ function headerFields(values: RecipeFormValues) {
 
 /** Only called after validation, so every row converts. */
 export function formToCreate(values: RecipeFormValues): RecipeCreate {
-  return { ...headerFields(values), items: values.items.map((row) => rowToItem(row)!) }
+  return {
+    ...headerFields(values),
+    items: values.items.map((row) => rowToItem(row)!),
+    steps: values.steps.map((step) => step.text.trim()).filter(Boolean),
+  }
 }
 
 export function formToUpdate(values: RecipeFormValues): RecipeUpdate {

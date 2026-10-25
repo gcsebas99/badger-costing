@@ -12,6 +12,8 @@ import pytest
 
 from app.models import CostMode, SupplyPrice
 from app.services.costing import CostingContext, CycleError, ItemStatus
+from app.services.scaling import ScalingError, anchor_factor, scale_spec
+from app.services.units import Unit, UnitConversionError
 from tests.factories import item, make_recipe, make_supply
 
 D = Decimal
@@ -336,3 +338,114 @@ def test_draft_cost_preview_uses_unsaved_changes(session, chain):
     assert preview.total_cost == D("540") + D("450")
     # The saved recipe is unchanged
     assert context(session).recipe_cost(chain["chipotle_mayo"].id).total_cost == D("765")
+
+
+# --- Batch scaling (kitchen sheet) ---------------------------------------------------------
+
+
+def test_scaling_multiplies_quantities_and_cost_but_not_unit_costs(session, chain):
+    ctx = context(session)
+    scaled = ctx.draft_cost(scale_spec(ctx.spec_for(chain["mayo"].id), D("3")))
+
+    assert scaled.yield_qty == D("1800")
+    assert scaled.portions == D("60")
+    assert scaled.total_cost == D("3240")  # 3 × 1080
+    assert scaled.cost_per_portion == D("54")
+    assert scaled.cost_per_base_unit == D("1.8")
+    lemon = scaled.items[2]
+    assert lemon.quantity == D("90")
+    assert lemon.waste_rate == D("0.5")
+    assert lemon.gross_quantity == D("135")
+
+
+def test_half_batch_with_subrecipes_and_margin(session, pizza):
+    ctx = context(session)
+    full = ctx.recipe_cost(pizza["margarita"].id)
+    half = ctx.draft_cost(scale_spec(ctx.spec_for(pizza["margarita"].id), D("0.5")))
+
+    assert approx(half.total_cost, full.total_cost / 2)
+    assert approx(half.cost_per_reference_unit, full.cost_per_reference_unit)
+    assert half.items[0].quantity == full.items[0].quantity / 2
+
+
+def test_scaled_subrecipe_line_is_not_expanded(session, chain):
+    ctx = context(session)
+    scaled = ctx.draft_cost(scale_spec(ctx.spec_for(chain["chipotle_mayo"].id), D("2")))
+
+    mayo_line = scaled.items[0]
+    assert mayo_line.quantity == D("600")
+    assert mayo_line.cost == D("1080")  # 600 g × ₡1.8
+    # The nested sub-recipe stays its own saved batch.
+    assert mayo_line.subrecipe.yield_qty == D("600")
+    assert scaled.total_cost == D("1530")
+
+
+def test_scaling_does_not_touch_the_saved_recipe(session, chain):
+    ctx = context(session)
+    scale_spec(ctx.spec_for(chain["mayo"].id), D("4"))
+    assert ctx.recipe_cost(chain["mayo"].id).total_cost == D("1080")
+
+
+def test_anchor_factor_in_another_unit_of_the_same_family(session, chain):
+    ctx = context(session)
+    spec = ctx.spec_for(chain["burger"].id)
+    beef = spec.items[1]  # 150 g
+
+    factor = anchor_factor(ctx, spec, beef.id, D("0.225"), Unit.KG)
+
+    assert factor == D("1.5")
+    scaled = scale_spec(spec, factor)
+    assert scaled.items[0].quantity == D("1.5")  # bun, pz
+    assert scaled.items[2].quantity == D("45")  # chipotle mayo, g
+
+
+def test_anchor_factor_from_the_kitchen_example(session):
+    meat = make_supply(session, "Carne molida", "1", "kg", "6000")
+    onion = make_supply(session, "Cebolla", "1", "kg", "900")
+    recipe = make_recipe(
+        session,
+        "Mezcla de carne",
+        "1.2",
+        "kg",
+        portions="8",
+        items=[item(meat, "1", "kg"), item(onion, "200", "g", waste="0.1")],
+    )
+    ctx = context(session)
+    spec = ctx.spec_for(recipe.id)
+
+    factor = anchor_factor(ctx, spec, spec.items[0].id, D("1.44"), Unit.KG)
+    scaled = ctx.draft_cost(scale_spec(spec, factor))
+
+    assert factor == D("1.44")
+    assert scaled.items[1].quantity == D("288")
+    assert scaled.items[1].gross_quantity == D("316.8")
+    assert scaled.yield_qty == D("1.728")
+    assert scaled.portions == D("11.52")
+
+
+def test_anchor_factor_through_piece_equivalence(session, chain):
+    ctx = context(session)
+    spec = ctx.spec_for(chain["mayo"].id)
+    eggs = spec.items[0]  # 3 pz, 1 pz = 50 g
+
+    assert anchor_factor(ctx, spec, eggs.id, D("300"), Unit.G) == D("2")  # 6 eggs
+
+
+def test_anchor_factor_rejects_incompatible_unit(session, chain):
+    ctx = context(session)
+    spec = ctx.spec_for(chain["mayo"].id)
+    oil = spec.items[1]  # litres
+    with pytest.raises(UnitConversionError):
+        anchor_factor(ctx, spec, oil.id, D("500"), Unit.G)
+
+
+def test_anchor_factor_rejects_foreign_line_and_bad_quantities(session, chain):
+    ctx = context(session)
+    spec = ctx.spec_for(chain["mayo"].id)
+    other_line = ctx.spec_for(chain["burger"].id).items[0]
+    with pytest.raises(ScalingError):
+        anchor_factor(ctx, spec, other_line.id, D("1"), Unit.PZ)
+    with pytest.raises(ScalingError):
+        anchor_factor(ctx, spec, spec.items[0].id, D("0"), Unit.PZ)
+    with pytest.raises(ScalingError):  # 3 pz → 1000 pz is over the ×100 limit
+        anchor_factor(ctx, spec, spec.items[0].id, D("1000"), Unit.PZ)
