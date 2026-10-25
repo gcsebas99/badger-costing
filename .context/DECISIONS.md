@@ -55,6 +55,10 @@
 | D49 | 2026-10-25 | Scaling = one factor on net qty, yield and portions; waste % unchanged; scaled batch is costed as a draft and never stored | One rule for multiplier and adjust-to-ingredient; reuses the costing engine |
 | D50 | 2026-10-25 | Adjust-to-ingredient compares against the line's **net** qty; units convert via `units.py` (incl. piece equivalence); factor limited to (0, 100] | Q1 default; matches the recipe's quantity column |
 | D51 | 2026-10-25 | Scaled sub-recipe lines are not expanded (the line scales; nested breakdown is its own batch) | Q2 default; sub-recipe has its own kitchen sheet |
+| D52 | 2026-10-25 | Print preview = the real sheet route in an iframe (`?embed=1` hides its toolbar); selection changes update the iframe URL via `history.replaceState` + `popstate` instead of reloading; print = `iframe.contentWindow.print()` | WYSIWYG, no PDF library (D36), no flash between selections |
+| D53 | 2026-10-25 | Kitchen sheet shows no prices; scaled batch cost appears only in the dialog | Sheet is for the line, not for costing |
+| D54 | 2026-10-25 | Kitchen rounding: g/ml whole ≥ 10, 1 dec ≥ 1, 2 dec < 1; kg/L 3 dec; pz 2 dec with "≈" | What a cook can weigh or count; exact values stay in the API |
+| D55 | 2026-10-25 | Sheets print with `print-color-adjust: exact` | Browsers drop backgrounds by default, hiding the white text on black table headers |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 

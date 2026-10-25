@@ -5,12 +5,30 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 ## Current status
 
 - **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) on branch
-  `imp1-kitchen`: I1 (Preparación steps) and I2 (scaling engine) done, awaiting Sebas's review.
+  `imp1-kitchen`: I1–I4 done (I1/I2 pushed; I3/I4 awaiting Sebas's review).
   M0–M5.2 are merged and pushed to `main`.
-- **Next:** I3 kitchen sheet + preview modal, then I4 multiplier, I5 adjust to ingredient.
+- **Next:** I5 "Ajustar a ingrediente" dialog (I5.1/I5.2; the sheet side, I5.3, is done), then I6 wrap-up.
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
 - **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work on this branch.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
+
+---
+
+## 2026-10-25 · Improvements 1 — I3 kitchen sheet + I4 multiplier (`imp1-kitchen`)
+
+**Done**
+- `/recetas/:id/cocina`: kitchen sheet (no prices), checkbox column, scaled quantities, gross column
+  only when a line has waste, numbered steps, notes, scale badge ("Receta ×2" / "Ajustada a 1,44 kg de
+  Carne molida · ×1,44"), anchor line highlighted. `SheetLayout` gained `kicker`, `badge`, `embedded`.
+- `formatKitchenQuantity` (D54); `kitchenScale.ts` (selection ↔ URL ↔ API query) with vitest.
+- `useScaledRecipe` hook; `PrintPreviewDialog` (iframe preview, in-place URL updates, print / open in
+  tab / close).
+- Editor header: "Ficha para cocina" and "Multiplicar" (×0,5 · ×2 · ×3 · ×4 with factor, yield,
+  portions and batch cost), disabled with a tooltip while there are unsaved changes.
+- Print CSS keeps backgrounds (`print-color-adjust: exact`) — also fixes the cost sheets' black headers.
+- Verified in Chrome on the scratch DB (API :8010 / Vite :5190): ×1 sheet, ×2 → ×0,5 updates without
+  reload, disabled tooltip, anchor URL 1,44 kg → 288 g onion, ≈ 2,88 pz eggs.
+- Tests: backend 158, frontend 43.
 
 ---
 

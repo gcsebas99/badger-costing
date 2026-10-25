@@ -94,7 +94,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## I3 — Kitchen sheet + preview modal (feature 5, shared by 1–2)
 
-- [ ] **I3.1 Route `/recetas/:id/cocina`**: outside the layout, like the existing sheets.
+- [x] **I3.1 Route `/recetas/:id/cocina`**: outside the layout, like the existing sheets.
   - Reads `?factor=` or `?ingrediente=&cantidad=&unidad=` and calls the scaled endpoint.
   - Header: "Badger Grub · Ficha de cocina", recipe name, category, date, and a scaling badge
     (e.g. "×2" or "Ajustada a 1,44 kg de Carne molida").
@@ -104,23 +104,23 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
   - Numbered preparation steps, then notes.
   - Large print-friendly type, no prices.
   - Reuses `SheetLayout` with a configurable kicker ("Ficha de costo" / "Ficha de cocina").
-- [ ] **I3.2 Kitchen-friendly display rounding** (`lib/format.ts`):
-  - g / ml: whole numbers below 100, otherwise at most 1 decimal.
-  - kg / L: 3 decimals, trimmed.
-  - pz: 2 decimals, with a "≈" marker when fractional.
+- [x] **I3.2 Kitchen-friendly display rounding** (`formatKitchenQuantity` in `lib/format.ts`):
+  - g / ml: whole numbers from 10 up, 1 decimal from 1 to 10, 2 decimals below 1.
+  - kg / L: up to 3 decimals, trimmed.
+  - pz: up to 2 decimals, with a "≈" marker when fractional.
   - Display only; the API value stays exact. Vitest cases included.
-- [ ] **I3.3 `PrintPreviewDialog` component**: wide dialog with an `<iframe src=…>` A4-like
+- [x] **I3.3 `PrintPreviewDialog` component**: wide dialog with an `<iframe src=…>` A4-like
       preview and a loading state. Footer actions: "Imprimir / guardar PDF" (iframe print),
       "Abrir en pestaña" and "Cerrar". Optional `controls` slot at the top for the scaling
       selectors.
-- [ ] **I3.4 "Ficha para cocina" button** in the recipe editor header, next to "Ficha PDF". It
+- [x] **I3.4 "Ficha para cocina" button** in the recipe editor header, next to "Ficha PDF". It
       opens `PrintPreviewDialog` at ×1.
 
 ## I4 — Multiplicar receta (feature 1)
 
-- [ ] **I4.1 "Multiplicar" button** (editor header) opens `PrintPreviewDialog` with a segmented
+- [x] **I4.1 "Multiplicar" button** (editor header) opens `PrintPreviewDialog` with a segmented
       control: ×0.5 · ×2 · ×3 · ×4 (default ×2).
-- [ ] **I4.2 Live update**: changing the multiplier updates the iframe URL right away. The new
+- [x] **I4.2 Live update**: changing the multiplier updates the iframe URL right away. The new
       yield, portions and screen-only batch cost show above the preview. Nothing is persisted.
 
 ## I5 — Ajustar a ingrediente (feature 2)
@@ -133,7 +133,8 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [ ] **I5.2 Live calculation**: input is debounced, then the iframe reloads. The resulting factor
       shows ("Factor ×1,44"), with the new yield and portions. Errors (incompatible unit, empty
       qty) appear inline and the last valid preview stays visible.
-- [ ] **I5.3 Highlight the anchor line** in the sheet ("ingrediente base").
+- [x] **I5.3 Highlight the anchor line** in the sheet ("ingrediente base"). *(Done with I3: the sheet
+      already reads `?ingrediente=&cantidad=&unidad=`.)*
 
 ## I6 — Wrap-up
 
