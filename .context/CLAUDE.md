@@ -6,6 +6,7 @@ is out of scope until after the roadmap. Personal use on `localhost`, no auth.
 
 - Source spec (Spanish): [`../badger-costing-roadmap.md`](../badger-costing-roadmap.md)
 - Milestones & task checklist: [`ROADMAP.md`](ROADMAP.md)
+- Improvements after the roadmap: [`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md) (kitchen tools for Recetas)
 - Session log / current status: [`PROGRESS.md`](PROGRESS.md)
 - Decisions (made and open): [`DECISIONS.md`](DECISIONS.md)
 
@@ -77,6 +78,8 @@ Always run `make test` and `make types` before calling a task done.
 - DB columns: money/quantities use `DecimalText` (exact TEXT), enums use `value_enum()`. After
   model changes run `make migration m="..."`; `tests/test_migrations.py` fails on drift.
 - API `detail` error messages are Spanish (shown in toasts); everything else in code is English.
+- Sebas may have `make dev` running on the **real DB** (:8000 / :5173). Never send writes to :8000 from
+  scripts; run scratch servers on other ports (API :8010, Vite :5190 with `VITE_API_TARGET`).
 - `samples_xlsx/` holds **sample** spreadsheets only (gitignored) — never load them into
   `data/costeo.db`. For visual checks use a scratch DB: `COSTEO_DATABASE_URL=sqlite:////tmp/x.db COSTEO_BACKUP_DIR=/tmp/b make dev`.
 - Frontend layout: `api/` (typed client + TanStack Query hooks per resource), `components/{ui,layout,
@@ -90,6 +93,8 @@ Always run `make test` and `make types` before calling a task done.
 - Menu engineering: `/api/sales-periods` (+ `/entries`, `/import`, `/menu-engineering`), page `/menu`.
 - Dashboard data: `GET /api/dashboard`; what-if: `POST /api/simulate`; CSV: `/api/export/{kind}.csv`;
   backups: `/api/backups`.
+- Recipe steps: `recipe_step` → `steps: list[str]` on recipe create/update/detail. Batch scaling:
+  `GET /api/recipes/{id}/scaled` (`factor` or `anchor_item_id`+`anchor_qty`+`anchor_unit`), `services/scaling.py`.
 - Editors' live cost: debounced form snapshot → `POST /api/recipes/preview` / `/api/products/preview`.
 - Comboboxes (cmdk) use `commandFilter` (accent-insensitive). Shared row editor:
   `components/forms/IngredientRows.tsx` + `ingredientRow.ts`.

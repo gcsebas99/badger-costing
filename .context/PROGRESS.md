@@ -4,13 +4,41 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 ## Current status
 
-- **Milestone:** M5 partially complete on branch `m5-menu` (committed locally, not pushed): M5.1 sales
-  data and M5.2 menu engineering done; **M5.3/M5.4 (recipe manual import/write-back) blocked** until
-  Sebas shares sample manual `.md` files. M0–M4 are merged and pushed to `main`.
-- **Next:** M5.3/M5.4 once the manual format is known; after the roadmap: inventory.
-- **Setup for real use:** Ajustes → create menu groups (and platforms when used); bank fee is 0 % by
-  default.
-- **Remote:** `origin` = https://github.com/gcsebas99/badger-costing.git
+- **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) on branch
+  `imp1-kitchen`: I1 (Preparación steps) and I2 (scaling engine) done, awaiting Sebas's review.
+  M0–M5.2 are merged and pushed to `main`.
+- **Next:** I3 kitchen sheet + preview modal, then I4 multiplier, I5 adjust to ingredient.
+- **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
+- **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work on this branch.
+- **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
+
+---
+
+## 2026-10-25 · Improvements 1 — I1 steps + I2 scaling (`imp1-kitchen`)
+
+**Done**
+- Migration `0006`: `recipe_step` (recipe FK CASCADE, position, text); `Recipe.steps` relationship.
+- API: `steps: list[str]` on recipe create/update/detail (replace-all; blank entries dropped; max
+  1000 chars each).
+- `services/scaling.py`: `scale_spec` (net qty, yield, portions × factor; waste unchanged),
+  `anchor_factor` (available qty of one line, converted with `units.convert` incl. piece
+  equivalence), factor range (0, 100]. `CostingContext.piece_equivalence()` helper.
+- `GET /api/recipes/{id}/scaled?factor=` or `?anchor_item_id=&anchor_qty=&anchor_unit=` → factor +
+  costed scaled batch (draft cost, nothing stored); Spanish 422s.
+- Editor: "Preparación" card (numbered auto-growing steps, Enter inserts below, Shift+Enter line
+  break, ↑/↓/delete, "Agregar paso"). Cost sheet shows the steps.
+- Verified in Chrome on a scratch DB: insert/reorder/multi-line/blank-drop round trip; scaled
+  endpoint 1440 g anchor → ×1.44, onion 288 g.
+- Tests: backend 158, frontend 35.
+
+**Gotchas**
+- Sebas runs `make dev` against the real DB on :8000 / :5173 — **never seed via :8000**. For checks run
+  the scratch API on another port (`uvicorn … --port 8010`) and Vite with
+  `VITE_API_TARGET=http://127.0.0.1:8010 npx vite --port 5190 --strictPort`; verify the API's DB with
+  `lsof -p <pid> | grep .db` first. (This session accidentally created 3 supplies on the real DB;
+  removed after a backup, `data/backups/costeo-20261025-130731.db`.)
+- His running uvicorn hot-reloads branch code: new tables need `make migrate` on the real DB.
+- ruff B008 flags `Query(...)` defaults on `Decimal` params → use `Annotated[..., Query()]`.
 
 ---
 

@@ -51,6 +51,10 @@
 | D45 | 2026-10-18 | Sales entries RESTRICT product/platform deletion (409 → deactivate instead) | Sales history must not disappear silently |
 | D46 | 2026-10-18 | CSV sales import: frontend reads the file and posts its text (no multipart dependency); flexible headers; replace or add | Works with typical POS exports |
 | D47 | 2026-10-18 | New sidebar section "Ingeniería de menú" (`/menu`) | Large enough feature to deserve its own section |
+| D48 | 2026-10-25 | Preparation steps in a `recipe_step` table, exposed as `steps: list[str]` (replace-all on save) | Ordered, same pattern as ingredients; no per-step metadata needed yet |
+| D49 | 2026-10-25 | Scaling = one factor on net qty, yield and portions; waste % unchanged; scaled batch is costed as a draft and never stored | One rule for multiplier and adjust-to-ingredient; reuses the costing engine |
+| D50 | 2026-10-25 | Adjust-to-ingredient compares against the line's **net** qty; units convert via `units.py` (incl. piece equivalence); factor limited to (0, 100] | Q1 default; matches the recipe's quantity column |
+| D51 | 2026-10-25 | Scaled sub-recipe lines are not expanded (the line scales; nested breakdown is its own batch) | Q2 default; sub-recipe has its own kitchen sheet |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 
