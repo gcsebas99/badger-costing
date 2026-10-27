@@ -299,6 +299,26 @@ def _as_inputs(specs: list[ItemSpec]) -> list[RecipeItemIn]:
     ]
 
 
+@router.post(
+    "/{product_id}/clone", response_model=ProductDetail, status_code=status.HTTP_201_CREATED
+)
+def clone_product(product_id: int, session: SessionDep):
+    source = _get_product(session, product_id)
+    spec = spec_from_product(source)
+    clone = Product.model_validate(
+        source.model_dump(exclude={"id", "name", "created_at", "updated_at"})
+        | {"name": f"{source.name} (copia)"}
+    )
+    clone.components = _component_rows(_as_inputs(spec.items), _as_inputs(spec.packaging))
+    clone.platform_prices = [
+        ProductPlatformPrice(platform_id=p.platform_id, price=p.price)
+        for p in source.platform_prices
+    ]
+    session.add(clone)
+    session.commit()
+    return _to_detail(session, clone.id)
+
+
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_product(product_id: int, session: SessionDep):
     product = _get_product(session, product_id)

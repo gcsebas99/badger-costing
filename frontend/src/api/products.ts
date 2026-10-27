@@ -76,6 +76,12 @@ export function useUpdateProduct() {
   )
 }
 
+export function useCloneProduct() {
+  return useProductMutation(async (id: number) =>
+    unwrap(await api.POST('/api/products/{product_id}/clone', { params: { path: { product_id: id } } })),
+  )
+}
+
 export function useDeleteProduct() {
   return useProductMutation(async (id: number) => {
     const { error, response } = await api.DELETE('/api/products/{product_id}', {

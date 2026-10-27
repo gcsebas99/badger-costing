@@ -168,6 +168,31 @@ def test_update_replaces_lists_and_prices(client, setup):
     assert D(body["pricing"]["cost"]["total_cost"]) == D("1170")
 
 
+def test_clone_copies_everything(client, setup):
+    product = create_product(
+        client, setup, items=[line("recipe", setup["chipotle_mayo"], "30", "g")], notes="Nota"
+    )
+    response = client.post(f"/api/products/{product['id']}/clone")
+    assert response.status_code == 201, response.text
+    clone = response.json()
+    assert clone["id"] != product["id"]
+    assert clone["name"] == "Hamburguesa clásica (copia)"
+    ignored = {"id", "name", "created_at", "updated_at", "pricing"}
+    strip = lambda lines: [{k: v for k, v in x.items() if k != "id"} for x in lines]  # noqa: E731
+    for key in product.keys() - ignored:
+        if key in ("items", "packaging"):
+            assert strip(clone[key]) == strip(product[key])
+        else:
+            assert clone[key] == product[key], key
+    assert clone["pricing"]["channels"] == product["pricing"]["channels"]
+    assert clone["pricing"]["cost"]["total_cost"] == product["pricing"]["cost"]["total_cost"]
+    # The original is untouched.
+    original = client.get(f"/api/products/{product['id']}").json()
+    assert original["name"] == "Hamburguesa clásica"
+    assert len(original["packaging"]) == 2
+    assert client.post("/api/products/9999/clone").status_code == 404
+
+
 def test_inactive_platform_is_not_priced(client, setup):
     product = create_product(client, setup)
     client.patch(f"/api/platforms/{setup['uber']['id']}", json={"active": False})

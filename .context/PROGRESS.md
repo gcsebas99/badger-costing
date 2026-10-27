@@ -12,6 +12,15 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 ---
 
+## 2026-10-26 · Clone product (`main`)
+
+**Done**
+- `POST /api/products/{id}/clone` copies every field, component, packaging line and platform price;
+  name gets a ` (copia)` suffix. Test in `tests/test_products_api.py`.
+- Product editor: "Clonar producto" button (disabled while there are unsaved changes) → opens the clone.
+
+---
+
 ## 2026-10-25 · Improvements 1 — I5 adjust to ingredient + I6 wrap-up (`imp1-kitchen`)
 
 **Done**

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft, FileText, Trash2 } from 'lucide-react'
+import { ArrowLeft, Copy, FileText, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { Link, useBlocker, useNavigate, useParams } from 'react-router'
@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { useMenuGroups, usePlatforms } from '@/api/catalog'
 import { errorMessage } from '@/api/client'
 import {
+  useCloneProduct,
   useCreateProduct,
   useDeleteProduct,
   useProduct,
@@ -67,6 +68,7 @@ export function ProductEditorPage() {
   const createProduct = useCreateProduct()
   const updateProduct = useUpdateProduct()
   const deleteProduct = useDeleteProduct()
+  const cloneProduct = useCloneProduct()
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   const {
@@ -129,6 +131,17 @@ export function ProductEditorPage() {
     }
   }
 
+  async function handleClone() {
+    if (productId === null) return
+    try {
+      const clone = await cloneProduct.mutateAsync(productId)
+      toast.success('Producto clonado.')
+      navigate(`/productos/${clone.id}`)
+    } catch (error) {
+      toast.error(errorMessage(error))
+    }
+  }
+
   async function handleDelete() {
     if (productId === null) return
     try {
@@ -172,6 +185,14 @@ export function ProductEditorPage() {
                 <FileText />
                 Ficha PDF
               </Link>
+            </Button>
+          )}
+          {!isNew && (
+            <Button type="button" variant="outline" size="sm" onClick={handleClone}
+              disabled={isDirty || cloneProduct.isPending}
+              title={isDirty ? 'Guarda los cambios antes de clonar' : undefined}>
+              <Copy />
+              Clonar producto
             </Button>
           )}
           {!isNew && (
