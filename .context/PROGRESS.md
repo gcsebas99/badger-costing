@@ -5,7 +5,7 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 ## Current status
 
 - **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) **complete** on
-  and merged into `main` (with M0–M5.2). Recetario is on branch `imp2-recetario`, not merged yet.
+  and merged into `main` (with M0–M5.2). Recetario (`imp2-recetario`) is also merged.
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
 - **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
