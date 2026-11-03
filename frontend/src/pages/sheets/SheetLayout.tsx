@@ -17,8 +17,26 @@ import { cn } from '@/lib/utils'
 
 const today = new Intl.DateTimeFormat('es-CR', { dateStyle: 'long' }).format(new Date())
 
+/** Back link and print button (hidden when printing). */
+export function SheetToolbar({ backTo, canPrint = true }: { backTo: string; canPrint?: boolean }) {
+  return (
+    <div className="print-hidden flex items-center justify-between">
+      <Button asChild variant="ghost" size="sm">
+        <Link to={backTo}>
+          <ArrowLeft />
+          Volver
+        </Link>
+      </Button>
+      <Button size="sm" disabled={!canPrint} onClick={() => window.print()}>
+        <Printer />
+        Imprimir / guardar PDF
+      </Button>
+    </div>
+  )
+}
+
 /**
- * Print-friendly page frame: brand header, print button, back link (hidden when printing).
+ * Print-friendly page frame: brand header and the toolbar.
  * `embedded` drops the toolbar too: the print preview dialog shows the page in an iframe.
  */
 export function SheetLayout({ title, subtitle, backTo, kicker = 'Ficha de costo', badge, embedded = false, children }: {
@@ -32,18 +50,7 @@ export function SheetLayout({ title, subtitle, backTo, kicker = 'Ficha de costo'
 }) {
   return (
     <div className="mx-auto max-w-4xl space-y-5 bg-white p-8 print:max-w-none print:p-0">
-      <div className={cn('print-hidden flex items-center justify-between', embedded && 'hidden')}>
-        <Button asChild variant="ghost" size="sm">
-          <Link to={backTo}>
-            <ArrowLeft />
-            Volver
-          </Link>
-        </Button>
-        <Button size="sm" onClick={() => window.print()}>
-          <Printer />
-          Imprimir / guardar PDF
-        </Button>
-      </div>
+      {!embedded && <SheetToolbar backTo={backTo} />}
       <header className="flex items-end justify-between border-b-2 border-brand-black pb-3">
         <div>
           <div className="text-xs font-semibold tracking-wide text-brand-burgundy uppercase">Badger Grub · {kicker}</div>
