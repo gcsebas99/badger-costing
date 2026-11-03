@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { isSheetReadyMessage } from '@/lib/printReady'
 
 interface PrintPreviewDialogProps {
   open: boolean
@@ -21,13 +22,15 @@ interface PrintPreviewDialogProps {
   src: string
   /** Selectors shown above the preview (multiplier, anchor ingredient…). */
   controls?: ReactNode
+  /** Keep printing disabled until the page signals `notifySheetReady()` (it loads its data after the iframe's `load`). */
+  waitForReady?: boolean
 }
 
 /**
  * Shows a printable page in an iframe ("PDF preview") and prints exactly that page through the
  * browser's dialog, where "Guardar como PDF" is available.
  */
-export function PrintPreviewDialog({ open, onOpenChange, title, description, src, controls }: PrintPreviewDialogProps) {
+export function PrintPreviewDialog({ open, onOpenChange, title, description, src, controls, waitForReady = false }: PrintPreviewDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex h-[92vh] flex-col gap-3 sm:max-w-5xl">
@@ -36,7 +39,7 @@ export function PrintPreviewDialog({ open, onOpenChange, title, description, src
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         {/* Mounted only while open, so each opening starts a fresh preview. */}
-        <PreviewBody src={src} title={title} controls={controls} />
+        <PreviewBody src={src} title={title} controls={controls} waitForReady={waitForReady} />
       </DialogContent>
     </Dialog>
   )
@@ -46,11 +49,27 @@ function withEmbed(src: string): string {
   return `${src}${src.includes('?') ? '&' : '?'}embed=1`
 }
 
-function PreviewBody({ src, title, controls }: { src: string; title: string; controls?: ReactNode }) {
+function PreviewBody({ src, title, controls, waitForReady }: {
+  src: string
+  title: string
+  controls?: ReactNode
+  waitForReady: boolean
+}) {
   const frameRef = useRef<HTMLIFrameElement>(null)
   // The iframe loads once; later selections update its URL in place (no reload, no flash).
   const [initialSrc] = useState(() => withEmbed(src))
   const [loaded, setLoaded] = useState(false)
+  const [signaled, setSignaled] = useState(false)
+  const canPrint = loaded && (!waitForReady || signaled)
+
+  useEffect(() => {
+    if (!waitForReady) return
+    function onMessage(event: MessageEvent) {
+      if (isSheetReadyMessage(event, frameRef.current?.contentWindow, window.location.origin)) setSignaled(true)
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [waitForReady])
 
   useEffect(() => {
     const frameWindow = frameRef.current?.contentWindow
@@ -87,7 +106,7 @@ function PreviewBody({ src, title, controls }: { src: string; title: string; con
         <DialogClose asChild>
           <Button variant="outline" size="sm">Cerrar</Button>
         </DialogClose>
-        <Button size="sm" disabled={!loaded} onClick={() => frameRef.current?.contentWindow?.print()}>
+        <Button size="sm" disabled={!canPrint} onClick={() => frameRef.current?.contentWindow?.print()}>
           <Printer />
           Imprimir / guardar PDF
         </Button>
