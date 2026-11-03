@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/select'
 import { SEARCH_PARAM } from '@/navigation'
 
+import { RecetarioButton } from './RecetarioDialog'
 import { recipeColumns } from './recipeColumns'
 
 const ALL = '__all__'
@@ -103,6 +104,7 @@ export function RecipesPage() {
           <span className="text-xs text-muted-foreground tabular-nums">
             {recipes ? `${recipes.length} receta${recipes.length === 1 ? '' : 's'}` : ''}
           </span>
+          <RecetarioButton />
           <ExportButton kind="recetas" />
         </div>
       </div>

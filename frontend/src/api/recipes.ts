@@ -1,4 +1,4 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { api, type Schemas, unwrap } from './client'
 import type { paths } from './schema'
@@ -43,13 +43,16 @@ export function useRecipes(filters: RecipeFilters) {
   })
 }
 
-export function useRecipe(id: number | null) {
-  return useQuery({
-    queryKey: recipeKeys.detail(id ?? 0),
+export function recipeDetailOptions(id: number) {
+  return queryOptions({
+    queryKey: recipeKeys.detail(id),
     queryFn: async () =>
-      unwrap(await api.GET('/api/recipes/{recipe_id}', { params: { path: { recipe_id: id! } } })),
-    enabled: id !== null,
+      unwrap(await api.GET('/api/recipes/{recipe_id}', { params: { path: { recipe_id: id } } })),
   })
+}
+
+export function useRecipe(id: number | null) {
+  return useQuery({ ...recipeDetailOptions(id ?? 0), enabled: id !== null })
 }
 
 export function useRecipeFacets() {
@@ -83,18 +86,24 @@ export function useRecipePreview(payload: RecipePreview | null) {
 }
 
 /** Saved recipe scaled for the kitchen (multiplier or anchor ingredient); nothing is stored. */
-export function useScaledRecipe(id: number, query: ScaleQuery | null) {
-  return useQuery({
-    queryKey: recipeKeys.scaled(id, query ?? {}),
+export function scaledRecipeOptions(id: number, query: ScaleQuery) {
+  return queryOptions({
+    queryKey: recipeKeys.scaled(id, query),
     queryFn: async () =>
       unwrap(
         await api.GET('/api/recipes/{recipe_id}/scaled', {
-          params: { path: { recipe_id: id }, query: query! },
+          params: { path: { recipe_id: id }, query },
         }),
       ),
+    retry: false,
+  })
+}
+
+export function useScaledRecipe(id: number, query: ScaleQuery | null) {
+  return useQuery({
+    ...scaledRecipeOptions(id, query ?? {}),
     enabled: query !== null,
     placeholderData: keepPreviousData,
-    retry: false,
   })
 }
 

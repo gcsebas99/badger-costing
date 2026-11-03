@@ -60,6 +60,9 @@
 | D54 | 2026-10-25 | Kitchen rounding: g/ml whole ≥ 10, 1 dec ≥ 1, 2 dec < 1; kg/L 3 dec; pz 2 dec with "≈" | What a cook can weigh or count; exact values stay in the API |
 | D55 | 2026-10-25 | Sheets print with `print-color-adjust: exact` | Browsers drop backgrounds by default, hiding the white text on black table headers |
 | D56 | 2026-10-25 | "Ajustar a ingrediente" restarts on the first line at ×1 each time it opens; units offered = the line's allowed units; invalid input shows an inline error and the preview keeps the last valid selection | Predictable; never prints a stale or invalid adjustment |
+| D57 | 2026-11-02 | Recetario = one printable page (`/recetas/recetario?ids=`) with a kitchen sheet per recipe at ×1, `break-before: page` on all but the first | Same print approach as D36/D52; no PDF library or new API |
+| D58 | 2026-11-02 | Recetario order is the list's (category, then name), not click order; no cover or index; sub-recipes are not added automatically | Predictable and easy to look up; drag-to-reorder and "Agregar sub-recetas usadas" can come later |
+| D59 | 2026-11-02 | The recetario renders nothing until every recipe settled, and signals the dialog via `postMessage`; recipes that fail get an on-screen warning (not printed) instead of being dropped silently | Never print a partial PDF without saying so |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 
