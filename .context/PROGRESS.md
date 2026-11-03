@@ -5,10 +5,34 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 ## Current status
 
 - **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) **complete** on
-  and merged into `main` (with M0–M5.2).
+  and merged into `main` (with M0–M5.2). Recetario is on branch `imp2-recetario`, not merged yet.
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
 - **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
+
+---
+
+## 2026-11-02 · Recetario: several kitchen sheets in one PDF (`imp2-recetario`)
+
+**Done**
+- Recetas toolbar: "Recetario" button → selection dialog (accent-insensitive search, kind filter, recipes
+  grouped by category with category and "Seleccionar todas" checkboxes, "Limpiar", counter).
+- "Generar recetario" → `PrintPreviewDialog` on `/recetas/recetario?ids=3,7,12` with the usual buttons, plus
+  "Cambiar selección", which returns to the list with the selection intact.
+- `KitchenSheet` extracted from `KitchenSheetPage`; `SheetToolbar` extracted from `SheetLayout`;
+  `recipeDetailOptions` / `scaledRecipeOptions` extracted for `useQueries`; shadcn `checkbox` added.
+- `PrintPreviewDialog` `waitForReady`: printing stays disabled until the page calls `notifySheetReady()`.
+- Verified on a scratch DB (API :8010 / Vite :5190): headless Chrome PDF has each recipe starting on its own
+  page, no blank first page, and a suggested title of "Recetario · Badger Grub"; order follows the list, not
+  click order; a missing recipe shows a warning that doesn't print; if none load, printing stays disabled.
+- Tests: backend 159, frontend 54.
+
+**Gotchas**
+- An iframe's `load` fires before the sheet's data arrives. Single sheets still enable printing on `load`
+  (they load fast); only the recetario waits for the signal.
+- `recetas/recetario` is a static route, so it outranks `recetas/:id`.
+- A section taller than the space left jumps to the next page (`break-inside-avoid`), so a very long recipe can
+  leave a mostly empty page after "Resumen". Same as the single sheet.
 
 ---
 
