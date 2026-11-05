@@ -7,6 +7,7 @@ is out of scope until after the roadmap. Personal use on `localhost`, no auth.
 - Source spec (Spanish): [`../badger-costing-roadmap.md`](../badger-costing-roadmap.md)
 - Milestones & task checklist: [`ROADMAP.md`](ROADMAP.md)
 - Improvements after the roadmap: [`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md) (kitchen tools for Recetas)
+  and [`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md) (week prep planner, in progress)
 - Session log / current status: [`PROGRESS.md`](PROGRESS.md)
 - Decisions (made and open): [`DECISIONS.md`](DECISIONS.md)
 

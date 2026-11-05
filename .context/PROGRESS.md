@@ -6,9 +6,29 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 - **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) **complete** on
   and merged into `main` (with M0–M5.2). Recetario (`imp2-recetario`) is also merged.
+- **In progress:** week prep planner ([`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md)) on `imp3-week-prep`:
+  backend done, next is P2 (page `/planeacion`).
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
 - **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
+
+---
+
+## 2026-11-04 · Week prep planner: backend (`imp3-week-prep`)
+
+**Done**
+- Plan in `ROADMAP-IMPROVEMENTS-3.md`; decisions D60–D63.
+- `services/prep_plan.py`, `POST /api/prep-plan` and `POST /api/prep-plan/export.csv`. No migration.
+- `tests/test_prep_plan.py`, including supplies × unit cost = product cost × units with no buffer.
+- Checked against a copy of the real DB, not `data/costeo.db`: 20 + 5 Combo Bad Habit at 10 % gives
+  Mermelada 4,30, Alioli 5,38, Torta 25 and Caja 25, with no warnings.
+- Tests: backend 180, frontend 54.
+
+**Next**
+- P2: page `/planeacion`; P3: printable sheet and CSV button.
+
+**Gotchas**
+- The burger recipe stays at 25 batches while its direct arugula gets the buffer. That's intended (D61).
 
 ---
 

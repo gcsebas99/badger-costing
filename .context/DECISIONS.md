@@ -63,6 +63,10 @@
 | D57 | 2026-11-02 | Recetario = one printable page (`/recetas/recetario?ids=`) with a kitchen sheet per recipe at ×1, `break-before: page` on all but the first | Same print approach as D36/D52; no PDF library or new API |
 | D58 | 2026-11-02 | Recetario order is the list's (category, then name), not click order; no cover or index; sub-recipes are not added automatically | Predictable and easy to look up; drag-to-reorder and "Agregar sub-recetas usadas" can come later |
 | D59 | 2026-11-02 | The recetario renders nothing until every recipe settled, and signals the dialog via `postMessage`; recipes that fail get an on-screen warning (not printed) instead of being dropped silently | Never print a partial PDF without saying so |
+| D60 | 2026-11-04 | Prep plan is calculated on request and never stored; the form lives in the URL | Requested for now; survives a reload without a table or migration |
+| D61 | 2026-11-04 | Waste % applies to recipes in Acompañamientos, Salsas and Vegetales (once per branch, with everything inside them), and to "Frutas y verduras" supplies on a line of a product or non-sub-recipe. Not inside other sub-recipes, not on packaging. Names are fixed in `services/prep_plan.py`, compared through `fold()` | Answered by Sebas; a batch of buns must keep its own ingredients. Renaming a category means updating the constant |
+| D62 | 2026-11-04 | Batches are never rounded; shown to 2 decimals and supplies use the exact value | Whoever runs the prep decides per recipe: mayo or blackberry sauce can round up because it keeps for the next session |
+| D63 | 2026-11-04 | The plan only uses quantities: a missing price doesn't matter; an unconvertible line is left out with a warning | Same spirit as D25, without aborting the plan |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 
