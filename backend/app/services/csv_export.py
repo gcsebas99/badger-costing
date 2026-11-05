@@ -10,6 +10,7 @@ from sqlmodel import Session, select
 
 from app.models.recipe import Recipe
 from app.models.supply import Supply
+from app.services.prep_plan import PrepPlan
 from app.services.product_pricing import PricingContext, load_products, pricing_input
 from app.services.settings import get_settings
 from app.services.supply_cost import supply_cost
@@ -167,4 +168,50 @@ def products_csv(session: Session) -> str:
             "% Desviación",
         ],
         rows,
+    )
+
+
+def prep_plan_csv(plan: PrepPlan) -> str:
+    """Recipes first, then supplies, in one table so it filters easily in Excel."""
+    recipes = [
+        [
+            "Receta",
+            r.name,
+            r.category,
+            number(r.batches),
+            "recetas",
+            number(r.yield_qty, 3),
+            r.yield_unit,
+            number(r.portions),
+            "Sí" if r.buffered else "No",
+        ]
+        for r in plan.recipes
+    ]
+    supplies = [
+        [
+            "Suministro",
+            s.name,
+            s.group,
+            number(s.quantity, 3),
+            s.unit,
+            "",
+            "",
+            "",
+            "Sí" if s.buffered else "No",
+        ]
+        for s in plan.supplies
+    ]
+    return to_csv(
+        [
+            "Tipo",
+            "Nombre",
+            "Categoría o grupo",
+            "Cantidad",
+            "Unidad",
+            "Rendimiento total",
+            "Unidad de rendimiento",
+            "Porciones",
+            "Incluye mermas",
+        ],
+        [*recipes, *supplies],
     )

@@ -185,6 +185,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/prep-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Calculate Prep Plan */
+        post: operations["calculate_prep_plan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/prep-plan/export.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export Prep Plan */
+        post: operations["export_prep_plan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/products": {
         parameters: {
             query?: never;
@@ -922,6 +956,40 @@ export interface components {
             /** Unpriced Units */
             unpriced_units: number;
         };
+        /** PlannedRecipeRead */
+        PlannedRecipeRead: {
+            /** Recipe Id */
+            recipe_id: number;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** Is Subrecipe */
+            is_subrecipe: boolean;
+            /** Batches */
+            batches: string;
+            /** Yield Qty */
+            yield_qty: string;
+            yield_unit: components["schemas"]["Unit"];
+            /** Portions */
+            portions: string;
+            /** Buffered */
+            buffered: boolean;
+        };
+        /** PlannedSupplyRead */
+        PlannedSupplyRead: {
+            /** Supply Id */
+            supply_id: number;
+            /** Name */
+            name: string;
+            /** Group */
+            group: string;
+            /** Quantity */
+            quantity: string;
+            unit: components["schemas"]["Unit"];
+            /** Buffered */
+            buffered: boolean;
+        };
         /** PlatformIn */
         PlatformIn: {
             /** Name */
@@ -976,6 +1044,51 @@ export interface components {
             fee_rate?: number | string | null;
             /** Active */
             active?: boolean | null;
+        };
+        /** PrepPlanExportIn */
+        PrepPlanExportIn: {
+            /**
+             * Buffer Rate
+             * @description 0.10 = 10 %
+             * @default 0
+             */
+            buffer_rate: number | string;
+            /** Items */
+            items: components["schemas"]["PrepPlanItemIn"][];
+            /** Name */
+            name?: string | null;
+        };
+        /** PrepPlanIn */
+        PrepPlanIn: {
+            /**
+             * Buffer Rate
+             * @description 0.10 = 10 %
+             * @default 0
+             */
+            buffer_rate: number | string;
+            /** Items */
+            items: components["schemas"]["PrepPlanItemIn"][];
+        };
+        /** PrepPlanItemIn */
+        PrepPlanItemIn: {
+            /** Product Id */
+            product_id: number;
+            /** Target Qty */
+            target_qty: number;
+            /**
+             * Extra Qty
+             * @default 0
+             */
+            extra_qty: number;
+        };
+        /** PrepPlanRead */
+        PrepPlanRead: {
+            /** Recipes */
+            recipes: components["schemas"]["PlannedRecipeRead"][];
+            /** Supplies */
+            supplies: components["schemas"]["PlannedSupplyRead"][];
+            /** Warnings */
+            warnings: string[];
         };
         /** PriceCreate */
         PriceCreate: {
@@ -2421,6 +2534,72 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    calculate_prep_plan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PrepPlanIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PrepPlanRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_prep_plan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PrepPlanExportIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": unknown;
+                };
             };
             /** @description Validation Error */
             422: {

@@ -505,6 +505,84 @@
         }
       }
     },
+    "/api/prep-plan": {
+      "post": {
+        "tags": [
+          "prep-plan"
+        ],
+        "summary": "Calculate Prep Plan",
+        "operationId": "calculate_prep_plan",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrepPlanIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrepPlanRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/prep-plan/export.csv": {
+      "post": {
+        "tags": [
+          "prep-plan"
+        ],
+        "summary": "Export Prep Plan",
+        "operationId": "export_prep_plan",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrepPlanExportIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/csv": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/products": {
       "get": {
         "tags": [
@@ -3202,6 +3280,95 @@
         ],
         "title": "MenuItemRead"
       },
+      "PlannedRecipeRead": {
+        "properties": {
+          "recipe_id": {
+            "type": "integer",
+            "title": "Recipe Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "is_subrecipe": {
+            "type": "boolean",
+            "title": "Is Subrecipe"
+          },
+          "batches": {
+            "type": "string",
+            "title": "Batches"
+          },
+          "yield_qty": {
+            "type": "string",
+            "title": "Yield Qty"
+          },
+          "yield_unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "portions": {
+            "type": "string",
+            "title": "Portions"
+          },
+          "buffered": {
+            "type": "boolean",
+            "title": "Buffered"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recipe_id",
+          "name",
+          "category",
+          "is_subrecipe",
+          "batches",
+          "yield_qty",
+          "yield_unit",
+          "portions",
+          "buffered"
+        ],
+        "title": "PlannedRecipeRead"
+      },
+      "PlannedSupplyRead": {
+        "properties": {
+          "supply_id": {
+            "type": "integer",
+            "title": "Supply Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "group": {
+            "type": "string",
+            "title": "Group"
+          },
+          "quantity": {
+            "type": "string",
+            "title": "Quantity"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "buffered": {
+            "type": "boolean",
+            "title": "Buffered"
+          }
+        },
+        "type": "object",
+        "required": [
+          "supply_id",
+          "name",
+          "group",
+          "quantity",
+          "unit",
+          "buffered"
+        ],
+        "title": "PlannedSupplyRead"
+      },
       "PlatformIn": {
         "properties": {
           "name": {
@@ -3357,6 +3524,139 @@
         },
         "type": "object",
         "title": "PlatformUpdate"
+      },
+      "PrepPlanExportIn": {
+        "properties": {
+          "buffer_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Buffer Rate",
+            "description": "0.10 = 10 %",
+            "default": 0
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PrepPlanItemIn"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "PrepPlanExportIn"
+      },
+      "PrepPlanIn": {
+        "properties": {
+          "buffer_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Buffer Rate",
+            "description": "0.10 = 10 %",
+            "default": 0
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PrepPlanItemIn"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "PrepPlanIn"
+      },
+      "PrepPlanItemIn": {
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "title": "Product Id"
+          },
+          "target_qty": {
+            "type": "integer",
+            "maximum": 100000.0,
+            "minimum": 0.0,
+            "title": "Target Qty"
+          },
+          "extra_qty": {
+            "type": "integer",
+            "maximum": 100000.0,
+            "minimum": 0.0,
+            "title": "Extra Qty",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "product_id",
+          "target_qty"
+        ],
+        "title": "PrepPlanItemIn"
+      },
+      "PrepPlanRead": {
+        "properties": {
+          "recipes": {
+            "items": {
+              "$ref": "#/components/schemas/PlannedRecipeRead"
+            },
+            "type": "array",
+            "title": "Recipes"
+          },
+          "supplies": {
+            "items": {
+              "$ref": "#/components/schemas/PlannedSupplyRead"
+            },
+            "type": "array",
+            "title": "Supplies"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recipes",
+          "supplies",
+          "warnings"
+        ],
+        "title": "PrepPlanRead"
       },
       "PriceCreate": {
         "properties": {
