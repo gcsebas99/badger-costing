@@ -5,6 +5,7 @@ import { RouteError } from '@/components/layout/RouteError'
 import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { MenuPage } from '@/pages/menu/MenuPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { PlanningPage } from '@/pages/planning/PlanningPage'
 import { ProductEditorPage } from '@/pages/products/ProductEditorPage'
 import { ProductsPage } from '@/pages/products/ProductsPage'
 import { RecipeEditorPage } from '@/pages/recipes/RecipeEditorPage'
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
           { path: 'productos', element: <ProductsPage /> },
           { path: 'productos/nuevo', element: <ProductEditorPage key="new" /> },
           { path: 'productos/:id', element: <ProductEditorPage /> },
+          { path: 'planeacion', element: <PlanningPage /> },
           { path: 'menu', element: <MenuPage /> },
           { path: 'ajustes', element: <SettingsPage /> },
           { path: 'simulador', element: <SimulatorPage /> },

@@ -5,7 +5,7 @@ Follow-up to the main roadmap ([`ROADMAP.md`](ROADMAP.md)). New section "Planeac
 
 Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
-**Status:** 🚧 in progress (backend done, frontend pending).
+**Status:** 🚧 in progress (backend and page done, printing and export pending).
 
 **Branch:** `imp3-week-prep` (small commits per task). Each block ends with `make test` and
 `make types` passing; the frontend block adds a browser check against a scratch DB.
@@ -56,12 +56,13 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## P2 — Page `/planeacion`
 
-- [ ] **P2.1 Navigation**: sidebar item "Planeación" below "Productos".
-- [ ] **P2.2 Form**: report name, waste %, rows of product (active only, no repeats), objetivo and
-      adicional. The form lives in the URL, so it survives a reload without being stored.
-- [ ] **P2.3 Live result**: debounced call; "Recetas" table (category, batches, total yield, portions)
+- [x] **P2.1 Navigation**: sidebar item "Planeación" below "Productos".
+- [x] **P2.2 Form**: report name, waste %, rows of product (active only, no repeats), objetivo and
+      adicional. The form lives in the URL, so it survives a reload without being stored; a value in
+      memory brings it back after visiting another section.
+- [x] **P2.3 Live result**: debounced call; "Recetas" table (category, batches, total yield, portions)
       and "Suministros" table grouped by group (kg / L / pz); warnings shown above them.
-- [ ] **P2.4 Tests**: URL encoding and form validation in vitest.
+- [x] **P2.4 Tests**: URL encoding and form validation in vitest.
 
 ## P3 — Print and export
 

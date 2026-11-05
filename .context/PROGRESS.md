@@ -7,10 +7,35 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 - **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) **complete** on
   and merged into `main` (with M0–M5.2). Recetario (`imp2-recetario`) is also merged.
 - **In progress:** week prep planner ([`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md)) on `imp3-week-prep`:
-  backend done, next is P2 (page `/planeacion`).
+  backend and page `/planeacion` done, next is P3 (printable sheet and CSV button).
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
 - **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
+
+---
+
+## 2026-11-04 · Week prep planner: page `/planeacion` (`imp3-week-prep`)
+
+**Done**
+- Sidebar item "Planeación" below "Productos"; `pages/planning/` (`PlanningPage`, `PlanResults`, `planForm`);
+  `api/prepPlan.ts`.
+- Form: name, waste %, rows of active products with objetivo and adicional. Already chosen products aren't offered.
+- Live result: "Recetas" and "Suministros" (grouped), a "Con mermas" badge and warnings.
+- The plan lives in the URL (`?nombre=&merma=&items=5:20:5,2:10:`), written after a debounce; `rememberPlan` keeps it
+  in memory so the sidebar link restores it.
+- Verified with headless Chrome on a copy of the real DB (API :8010 / Vite :5190): typing, choosing products, invalid
+  quantity and %, comma decimals, leaving and returning, reload, remove row, Limpiar, unknown product. No console errors.
+  The Claude in Chrome extension wasn't connected, so this ran through a CDP script.
+- Tests: backend 180, frontend 70.
+
+**Next**
+- P3: printable sheet `/planeacion/reporte` and "Exportar CSV" button (API already exists).
+
+**Gotchas**
+- `useWatch` values update before resolver errors arrive, so a render can see `1,` with no error yet. `Number('1,')` is
+  NaN and `formatQuantity` throws, which took the page down. Validate before formatting (`rowTotal`).
+- A few quantities show a hair lower than a hand calculation (Aguacate ≈ 6,87 pz vs 6,875): pz conversions divide, so
+  the Decimal comes out just under the half. Display only.
 
 ---
 
