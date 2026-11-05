@@ -5,7 +5,7 @@ Follow-up to the main roadmap ([`ROADMAP.md`](ROADMAP.md)). New section "Planeac
 
 Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
-**Status:** 🚧 in progress (backend and page done, printing and export pending).
+**Status:** ✅ complete on `imp3-week-prep` (2026-11-04), not merged yet.
 
 **Branch:** `imp3-week-prep` (small commits per task). Each block ends with `make test` and
 `make types` passing; the frontend block adds a browser check against a scratch DB.
@@ -66,14 +66,14 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## P3 — Print and export
 
-- [ ] **P3.1 Printable sheet** `/planeacion/reporte?…` (no prices) with `PrintPreviewDialog`
+- [x] **P3.1 Printable sheet** `/planeacion/reporte?…` (no prices) with `PrintPreviewDialog`
       `waitForReady`.
-- [ ] **P3.2 "Exportar CSV" button**: downloads the CSV from P1.3.
+- [x] **P3.2 "Exportar CSV" button**: downloads the CSV from P1.3.
 
 ## P4 — Wrap-up
 
-- [ ] Update `.context/CLAUDE.md`, `DECISIONS.md` and `PROGRESS.md`.
-- [ ] Browser pass on a scratch DB.
+- [x] Update `.context/CLAUDE.md`, `DECISIONS.md` and `PROGRESS.md`.
+- [x] Browser pass on a scratch DB.
 
 ## Out of scope for now
 

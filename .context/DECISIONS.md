@@ -67,6 +67,8 @@
 | D61 | 2026-11-04 | Waste % applies to recipes in Acompañamientos, Salsas and Vegetales (once per branch, with everything inside them), and to "Frutas y verduras" supplies on a line of a product or non-sub-recipe. Not inside other sub-recipes, not on packaging. Names are fixed in `services/prep_plan.py`, compared through `fold()` | Answered by Sebas; a batch of buns must keep its own ingredients. Renaming a category means updating the constant |
 | D62 | 2026-11-04 | Batches are never rounded; shown to 2 decimals and supplies use the exact value | Whoever runs the prep decides per recipe: mayo or blackberry sauce can round up because it keeps for the next session |
 | D63 | 2026-11-04 | The plan only uses quantities: a missing price doesn't matter; an unconvertible line is left out with a warning | Same spirit as D25, without aborting the plan |
+| D64 | 2026-11-04 | Plan sheet has no prices and adds a checkbox per recipe and supply; supplies always start on a new printed page; lines left out by warnings do print | Recipes for the kitchen and the shopping list get used separately; a paper list must say when it's incomplete |
+| D65 | 2026-11-04 | Plan CSV is one table (recipes, then supplies) with a "Tipo" column; the report name only goes in the filename; the product list and % aren't in the file | Filters easily in Excel; keeps the columns uniform |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 

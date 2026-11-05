@@ -5,6 +5,7 @@ import {
   groupSupplies,
   initialPlan,
   parsePlanParams,
+  planReportUrl,
   planToParams,
   planToPayload,
   rememberPlan,
@@ -44,6 +45,15 @@ describe('plan URL', () => {
 
   it('starts with one empty row when there are no items', () => {
     expect(parsePlanParams(new URLSearchParams()).rows).toEqual(emptyPlan().rows)
+  })
+})
+
+describe('planReportUrl', () => {
+  it('carries the whole plan, so the sheet can rebuild it', () => {
+    const values = { name: 'Sesión 1', bufferPercent: '10', rows: [{ productId: 3, target: '20', extra: '5' }] }
+    const url = new URL(planReportUrl(values), 'http://localhost')
+    expect(url.pathname).toBe('/planeacion/reporte')
+    expect(parsePlanParams(url.searchParams)).toEqual(values)
   })
 })
 

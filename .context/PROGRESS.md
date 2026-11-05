@@ -6,11 +6,30 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
 
 - **Milestone:** Improvements 1 ([`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md)) **complete** on
   and merged into `main` (with M0–M5.2). Recetario (`imp2-recetario`) is also merged.
-- **In progress:** week prep planner ([`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md)) on `imp3-week-prep`:
-  backend and page `/planeacion` done, next is P3 (printable sheet and CSV button).
+- **Ready to merge:** week prep planner ([`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md)) is complete on
+  `imp3-week-prep`, waiting for Sebas's review.
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
 - **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
+
+---
+
+## 2026-11-04 · Week prep planner: printing and CSV (`imp3-week-prep`)
+
+**Done**
+- `/planeacion/reporte`: summary, products, recipes and supplies with checkboxes, no prices. Rebuilt from the URL.
+- "Imprimir / PDF" (`PrintPreviewDialog` with `waitForReady`) and "Exportar CSV" (`downloadPrepPlanCsv`, a POST, so it
+  downloads a blob); both are disabled while the result is out of date.
+- Verified with headless Chrome on a copy of the real DB: dialog, print call, CSV download with BOM and filename
+  `badger-planeacion-sesion-0-…`, sheet with no products or an unknown one, back link. No console errors. Real PDF with 4
+  products: 3 pages, table header repeated, no group split. The system print dialog itself wasn't opened.
+- Tests: backend 180, frontend 73.
+
+**Gotchas**
+- `SheetSection` is `break-inside-avoid`, wrong for a long list; supplies use a plain section. The first version
+  stranded the "Suministros" heading at the bottom of page 1, hence the forced page break (D64).
+- "Con mermas" on a supply means at least part of it has the buffer: Harina is marked because of Cebolla crispy, even
+  though the buns' flour has none.
 
 ---
 

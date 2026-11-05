@@ -1,15 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ClipboardList, Eraser, Plus, Trash2 } from 'lucide-react'
+import { ClipboardList, Download, Eraser, Plus, Printer, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { useSearchParams } from 'react-router'
+import { toast } from 'sonner'
 
 import { errorMessage } from '@/api/client'
-import { usePrepPlan } from '@/api/prepPlan'
+import { downloadPrepPlanCsv, usePrepPlan } from '@/api/prepPlan'
 import { useProducts } from '@/api/products'
 import { FormField } from '@/components/forms/FormField'
 import { SearchSelect } from '@/components/forms/SearchSelect'
 import { EmptyState } from '@/components/layout/EmptyState'
+import { PrintPreviewDialog } from '@/components/PrintPreviewDialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -30,6 +32,7 @@ import {
   initialPlan,
   type PlanFormValues,
   planFormSchema,
+  planReportUrl,
   planToParams,
   planToPayload,
   rememberPlan,
@@ -63,6 +66,20 @@ export function PlanningPage() {
   const payload = useMemo(() => planToPayload(debounced), [debounced])
   const plan = usePrepPlan(payload)
   const isStale = plan.isFetching || snapshot !== debouncedSnapshot
+  const [printing, setPrinting] = useState(false)
+  const [exporting, setExporting] = useState(false)
+
+  async function exportCsv() {
+    if (!payload) return
+    setExporting(true)
+    try {
+      await downloadPrepPlanCsv({ ...payload, name: debounced.name.trim() || null })
+    } catch (error) {
+      toast.error(errorMessage(error))
+    } finally {
+      setExporting(false)
+    }
+  }
 
   // The URL holds the plan (D60), written after typing stops so it never fights the inputs.
   useEffect(() => {
@@ -216,10 +233,28 @@ export function PlanningPage() {
         />
       )}
       {payload && plan.data && (
-        <div className={cn('transition-opacity', isStale && 'opacity-60')}>
+        <div className={cn('space-y-4 transition-opacity', isStale && 'opacity-60')}>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" size="sm" disabled={isStale || exporting} onClick={exportCsv}>
+              <Download />
+              Exportar CSV
+            </Button>
+            <Button type="button" size="sm" disabled={isStale} onClick={() => setPrinting(true)}>
+              <Printer />
+              Imprimir / PDF
+            </Button>
+          </div>
           <PlanResults plan={plan.data} />
         </div>
       )}
+
+      <PrintPreviewDialog
+        open={printing}
+        onOpenChange={setPrinting}
+        title="Reporte de planeación"
+        src={planReportUrl(debounced)}
+        waitForReady
+      />
     </div>
   )
 }

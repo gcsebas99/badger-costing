@@ -64,6 +64,10 @@ export function planToParams(values: PlanFormValues): URLSearchParams {
   return params
 }
 
+export function planReportUrl(values: PlanFormValues): string {
+  return `/planeacion/reporte?${planToParams(values).toString()}`
+}
+
 /** API request, or null when there's nothing valid to calculate yet. */
 export function planToPayload(values: PlanFormValues): PrepPlanIn | null {
   if (!planFormSchema.safeParse(values).success) return null

@@ -7,7 +7,7 @@ is out of scope until after the roadmap. Personal use on `localhost`, no auth.
 - Source spec (Spanish): [`../badger-costing-roadmap.md`](../badger-costing-roadmap.md)
 - Milestones & task checklist: [`ROADMAP.md`](ROADMAP.md)
 - Improvements after the roadmap: [`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md) (kitchen tools for Recetas)
-  and [`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md) (week prep planner, in progress)
+  and [`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md) (week prep planner)
 - Session log / current status: [`PROGRESS.md`](PROGRESS.md)
 - Decisions (made and open): [`DECISIONS.md`](DECISIONS.md)
 
@@ -98,6 +98,9 @@ Always run `make test` and `make types` before calling a task done.
 - Recetario: `/recetas/recetario?ids=3,7,12` (several kitchen sheets at ×1, one per page; `pages/sheets/RecetarioPage.tsx`);
   selection in `pages/recipes/RecetarioDialog.tsx` + `recetario.ts`. `PrintPreviewDialog waitForReady` holds printing
   until the page calls `notifySheetReady()` (`lib/printReady.ts`).
+- Week prep planner: page `/planeacion` (`pages/planning/`), sheet `/planeacion/reporte` (`pages/sheets/PlanSheetPage.tsx`).
+  Never stored: the plan lives in the URL (`?nombre=&merma=&items=5:20:5,2:10:`, see `planForm.ts`). API: `POST /api/prep-plan`
+  and `/api/prep-plan/export.csv` (`services/prep_plan.py`). Waste % rules: D61; batches are never rounded: D62.
 - Menu engineering: `/api/sales-periods` (+ `/entries`, `/import`, `/menu-engineering`), page `/menu`.
 - Dashboard data: `GET /api/dashboard`; what-if: `POST /api/simulate`; CSV: `/api/export/{kind}.csv`;
   backups: `/api/backups`.

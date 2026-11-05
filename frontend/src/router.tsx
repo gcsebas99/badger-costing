@@ -12,6 +12,7 @@ import { RecipeEditorPage } from '@/pages/recipes/RecipeEditorPage'
 import { RecipesPage } from '@/pages/recipes/RecipesPage'
 import { SettingsPage } from '@/pages/settings/SettingsPage'
 import { KitchenSheetPage } from '@/pages/sheets/KitchenSheetPage'
+import { PlanSheetPage } from '@/pages/sheets/PlanSheetPage'
 import { ProductSheetPage } from '@/pages/sheets/ProductSheetPage'
 import { RecetarioPage } from '@/pages/sheets/RecetarioPage'
 import { RecipeSheetPage } from '@/pages/sheets/RecipeSheetPage'
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
   { path: 'recetas/recetario', element: <RecetarioPage />, errorElement: <RouteError /> },
   { path: 'recetas/:id/ficha', element: <RecipeSheetPage />, errorElement: <RouteError /> },
   { path: 'recetas/:id/cocina', element: <KitchenSheetPage />, errorElement: <RouteError /> },
+  { path: 'planeacion/reporte', element: <PlanSheetPage />, errorElement: <RouteError /> },
   { path: 'productos/:id/ficha', element: <ProductSheetPage />, errorElement: <RouteError /> },
   {
     element: <AppLayout />,
