@@ -8,6 +8,8 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
   and merged into `main` (with M0–M5.2). Recetario (`imp2-recetario`) is also merged.
 - **Ready to merge:** week prep planner ([`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md)) is complete on
   `imp3-week-prep`, waiting for Sebas's review.
+- **In progress:** session closing "Cierres" ([`ROADMAP-IMPROVEMENTS-4.md`](ROADMAP-IMPROVEMENTS-4.md), D66–D70),
+  in progress on `imp4-closing` (from `imp3-week-prep`).
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
 - **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git

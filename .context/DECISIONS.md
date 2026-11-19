@@ -69,6 +69,11 @@
 | D63 | 2026-11-04 | The plan only uses quantities: a missing price doesn't matter; an unconvertible line is left out with a warning | Same spirit as D25, without aborting the plan |
 | D64 | 2026-11-04 | Plan sheet has no prices and adds a checkbox per recipe and supply; supplies always start on a new printed page; lines left out by warnings do print | Recipes for the kitchen and the shopping list get used separately; a paper list must say when it's incomplete |
 | D65 | 2026-11-04 | Plan CSV is one table (recipes, then supplies) with a "Tipo" column; the report name only goes in the filename; the product list and % aren't in the file | Filters easily in Excel; keeps the columns uniform |
+| D66 | 2026-11-19 | Closings are stored; while a draft their costs are computed live, and "Cerrar" writes a per-product snapshot (unit cost, food/packaging, PVP, complete flag). "Reabrir" drops it | Exception to "costs are never stored": a closed session is a historical record and must not move when supply prices change |
+| D67 | 2026-11-19 | Net income = billed − IVA − bank fee, both typed as ₡ amounts (default 0); the UI only suggests values from the Ajustes rates | Answered by Sebas; the POS/bank statement already gives the real amounts |
+| D68 | 2026-11-19 | A closing with an incomplete product cost can be closed after a confirmation, and its report says "Costo incompleto" | Blocking would stop the close over a missing price; hiding it would mislead |
+| D69 | 2026-11-19 | Keep the latest `closings_to_keep` closings (setting, default 5); creating one past the limit deletes the oldest by end date in the same transaction, after a UI warning. Backups keep the rest | Answered by Sebas ("at least 5", configurable) |
+| D70 | 2026-11-19 | Labor and expense lines store their own rate/amount and a name snapshot; catalog FKs are SET NULL | Changing a default rate or renaming never rewrites an old closing |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 
