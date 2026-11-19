@@ -50,6 +50,8 @@ import {
   formToPreview,
 } from './closingForm'
 
+const SAVED = 'saved'
+
 type Confirm = 'delete' | 'close' | 'reopen' | 'retention' | null
 
 export function ClosingEditorPage() {
@@ -92,8 +94,10 @@ export function ClosingEditorPage() {
   const report = showSaved ? closing.report : mapping ? preview.data : undefined
   const isStale = !showSaved && (preview.isFetching || snapshot !== debouncedSnapshot)
 
+  // Leaving after a save or delete passes `state: SAVED`: the blocker's closure may still see the
+  // old `isDirty`, and a save confirmed from a dialog runs outside `handleSubmit`.
   const blocker = useBlocker(({ currentLocation, nextLocation }) =>
-    isDirty && !isSubmitting && currentLocation.pathname !== nextLocation.pathname,
+    isDirty && !isSubmitting && nextLocation.state !== SAVED && currentLocation.pathname !== nextLocation.pathname,
   )
 
   async function save(values: ClosingFormValues) {
@@ -102,7 +106,7 @@ export function ClosingEditorPage() {
         const created = await createClosing.mutateAsync(formToPayload(values))
         reset(detailToForm(created))
         toast.success('Cierre creado.')
-        navigate(`/cierres/${created.id}`, { replace: true })
+        navigate(`/cierres/${created.id}`, { replace: true, state: SAVED })
       } else {
         const updated = await updateClosing.mutateAsync({ id: closingId, body: formToPayload(values) })
         reset(detailToForm(updated))
@@ -258,13 +262,17 @@ export function ClosingEditorPage() {
                 <MoneyInput id="bankFee" {...register('bankFee')} aria-invalid={!!errors.bankFee} />
               </FormField>
             </div>
-            {report && Number(report.billed_amount) > 0 && !readOnly && (
+            {report && !readOnly && (Number(report.suggested_vat_amount) > 0 || Number(report.suggested_bank_fee_amount) > 0) && (
               <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                 Según las tasas de Ajustes:
-                <SuggestButton label={`IVA ${formatCRC(report.suggested_vat_amount)}`}
-                  onClick={() => applySuggestion('vat', report.suggested_vat_amount)} />
-                <SuggestButton label={`Comisión ${formatCRC(report.suggested_bank_fee_amount)}`}
-                  onClick={() => applySuggestion('bankFee', report.suggested_bank_fee_amount)} />
+                {Number(report.suggested_vat_amount) > 0 && (
+                  <SuggestButton label={`IVA ${formatCRC(report.suggested_vat_amount)}`}
+                    onClick={() => applySuggestion('vat', report.suggested_vat_amount)} />
+                )}
+                {Number(report.suggested_bank_fee_amount) > 0 && (
+                  <SuggestButton label={`comisión ${formatCRC(report.suggested_bank_fee_amount)}`}
+                    onClick={() => applySuggestion('bankFee', report.suggested_bank_fee_amount)} />
+                )}
               </p>
             )}
           </Section>
@@ -335,8 +343,7 @@ export function ClosingEditorPage() {
         onConfirm={() =>
           run(async () => {
             await deleteClosing.mutateAsync(closingId!)
-            reset(emptyClosingForm(todayISO()))
-            navigate('/cierres')
+            navigate('/cierres', { state: SAVED })
           }, 'Cierre eliminado.')
         }
       />

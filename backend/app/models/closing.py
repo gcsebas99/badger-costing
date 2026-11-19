@@ -36,6 +36,10 @@ class ExpenseType(SQLModel, table=True):
 
 
 class Closing(SQLModel, table=True):
+    # Retention deletes old closings: never reuse their ids (old report links must not point to
+    # another closing).
+    __table_args__ = {"sqlite_autoincrement": True}
+
     id: int | None = Field(default=None, primary_key=True)
     name: str
     start_date: date

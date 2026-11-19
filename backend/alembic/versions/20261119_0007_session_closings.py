@@ -35,7 +35,8 @@ def upgrade() -> None:
     sa.Column('closed_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=True),
     sa.Column('created_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
     sa.Column('updated_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sqlite_autoincrement=True,
     )
     with op.batch_alter_table('closing', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_closing_end_date'), ['end_date'], unique=False)

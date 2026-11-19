@@ -320,3 +320,12 @@ def test_export_csv(client: TestClient, menu):
     assert text.startswith("Sección;Concepto;Cantidad;Unitario;Total")
     assert "Resultado;Ganancia neta;;;15000,00" in text
     assert "Productos;Burger;10;1100,00;11000,00" in text
+
+
+def test_ids_are_not_reused_after_delete(client: TestClient, menu):
+    """Retention deletes closings; an old report link must not open a different closing."""
+    first = client.post("/api/closings", json=payload(menu["burger"].id)).json()["id"]
+    second = client.post("/api/closings", json=payload(menu["burger"].id)).json()["id"]
+    client.delete(f"/api/closings/{second}")
+    third = client.post("/api/closings", json=payload(menu["burger"].id)).json()["id"]
+    assert third > second > first

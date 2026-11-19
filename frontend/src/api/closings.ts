@@ -90,7 +90,18 @@ export function useUpdateClosing() {
 }
 
 export function useDeleteClosing() {
-  return useClosingMutation(async (id: number) => noContent(await api.DELETE('/api/closings/{closing_id}', path(id))))
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: number) => noContent(await api.DELETE('/api/closings/{closing_id}', path(id))),
+    // Refetching the deleted closing would 404 (with retries) and hold up leaving the page.
+    onSuccess: async (_, id) => {
+      await queryClient.invalidateQueries({
+        queryKey: closingKeys.all,
+        predicate: (query) => query.queryKey[1] !== 'detail' || query.queryKey[2] !== id,
+      })
+      await queryClient.invalidateQueries({ queryKey: closingKeys.expenseTypes })
+    },
+  })
 }
 
 export function useCloseClosing() {
