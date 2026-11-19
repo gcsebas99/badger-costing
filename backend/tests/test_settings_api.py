@@ -7,6 +7,7 @@ def test_settings_defaults(client):
         "target_food_cost_rate": "0.3",
         "deviation_upper_rate": "0.05",
         "deviation_lower_rate": "-0.1",
+        "closings_to_keep": 5,
     }
 
 

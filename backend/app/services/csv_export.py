@@ -8,8 +8,10 @@ from decimal import ROUND_HALF_UP, Decimal
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
+from app.models.closing import Closing
 from app.models.recipe import Recipe
 from app.models.supply import Supply
+from app.services.closing import ClosingReport
 from app.services.prep_plan import PrepPlan
 from app.services.product_pricing import PricingContext, load_products, pricing_input
 from app.services.settings import get_settings
@@ -215,3 +217,37 @@ def prep_plan_csv(plan: PrepPlan) -> str:
         ],
         [*recipes, *supplies],
     )
+
+
+def closing_csv(closing: Closing, report: ClosingReport) -> str:
+    """One table: Sección; Concepto; Cantidad; Unitario; Total (income, costs, result)."""
+    rows: list[list[object]] = [
+        ["Ingresos", "Facturado", "", "", number(report.billed_amount)],
+        ["Ingresos", "IVA", "", "", number(-report.vat_amount)],
+        ["Ingresos", "Comisión bancaria", "", "", number(-report.bank_fee_amount)],
+        ["Ingresos", "Ingreso neto", "", "", number(report.net_income)],
+    ]
+    for p in report.products:
+        rows.append(["Productos", p.name, p.units, number(p.unit_cost), number(p.total_cost)])
+    for line in report.labor:
+        rows.append(
+            [
+                "Mano de obra",
+                line.name,
+                number(line.hours),
+                number(line.hourly_rate),
+                number(line.total),
+            ]
+        )
+    for line in report.expenses:
+        rows.append(["Otros gastos", line.name, "", "", number(line.amount)])
+    rows += [
+        ["Resultado", "Costo de producto", "", "", number(report.product_cost)],
+        ["Resultado", "Mano de obra", "", "", number(report.labor_cost)],
+        ["Resultado", "Otros gastos", "", "", number(report.other_expenses)],
+        ["Resultado", "Gastos totales", "", "", number(report.total_expenses)],
+        ["Resultado", "Ganancia neta", "", "", number(report.net_profit)],
+    ]
+    if report.net_margin_rate is not None:
+        rows.append(["Resultado", "Margen neto %", "", "", number(report.net_margin_rate * 100)])
+    return to_csv(["Sección", "Concepto", "Cantidad", "Unitario", "Total"], rows)

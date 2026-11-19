@@ -96,6 +96,200 @@ export interface paths {
         patch: operations["update_menu_group"];
         trace?: never;
     };
+    "/api/collaborators": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Collaborators */
+        get: operations["list_collaborators"];
+        put?: never;
+        /** Create Collaborator */
+        post: operations["create_collaborator"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/collaborators/{collaborator_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Collaborator */
+        delete: operations["delete_collaborator"];
+        options?: never;
+        head?: never;
+        /** Update Collaborator */
+        patch: operations["update_collaborator"];
+        trace?: never;
+    };
+    "/api/expense-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Expense Types */
+        get: operations["list_expense_types"];
+        put?: never;
+        /** Create Expense Type */
+        post: operations["create_expense_type"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/expense-types/{expense_type_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Expense Type */
+        delete: operations["delete_expense_type"];
+        options?: never;
+        head?: never;
+        /** Update Expense Type */
+        patch: operations["update_expense_type"];
+        trace?: never;
+    };
+    "/api/closings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Closings */
+        get: operations["list_closings"];
+        put?: never;
+        /** Create Closing */
+        post: operations["create_closing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/closings/retention": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Closing Retention */
+        get: operations["closing_retention"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/closings/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview Closing */
+        post: operations["preview_closing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/closings/{closing_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Closing */
+        get: operations["read_closing"];
+        /** Update Closing */
+        put: operations["update_closing"];
+        post?: never;
+        /** Delete Closing */
+        delete: operations["delete_closing"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/closings/{closing_id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Close Closing */
+        post: operations["close_closing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/closings/{closing_id}/reopen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reopen Closing */
+        post: operations["reopen_closing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/closings/{closing_id}/export.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Closing */
+        get: operations["export_closing"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/dashboard": {
         parameters: {
             query?: never;
@@ -734,6 +928,381 @@ export interface components {
             food_cost_status: components["schemas"]["AlertLevel"];
         };
         /**
+         * ClosingAmountsIn
+         * @description What the report needs: amounts and lines (also used by the live preview).
+         */
+        ClosingAmountsIn: {
+            /**
+             * Billed Amount
+             * @default 0
+             */
+            billed_amount: number | string;
+            /**
+             * Vat Amount
+             * @default 0
+             */
+            vat_amount: number | string;
+            /**
+             * Bank Fee Amount
+             * @default 0
+             */
+            bank_fee_amount: number | string;
+            /**
+             * Products
+             * @default []
+             */
+            products: components["schemas"]["ClosingProductIn"][];
+            /**
+             * Labor
+             * @default []
+             */
+            labor: components["schemas"]["ClosingLaborIn-Input"][];
+            /**
+             * Expenses
+             * @default []
+             */
+            expenses: components["schemas"]["ClosingExpenseIn-Input"][];
+        };
+        /** ClosingDetail */
+        ClosingDetail: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Notes */
+            notes: string | null;
+            status: components["schemas"]["ClosingStatus"];
+            /** Closed At */
+            closed_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Billed Amount */
+            billed_amount: string;
+            /** Vat Amount */
+            vat_amount: string;
+            /** Bank Fee Amount */
+            bank_fee_amount: string;
+            /** Products */
+            products: components["schemas"]["ClosingProductIn"][];
+            /** Labor */
+            labor: components["schemas"]["ClosingLaborIn-Output"][];
+            /** Expenses */
+            expenses: components["schemas"]["ClosingExpenseIn-Output"][];
+            report: components["schemas"]["ClosingReportRead"];
+        };
+        /** ClosingExpenseIn */
+        "ClosingExpenseIn-Input": {
+            /** Expense Type Id */
+            expense_type_id?: number | null;
+            /** Name */
+            name: string;
+            /** Amount */
+            amount: number | string;
+        };
+        /** ClosingExpenseIn */
+        "ClosingExpenseIn-Output": {
+            /** Expense Type Id */
+            expense_type_id?: number | null;
+            /** Name */
+            name: string;
+            /** Amount */
+            amount: string;
+        };
+        /** ClosingExpenseReport */
+        ClosingExpenseReport: {
+            /** Expense Type Id */
+            expense_type_id: number | null;
+            /** Name */
+            name: string;
+            /** Amount */
+            amount: string;
+        };
+        /** ClosingIn */
+        ClosingIn: {
+            /**
+             * Billed Amount
+             * @default 0
+             */
+            billed_amount: number | string;
+            /**
+             * Vat Amount
+             * @default 0
+             */
+            vat_amount: number | string;
+            /**
+             * Bank Fee Amount
+             * @default 0
+             */
+            bank_fee_amount: number | string;
+            /**
+             * Products
+             * @default []
+             */
+            products: components["schemas"]["ClosingProductIn"][];
+            /**
+             * Labor
+             * @default []
+             */
+            labor: components["schemas"]["ClosingLaborIn-Input"][];
+            /**
+             * Expenses
+             * @default []
+             */
+            expenses: components["schemas"]["ClosingExpenseIn-Input"][];
+            /** Name */
+            name: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** ClosingLaborIn */
+        "ClosingLaborIn-Input": {
+            /** Collaborator Id */
+            collaborator_id?: number | null;
+            /** Name */
+            name: string;
+            /** Hours */
+            hours: number | string;
+            /** Hourly Rate */
+            hourly_rate: number | string;
+        };
+        /** ClosingLaborIn */
+        "ClosingLaborIn-Output": {
+            /** Collaborator Id */
+            collaborator_id?: number | null;
+            /** Name */
+            name: string;
+            /** Hours */
+            hours: string;
+            /** Hourly Rate */
+            hourly_rate: string;
+        };
+        /** ClosingLaborReport */
+        ClosingLaborReport: {
+            /** Collaborator Id */
+            collaborator_id: number | null;
+            /** Name */
+            name: string;
+            /** Hours */
+            hours: string;
+            /** Hourly Rate */
+            hourly_rate: string;
+            /** Total */
+            total: string;
+        };
+        /** ClosingProductIn */
+        ClosingProductIn: {
+            /** Product Id */
+            product_id: number;
+            /** Units */
+            units: number;
+        };
+        /** ClosingProductReport */
+        ClosingProductReport: {
+            /** Product Id */
+            product_id: number;
+            /** Name */
+            name: string;
+            /** Units */
+            units: number;
+            /** Unit Cost */
+            unit_cost: string;
+            /** Food Cost */
+            food_cost: string;
+            /** Packaging Cost */
+            packaging_cost: string;
+            /** Total Cost */
+            total_cost: string;
+            /** Unit Price */
+            unit_price: string | null;
+            /** Expected Revenue */
+            expected_revenue: string | null;
+            /** Complete */
+            complete: boolean;
+            /** Issues */
+            issues: string[];
+        };
+        /**
+         * ClosingRead
+         * @description List row.
+         */
+        ClosingRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            status: components["schemas"]["ClosingStatus"];
+            /** Closed At */
+            closed_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Billed Amount */
+            billed_amount: string;
+            /** Net Income */
+            net_income: string;
+            /** Total Expenses */
+            total_expenses: string;
+            /** Net Profit */
+            net_profit: string;
+            /** Net Margin Rate */
+            net_margin_rate: string | null;
+            /** Complete */
+            complete: boolean;
+        };
+        /** ClosingReportRead */
+        ClosingReportRead: {
+            /** Frozen */
+            frozen: boolean;
+            /** Billed Amount */
+            billed_amount: string;
+            /** Vat Amount */
+            vat_amount: string;
+            /** Bank Fee Amount */
+            bank_fee_amount: string;
+            /** Net Income */
+            net_income: string;
+            /** Products */
+            products: components["schemas"]["ClosingProductReport"][];
+            /** Labor */
+            labor: components["schemas"]["ClosingLaborReport"][];
+            /** Expenses */
+            expenses: components["schemas"]["ClosingExpenseReport"][];
+            /** Total Units */
+            total_units: number;
+            /** Product Cost */
+            product_cost: string;
+            /** Food Cost */
+            food_cost: string;
+            /** Packaging Cost */
+            packaging_cost: string;
+            /** Labor Cost */
+            labor_cost: string;
+            /** Labor Hours */
+            labor_hours: string;
+            /** Other Expenses */
+            other_expenses: string;
+            /** Total Expenses */
+            total_expenses: string;
+            /** Net Profit */
+            net_profit: string;
+            /** Net Margin Rate */
+            net_margin_rate: string | null;
+            /** Food Cost Rate */
+            food_cost_rate: string | null;
+            /** Labor Rate */
+            labor_rate: string | null;
+            /** Prime Cost Rate */
+            prime_cost_rate: string | null;
+            /** Other Expenses Rate */
+            other_expenses_rate: string | null;
+            /** Expected Billing */
+            expected_billing: string | null;
+            /** Billing Difference */
+            billing_difference: string | null;
+            /** Products Without Price */
+            products_without_price: string[];
+            /** Complete */
+            complete: boolean;
+            /** Warnings */
+            warnings: string[];
+            /** Suggested Vat Amount */
+            suggested_vat_amount: string;
+            /** Suggested Bank Fee Amount */
+            suggested_bank_fee_amount: string;
+        };
+        /** ClosingRetentionRead */
+        ClosingRetentionRead: {
+            /** Keep */
+            keep: number;
+            /** Count */
+            count: number;
+            /**
+             * Will Delete
+             * @description Closings that creating a new one would delete (oldest first).
+             */
+            will_delete: components["schemas"]["ClosingRead"][];
+        };
+        /**
+         * ClosingStatus
+         * @enum {string}
+         */
+        ClosingStatus: "draft" | "closed";
+        /** CollaboratorIn */
+        CollaboratorIn: {
+            /** Name */
+            name: string;
+            /**
+             * Hourly Rate
+             * @default 0
+             */
+            hourly_rate: number | string;
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+        };
+        /** CollaboratorRead */
+        CollaboratorRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Hourly Rate */
+            hourly_rate: string;
+            /** Active */
+            active: boolean;
+        };
+        /** CollaboratorUpdate */
+        CollaboratorUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Hourly Rate */
+            hourly_rate?: number | string | null;
+            /** Active */
+            active?: boolean | null;
+        };
+        /**
          * CostMode
          * @enum {string}
          */
@@ -771,6 +1340,37 @@ export interface components {
             /** Quantity */
             quantity: string;
             unit: components["schemas"]["Unit"];
+        };
+        /** ExpenseTypeIn */
+        ExpenseTypeIn: {
+            /** Name */
+            name: string;
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+        };
+        /** ExpenseTypeRead */
+        ExpenseTypeRead: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Active */
+            active: boolean;
+            /**
+             * Last Amount
+             * @description Amount on the most recent closing that used it (prefill).
+             */
+            last_amount?: string | null;
+        };
+        /** ExpenseTypeUpdate */
+        ExpenseTypeUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Active */
+            active?: boolean | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -1885,6 +2485,8 @@ export interface components {
             deviation_upper_rate: string;
             /** Deviation Lower Rate */
             deviation_lower_rate: string;
+            /** Closings To Keep */
+            closings_to_keep: number;
         };
         /** SettingsUpdate */
         SettingsUpdate: {
@@ -1901,6 +2503,8 @@ export interface components {
             deviation_upper_rate?: number | string | null;
             /** Deviation Lower Rate */
             deviation_lower_rate?: number | string | null;
+            /** Closings To Keep */
+            closings_to_keep?: number | null;
         };
         /** SimulationIn */
         SimulationIn: {
@@ -2380,6 +2984,556 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MenuGroupRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_collaborators: {
+        parameters: {
+            query?: {
+                active?: boolean | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollaboratorRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_collaborator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollaboratorIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollaboratorRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_collaborator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                collaborator_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_collaborator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                collaborator_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollaboratorUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollaboratorRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_expense_types: {
+        parameters: {
+            query?: {
+                active?: boolean | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpenseTypeRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_expense_type: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpenseTypeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpenseTypeRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_expense_type: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                expense_type_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_expense_type: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                expense_type_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpenseTypeUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpenseTypeRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_closings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClosingRead"][];
+                };
+            };
+        };
+    };
+    create_closing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClosingIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClosingDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    closing_retention: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClosingRetentionRead"];
+                };
+            };
+        };
+    };
+    preview_closing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClosingAmountsIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClosingReportRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_closing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                closing_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClosingDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_closing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                closing_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClosingIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClosingDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_closing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                closing_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    close_closing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                closing_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClosingDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reopen_closing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                closing_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClosingDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_closing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                closing_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": unknown;
                 };
             };
             /** @description Validation Error */

@@ -21,7 +21,7 @@ from app.services.costing import ItemSpec
 from app.services.product_cost import ProductSpec, spec_from_product
 from app.services.product_pricing import PricingContext, PricingInput, pricing_input
 from app.services.text import fold
-from app.services.usages import sales_count
+from app.services.usages import closing_count, sales_count
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -326,6 +326,11 @@ def delete_product(product_id: int, session: SessionDep):
         raise HTTPException(
             status.HTTP_409_CONFLICT,
             "El producto tiene ventas registradas. Desactívalo en lugar de eliminarlo.",
+        )
+    if closing_count(session, product_id):
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "El producto aparece en un cierre guardado. Desactívalo en lugar de eliminarlo.",
         )
     session.delete(product)
     session.commit()

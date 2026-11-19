@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.routers import (
     catalog,
+    closings,
     health,
     insights,
     prep_plan,
@@ -15,6 +16,7 @@ from app.routers import (
 api_router = APIRouter(prefix="/api")
 api_router.include_router(health.router)
 api_router.include_router(catalog.router)
+api_router.include_router(closings.router)
 api_router.include_router(insights.router)
 api_router.include_router(prep_plan.router)
 api_router.include_router(products.router)

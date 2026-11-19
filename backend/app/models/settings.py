@@ -36,3 +36,8 @@ class AppSettings(SQLModel, table=True):
     )
     deviation_upper_rate: Decimal = _rate("0.05", "Alert when cost is this much above theoretical")
     deviation_lower_rate: Decimal = _rate("-0.1", "Alert when cost is this much below theoretical")
+    closings_to_keep: int = Field(
+        default=5,
+        sa_column_kwargs={"server_default": "5"},
+        description="How many session closings to keep; the oldest is deleted past this",
+    )

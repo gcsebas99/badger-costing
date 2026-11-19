@@ -325,6 +325,733 @@
         }
       }
     },
+    "/api/collaborators": {
+      "get": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "List Collaborators",
+        "operationId": "list_collaborators",
+        "parameters": [
+          {
+            "name": "active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Active"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CollaboratorRead"
+                  },
+                  "title": "Response List Collaborators"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Create Collaborator",
+        "operationId": "create_collaborator",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollaboratorIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollaboratorRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/collaborators/{collaborator_id}": {
+      "patch": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Update Collaborator",
+        "operationId": "update_collaborator",
+        "parameters": [
+          {
+            "name": "collaborator_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Collaborator Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollaboratorUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollaboratorRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Delete Collaborator",
+        "operationId": "delete_collaborator",
+        "parameters": [
+          {
+            "name": "collaborator_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Collaborator Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/expense-types": {
+      "get": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "List Expense Types",
+        "operationId": "list_expense_types",
+        "parameters": [
+          {
+            "name": "active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Active"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExpenseTypeRead"
+                  },
+                  "title": "Response List Expense Types"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Create Expense Type",
+        "operationId": "create_expense_type",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpenseTypeIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseTypeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/expense-types/{expense_type_id}": {
+      "patch": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Update Expense Type",
+        "operationId": "update_expense_type",
+        "parameters": [
+          {
+            "name": "expense_type_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Expense Type Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpenseTypeUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseTypeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Delete Expense Type",
+        "operationId": "delete_expense_type",
+        "parameters": [
+          {
+            "name": "expense_type_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Expense Type Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/closings": {
+      "get": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "List Closings",
+        "operationId": "list_closings",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ClosingRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Closings"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Create Closing",
+        "operationId": "create_closing",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClosingIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosingDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/closings/retention": {
+      "get": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Closing Retention",
+        "operationId": "closing_retention",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosingRetentionRead"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/closings/preview": {
+      "post": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Preview Closing",
+        "operationId": "preview_closing",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClosingAmountsIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosingReportRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/closings/{closing_id}": {
+      "get": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Read Closing",
+        "operationId": "read_closing",
+        "parameters": [
+          {
+            "name": "closing_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Closing Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosingDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Update Closing",
+        "operationId": "update_closing",
+        "parameters": [
+          {
+            "name": "closing_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Closing Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClosingIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosingDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Delete Closing",
+        "operationId": "delete_closing",
+        "parameters": [
+          {
+            "name": "closing_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Closing Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/closings/{closing_id}/close": {
+      "post": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Close Closing",
+        "operationId": "close_closing",
+        "parameters": [
+          {
+            "name": "closing_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Closing Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosingDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/closings/{closing_id}/reopen": {
+      "post": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Reopen Closing",
+        "operationId": "reopen_closing",
+        "parameters": [
+          {
+            "name": "closing_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Closing Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosingDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/closings/{closing_id}/export.csv": {
+      "get": {
+        "tags": [
+          "closings"
+        ],
+        "summary": "Export Closing",
+        "operationId": "export_closing",
+        "parameters": [
+          {
+            "name": "closing_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Closing Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/csv": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/dashboard": {
       "get": {
         "tags": [
@@ -2569,6 +3296,1068 @@
         ],
         "title": "ChannelPricingRead"
       },
+      "ClosingAmountsIn": {
+        "properties": {
+          "billed_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Billed Amount",
+            "default": "0"
+          },
+          "vat_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Vat Amount",
+            "default": "0"
+          },
+          "bank_fee_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Bank Fee Amount",
+            "default": "0"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingProductIn"
+            },
+            "type": "array",
+            "title": "Products",
+            "default": []
+          },
+          "labor": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingLaborIn-Input"
+            },
+            "type": "array",
+            "title": "Labor",
+            "default": []
+          },
+          "expenses": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingExpenseIn-Input"
+            },
+            "type": "array",
+            "title": "Expenses",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "ClosingAmountsIn",
+        "description": "What the report needs: amounts and lines (also used by the live preview)."
+      },
+      "ClosingDetail": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClosingStatus"
+          },
+          "closed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closed At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "billed_amount": {
+            "type": "string",
+            "title": "Billed Amount"
+          },
+          "vat_amount": {
+            "type": "string",
+            "title": "Vat Amount"
+          },
+          "bank_fee_amount": {
+            "type": "string",
+            "title": "Bank Fee Amount"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingProductIn"
+            },
+            "type": "array",
+            "title": "Products"
+          },
+          "labor": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingLaborIn-Output"
+            },
+            "type": "array",
+            "title": "Labor"
+          },
+          "expenses": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingExpenseIn-Output"
+            },
+            "type": "array",
+            "title": "Expenses"
+          },
+          "report": {
+            "$ref": "#/components/schemas/ClosingReportRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "start_date",
+          "end_date",
+          "notes",
+          "status",
+          "closed_at",
+          "created_at",
+          "updated_at",
+          "billed_amount",
+          "vat_amount",
+          "bank_fee_amount",
+          "products",
+          "labor",
+          "expenses",
+          "report"
+        ],
+        "title": "ClosingDetail"
+      },
+      "ClosingExpenseIn-Input": {
+        "properties": {
+          "expense_type_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expense Type Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "amount"
+        ],
+        "title": "ClosingExpenseIn"
+      },
+      "ClosingExpenseIn-Output": {
+        "properties": {
+          "expense_type_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expense Type Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "amount"
+        ],
+        "title": "ClosingExpenseIn"
+      },
+      "ClosingExpenseReport": {
+        "properties": {
+          "expense_type_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expense Type Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "expense_type_id",
+          "name",
+          "amount"
+        ],
+        "title": "ClosingExpenseReport"
+      },
+      "ClosingIn": {
+        "properties": {
+          "billed_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Billed Amount",
+            "default": "0"
+          },
+          "vat_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Vat Amount",
+            "default": "0"
+          },
+          "bank_fee_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Bank Fee Amount",
+            "default": "0"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingProductIn"
+            },
+            "type": "array",
+            "title": "Products",
+            "default": []
+          },
+          "labor": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingLaborIn-Input"
+            },
+            "type": "array",
+            "title": "Labor",
+            "default": []
+          },
+          "expenses": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingExpenseIn-Input"
+            },
+            "type": "array",
+            "title": "Expenses",
+            "default": []
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "start_date",
+          "end_date"
+        ],
+        "title": "ClosingIn"
+      },
+      "ClosingLaborIn-Input": {
+        "properties": {
+          "collaborator_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collaborator Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "hours": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Hours"
+          },
+          "hourly_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Hourly Rate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "hours",
+          "hourly_rate"
+        ],
+        "title": "ClosingLaborIn"
+      },
+      "ClosingLaborIn-Output": {
+        "properties": {
+          "collaborator_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collaborator Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "hours": {
+            "type": "string",
+            "title": "Hours"
+          },
+          "hourly_rate": {
+            "type": "string",
+            "title": "Hourly Rate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "hours",
+          "hourly_rate"
+        ],
+        "title": "ClosingLaborIn"
+      },
+      "ClosingLaborReport": {
+        "properties": {
+          "collaborator_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collaborator Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "hours": {
+            "type": "string",
+            "title": "Hours"
+          },
+          "hourly_rate": {
+            "type": "string",
+            "title": "Hourly Rate"
+          },
+          "total": {
+            "type": "string",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "collaborator_id",
+          "name",
+          "hours",
+          "hourly_rate",
+          "total"
+        ],
+        "title": "ClosingLaborReport"
+      },
+      "ClosingProductIn": {
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "title": "Product Id"
+          },
+          "units": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Units"
+          }
+        },
+        "type": "object",
+        "required": [
+          "product_id",
+          "units"
+        ],
+        "title": "ClosingProductIn"
+      },
+      "ClosingProductReport": {
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "title": "Product Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "units": {
+            "type": "integer",
+            "title": "Units"
+          },
+          "unit_cost": {
+            "type": "string",
+            "title": "Unit Cost"
+          },
+          "food_cost": {
+            "type": "string",
+            "title": "Food Cost"
+          },
+          "packaging_cost": {
+            "type": "string",
+            "title": "Packaging Cost"
+          },
+          "total_cost": {
+            "type": "string",
+            "title": "Total Cost"
+          },
+          "unit_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Price"
+          },
+          "expected_revenue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Revenue"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Issues"
+          }
+        },
+        "type": "object",
+        "required": [
+          "product_id",
+          "name",
+          "units",
+          "unit_cost",
+          "food_cost",
+          "packaging_cost",
+          "total_cost",
+          "unit_price",
+          "expected_revenue",
+          "complete",
+          "issues"
+        ],
+        "title": "ClosingProductReport"
+      },
+      "ClosingRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClosingStatus"
+          },
+          "closed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closed At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "billed_amount": {
+            "type": "string",
+            "title": "Billed Amount"
+          },
+          "net_income": {
+            "type": "string",
+            "title": "Net Income"
+          },
+          "total_expenses": {
+            "type": "string",
+            "title": "Total Expenses"
+          },
+          "net_profit": {
+            "type": "string",
+            "title": "Net Profit"
+          },
+          "net_margin_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Margin Rate"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "start_date",
+          "end_date",
+          "status",
+          "closed_at",
+          "created_at",
+          "billed_amount",
+          "net_income",
+          "total_expenses",
+          "net_profit",
+          "net_margin_rate",
+          "complete"
+        ],
+        "title": "ClosingRead",
+        "description": "List row."
+      },
+      "ClosingReportRead": {
+        "properties": {
+          "frozen": {
+            "type": "boolean",
+            "title": "Frozen"
+          },
+          "billed_amount": {
+            "type": "string",
+            "title": "Billed Amount"
+          },
+          "vat_amount": {
+            "type": "string",
+            "title": "Vat Amount"
+          },
+          "bank_fee_amount": {
+            "type": "string",
+            "title": "Bank Fee Amount"
+          },
+          "net_income": {
+            "type": "string",
+            "title": "Net Income"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingProductReport"
+            },
+            "type": "array",
+            "title": "Products"
+          },
+          "labor": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingLaborReport"
+            },
+            "type": "array",
+            "title": "Labor"
+          },
+          "expenses": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingExpenseReport"
+            },
+            "type": "array",
+            "title": "Expenses"
+          },
+          "total_units": {
+            "type": "integer",
+            "title": "Total Units"
+          },
+          "product_cost": {
+            "type": "string",
+            "title": "Product Cost"
+          },
+          "food_cost": {
+            "type": "string",
+            "title": "Food Cost"
+          },
+          "packaging_cost": {
+            "type": "string",
+            "title": "Packaging Cost"
+          },
+          "labor_cost": {
+            "type": "string",
+            "title": "Labor Cost"
+          },
+          "labor_hours": {
+            "type": "string",
+            "title": "Labor Hours"
+          },
+          "other_expenses": {
+            "type": "string",
+            "title": "Other Expenses"
+          },
+          "total_expenses": {
+            "type": "string",
+            "title": "Total Expenses"
+          },
+          "net_profit": {
+            "type": "string",
+            "title": "Net Profit"
+          },
+          "net_margin_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Margin Rate"
+          },
+          "food_cost_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Food Cost Rate"
+          },
+          "labor_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Labor Rate"
+          },
+          "prime_cost_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prime Cost Rate"
+          },
+          "other_expenses_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Other Expenses Rate"
+          },
+          "expected_billing": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Billing"
+          },
+          "billing_difference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Billing Difference"
+          },
+          "products_without_price": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Products Without Price"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "suggested_vat_amount": {
+            "type": "string",
+            "title": "Suggested Vat Amount"
+          },
+          "suggested_bank_fee_amount": {
+            "type": "string",
+            "title": "Suggested Bank Fee Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "frozen",
+          "billed_amount",
+          "vat_amount",
+          "bank_fee_amount",
+          "net_income",
+          "products",
+          "labor",
+          "expenses",
+          "total_units",
+          "product_cost",
+          "food_cost",
+          "packaging_cost",
+          "labor_cost",
+          "labor_hours",
+          "other_expenses",
+          "total_expenses",
+          "net_profit",
+          "net_margin_rate",
+          "food_cost_rate",
+          "labor_rate",
+          "prime_cost_rate",
+          "other_expenses_rate",
+          "expected_billing",
+          "billing_difference",
+          "products_without_price",
+          "complete",
+          "warnings",
+          "suggested_vat_amount",
+          "suggested_bank_fee_amount"
+        ],
+        "title": "ClosingReportRead"
+      },
+      "ClosingRetentionRead": {
+        "properties": {
+          "keep": {
+            "type": "integer",
+            "title": "Keep"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "will_delete": {
+            "items": {
+              "$ref": "#/components/schemas/ClosingRead"
+            },
+            "type": "array",
+            "title": "Will Delete",
+            "description": "Closings that creating a new one would delete (oldest first)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "keep",
+          "count",
+          "will_delete"
+        ],
+        "title": "ClosingRetentionRead"
+      },
+      "ClosingStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "closed"
+        ],
+        "title": "ClosingStatus"
+      },
+      "CollaboratorIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "hourly_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Hourly Rate",
+            "default": "0"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CollaboratorIn"
+      },
+      "CollaboratorRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "hourly_rate": {
+            "type": "string",
+            "title": "Hourly Rate"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "hourly_rate",
+          "active"
+        ],
+        "title": "CollaboratorRead"
+      },
+      "CollaboratorUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "hourly_rate": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hourly Rate"
+          },
+          "active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active"
+          }
+        },
+        "type": "object",
+        "title": "CollaboratorUpdate"
+      },
       "CostMode": {
         "type": "string",
         "enum": [
@@ -2679,6 +4468,91 @@
           "unit"
         ],
         "title": "EquivalenceRead"
+      },
+      "ExpenseTypeIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ExpenseTypeIn"
+      },
+      "ExpenseTypeRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          },
+          "last_amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Amount",
+            "description": "Amount on the most recent closing that used it (prefill)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "active"
+        ],
+        "title": "ExpenseTypeRead"
+      },
+      "ExpenseTypeUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active"
+          }
+        },
+        "type": "object",
+        "title": "ExpenseTypeUpdate"
       },
       "HTTPValidationError": {
         "properties": {
@@ -5931,6 +7805,10 @@
           "deviation_lower_rate": {
             "type": "string",
             "title": "Deviation Lower Rate"
+          },
+          "closings_to_keep": {
+            "type": "integer",
+            "title": "Closings To Keep"
           }
         },
         "type": "object",
@@ -5941,7 +7819,8 @@
           "margin_alert_rate",
           "target_food_cost_rate",
           "deviation_upper_rate",
-          "deviation_lower_rate"
+          "deviation_lower_rate",
+          "closings_to_keep"
         ],
         "title": "SettingsRead"
       },
@@ -6052,6 +7931,19 @@
               }
             ],
             "title": "Deviation Lower Rate"
+          },
+          "closings_to_keep": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closings To Keep"
           }
         },
         "type": "object",

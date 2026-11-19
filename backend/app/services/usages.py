@@ -3,6 +3,7 @@
 from sqlalchemy import func
 from sqlmodel import Session, col, or_, select
 
+from app.models.closing import ClosingProduct
 from app.models.product import MenuGroup, Product, ProductItem
 from app.models.recipe import Recipe, RecipeItem
 from app.models.sales import SalesEntry
@@ -64,3 +65,9 @@ def sales_count(session: Session, *, product_id: int | None = None, platform_id:
     if platform_id is not None:
         query = query.where(col(SalesEntry.platform_id) == platform_id)
     return session.exec(query).one()
+
+
+def closing_count(session: Session, product_id: int) -> int:
+    """How many closing lines reference a product."""
+    query = select(func.count()).select_from(ClosingProduct)
+    return session.exec(query.where(col(ClosingProduct.product_id) == product_id)).one()

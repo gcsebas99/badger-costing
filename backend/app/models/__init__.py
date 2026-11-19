@@ -2,6 +2,15 @@
 
 from sqlmodel import SQLModel
 
+from app.models.closing import (
+    Closing,
+    ClosingExpense,
+    ClosingLabor,
+    ClosingProduct,
+    ClosingStatus,
+    Collaborator,
+    ExpenseType,
+)
 from app.models.product import (
     MenuGroup,
     Product,
@@ -17,7 +26,14 @@ from app.models.supply import Supply, SupplyPrice, UnitEquivalence
 
 __all__ = [
     "AppSettings",
+    "Closing",
+    "ClosingExpense",
+    "ClosingLabor",
+    "ClosingProduct",
+    "ClosingStatus",
+    "Collaborator",
     "CostMode",
+    "ExpenseType",
     "MenuGroup",
     "Product",
     "ProductItem",

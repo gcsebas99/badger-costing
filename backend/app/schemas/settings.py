@@ -18,6 +18,7 @@ class SettingsRead(ApiModel):
     target_food_cost_rate: DecimalOut
     deviation_upper_rate: DecimalOut
     deviation_lower_rate: DecimalOut
+    closings_to_keep: int
 
 
 class SettingsUpdate(ApiModel):
@@ -28,3 +29,4 @@ class SettingsUpdate(ApiModel):
     target_food_cost_rate: PositiveRate | None = None
     deviation_upper_rate: Rate | None = None
     deviation_lower_rate: NegativeRate | None = None
+    closings_to_keep: Annotated[int, Field(ge=1, le=100)] | None = None
