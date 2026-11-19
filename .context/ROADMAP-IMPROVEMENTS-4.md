@@ -6,7 +6,7 @@ Unlike Planeación, closings **are stored** (the latest N, default 5).
 
 Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
-**Status:** 🚧 in progress on `imp4-closing` (branched from `imp3-week-prep`, which isn't merged yet). C1 done.
+**Status:** ✅ complete on `imp4-closing` (2026-11-19), branched from `imp3-week-prep`; not merged yet.
 
 Each block ends with `make test` and `make types` passing; the frontend blocks add a browser check
 against a scratch DB.
@@ -87,10 +87,10 @@ deleted.
 
 ## C2 — Page `/cierres`
 
-- [ ] **C2.1 Navigation**: sidebar item "Cierres" below "Planeación"; "Nuevo" → `/cierres/nuevo`.
-- [ ] **C2.2 List**: table of the stored closings (name, dates, facturado, ganancia neta, margen, estado
+- [x] **C2.1 Navigation**: sidebar item "Cierres" below "Planeación"; "Nuevo" → `/cierres/nuevo`.
+- [x] **C2.2 List**: table of the stored closings (name, dates, facturado, ganancia neta, margen, estado
       badge), plus a note "Se conservan los últimos N cierres".
-- [ ] **C2.3 Editor** `/cierres/nuevo` and `/cierres/:id` (full page, RHF + Zod, unsaved-changes guard):
+- [x] **C2.3 Editor** `/cierres/nuevo` and `/cierres/:id` (full page, RHF + Zod, unsaved-changes guard):
       - Session: name, start date, end date, notes.
       - Ingresos: facturado, IVA, comisión bancaria (with the "usar tasas de Ajustes" hint).
       - Productos vendidos: rows of product (active only, no repeats) + units, using `IngredientRows`-style
@@ -101,24 +101,24 @@ deleted.
       - Buttons: Guardar, Cerrar cierre (confirmation, extra warning if cost incomplete), Reabrir,
         Eliminar. A closed closing is read-only.
       - Creating when the limit is reached shows which closing will be deleted before saving.
-- [ ] **C2.4 Catalogs in Ajustes**: collaborators (name, default rate, active) and expense types
+- [x] **C2.4 Catalogs in Ajustes**: collaborators (name, default rate, active) and expense types
       (name, active); "Cierres a conservar" setting.
-- [ ] **C2.5 Tests** (vitest): form validation, percent/decimal parsing, preview payload mapping.
+- [x] **C2.5 Tests** (vitest): form validation, percent/decimal parsing, preview payload mapping.
 
 ## C3 — Report and PDF
 
-- [ ] **C3.1 Printable sheet** `/cierres/:id/reporte` (outside the layout, `?embed=1`), with prices:
+- [x] **C3.1 Printable sheet** `/cierres/:id/reporte` (outside the layout, `?embed=1`), with prices:
       header (name, dates, estado), Ingresos block, Gastos block (product cost per product, labor per
       collaborator, other expenses), Resultado (net profit, margin, ratios), billed vs expected
       difference, warnings. `notifySheetReady()`.
-- [ ] **C3.2 "Imprimir / PDF"** button in the editor and the list (`PrintPreviewDialog` with
+- [x] **C3.2 "Imprimir / PDF"** button in the editor and the list (`PrintPreviewDialog` with
       `waitForReady`), disabled with unsaved changes.
-- [ ] **C3.3 CSV** button — endpoint `GET /api/closings/{id}/export.csv` already done in C1 (D37).
+- [x] **C3.3 CSV** button in the editor — endpoint `GET /api/closings/{id}/export.csv` (D37).
 
 ## C4 — Wrap-up
 
-- [ ] Update `.context/CLAUDE.md`, `DECISIONS.md` and `PROGRESS.md`.
-- [ ] Browser pass on a scratch DB (never `data/costeo.db`).
+- [x] Update `.context/CLAUDE.md`, `DECISIONS.md` and `PROGRESS.md`.
+- [x] Browser pass on a scratch DB (never `data/costeo.db`).
 
 ## Out of scope for now (candidates for v2)
 

@@ -8,11 +8,43 @@ Newest first. Each entry: date, milestone/branch, what was done, what's next, go
   and merged into `main` (with M0–M5.2). Recetario (`imp2-recetario`) is also merged.
 - **Ready to merge:** week prep planner ([`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md)) is complete on
   `imp3-week-prep`, waiting for Sebas's review.
-- **In progress:** session closing "Cierres" ([`ROADMAP-IMPROVEMENTS-4.md`](ROADMAP-IMPROVEMENTS-4.md), D66–D70),
-  in progress on `imp4-closing` (from `imp3-week-prep`).
+- **Ready to merge:** session closing "Cierres" ([`ROADMAP-IMPROVEMENTS-4.md`](ROADMAP-IMPROVEMENTS-4.md), D66–D74)
+  is complete on `imp4-closing` (branched from `imp3-week-prep`; merge that first).
 - **Blocked:** M5.3/M5.4 (recipe manual import/write-back) until Sebas shares sample manual `.md` files.
-- **Real DB:** needs `make migrate` (rev `0006`) before the recipe pages work.
+- **Real DB:** needs `make migrate` (rev `0007`, session closings) before Cierres works.
 - **Remote:** `origin` = git@github.com:gcsebas99/badger-costing.git
+
+---
+
+## 2026-11-19 · Session closing "Cierres" (`imp4-closing`)
+
+**Done**
+- Plan: `ROADMAP-IMPROVEMENTS-4.md`, D66–D74 (Sebas: freeze costs on close, IVA/fee typed as ₡ amounts, date range,
+  configurable retention default 5).
+- Backend: migration `0007` (`collaborator`, `expense_type`, `closing` + product/labor/expense lines,
+  `app_settings.closings_to_keep`); `services/closing.py` (report: net income, product/labor/other costs, ratios,
+  expected billing vs billed, warnings, IVA/fee hints); `/api/closings` CRUD + preview, retention, close/reopen, CSV;
+  catalogs `/api/collaborators` and `/api/expense-types` (`last_amount` prefill). Products used in a closing can't be
+  deleted (409).
+- Frontend: sidebar "Cierres"; list; full-page editor with live summary, "Crear «…»" for collaborators and expenses,
+  rate / last amount prefill, "Usar IVA / comisión" hints, close/reopen/delete, retention warning + confirm;
+  Ajustes section (collaborators, expenses, "Cierres a conservar"); printable report with `PrintPreviewDialog`;
+  CSV button.
+- Verified with headless Chrome over CDP on a copy of the real DB (API :8010 / Vite :5190): catalogs, new closing with
+  2 products, 2 collaborators (one created inline), 2 expenses (one created inline), hints, validation, create, close
+  (read-only, frozen), print preview ready, reopen, list, sheet, CSV, retention with keep = 1, delete with unsaved
+  changes, unsaved-changes guard. Totals checked by hand. No console errors. The extension wasn't connected again.
+- Tests: backend 196, frontend 81.
+
+**Gotchas**
+- A save confirmed from a dialog runs outside `handleSubmit`, so `isSubmitting` is false and the blocker's closure
+  still sees `isDirty`: navigation after create was blocked. Fixed with `state: 'saved'` (D74).
+- `mutateAsync` awaits `onSuccess` invalidations: refetching the just-deleted closing 404'd with 3 retries and delayed
+  the redirect for seconds.
+- SQLite reuses the max id after a delete without AUTOINCREMENT (D73).
+- In the print preview, Escape goes to the iframe and doesn't close the dialog (existing behavior); use "Cerrar".
+- `InlineInput` now shows the message of a validation `Error` thrown before the request instead of "No se pudo
+  conectar".
 
 ---
 

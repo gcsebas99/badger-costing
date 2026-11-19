@@ -8,7 +8,7 @@ is out of scope until after the roadmap. Personal use on `localhost`, no auth.
 - Milestones & task checklist: [`ROADMAP.md`](ROADMAP.md)
 - Improvements after the roadmap: [`ROADMAP-IMPROVEMENTS-1.md`](ROADMAP-IMPROVEMENTS-1.md) (kitchen tools for Recetas),
   [`ROADMAP-IMPROVEMENTS-3.md`](ROADMAP-IMPROVEMENTS-3.md) (week prep planner)
-  and [`ROADMAP-IMPROVEMENTS-4.md`](ROADMAP-IMPROVEMENTS-4.md) (session closing, planned)
+  and [`ROADMAP-IMPROVEMENTS-4.md`](ROADMAP-IMPROVEMENTS-4.md) (session closing)
 - Session log / current status: [`PROGRESS.md`](PROGRESS.md)
 - Decisions (made and open): [`DECISIONS.md`](DECISIONS.md)
 
@@ -102,6 +102,10 @@ Always run `make test` and `make types` before calling a task done.
 - Week prep planner: page `/planeacion` (`pages/planning/`), sheet `/planeacion/reporte` (`pages/sheets/PlanSheetPage.tsx`).
   Never stored: the plan lives in the URL (`?nombre=&merma=&items=5:20:5,2:10:`, see `planForm.ts`). API: `POST /api/prep-plan`
   and `/api/prep-plan/export.csv` (`services/prep_plan.py`). Waste % rules: D61; batches are never rounded: D62.
+- Session closings ("Cierres"): page `/cierres` (`pages/closings/`), editor `/cierres/nuevo|:id`, sheet `/cierres/:id/reporte`.
+  **Stored** (unlike the plan): drafts are costed live, "Cerrar" freezes a per-product snapshot (D66); latest
+  `closings_to_keep` kept (D69). API: `/api/closings` (+ `/preview`, `/retention`, `/{id}/close|reopen|export.csv`),
+  `/api/collaborators`, `/api/expense-types`; `services/closing.py`. `SearchSelect` has `onCreate` ("Crear «…»").
 - Menu engineering: `/api/sales-periods` (+ `/entries`, `/import`, `/menu-engineering`), page `/menu`.
 - Dashboard data: `GET /api/dashboard`; what-if: `POST /api/simulate`; CSV: `/api/export/{kind}.csv`;
   backups: `/api/backups`.

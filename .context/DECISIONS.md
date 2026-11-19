@@ -74,6 +74,10 @@
 | D68 | 2026-11-19 | A closing with an incomplete product cost can be closed after a confirmation, and its report says "Costo incompleto" | Blocking would stop the close over a missing price; hiding it would mislead |
 | D69 | 2026-11-19 | Keep the latest `closings_to_keep` closings (setting, default 5); creating one past the limit deletes the oldest by end date in the same transaction, after a UI warning. Backups keep the rest | Answered by Sebas ("at least 5", configurable) |
 | D70 | 2026-11-19 | Labor and expense lines store their own rate/amount and a name snapshot; catalog FKs are SET NULL | Changing a default rate or renaming never rewrites an old closing |
+| D71 | 2026-11-19 | The closings API accepts inactive products (a product can be deactivated after the session); the editor only offers active ones for new rows | Editing an old draft must not fail because a combo left the menu |
+| D72 | 2026-11-19 | Closing report sheet `/cierres/:id/reporte` shows prices (unlike kitchen/plan sheets) and labels drafts "Borrador · costos actuales"; same print flow (D36/D52) | It's a financial report; a draft printout must say its costs can still move |
+| D73 | 2026-11-19 | `closing` uses SQLite AUTOINCREMENT | Retention deletes closings; a reused id would make an old report link open a different closing |
+| D74 | 2026-11-19 | Leaving the editor after a save/delete passes `state: 'saved'` so the unsaved-changes blocker lets it through; deleting doesn't refetch the deleted closing | A save confirmed from the retention dialog runs outside `handleSubmit`; refetching a 404 with retries delayed the redirect by seconds |
 
 ## Open (from spec — need Sebas's answer before the noted milestone)
 
