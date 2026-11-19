@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 
 import { BackupsSection } from './BackupsSection'
 import { MenuGroupsTable, PlatformsTable } from './CatalogTables'
+import { ClosingsToKeep, CollaboratorsTable, ExpenseTypesTable } from './ClosingCatalogs'
 import { SettingsForm } from './SettingsForm'
 
 export function SettingsPage() {
@@ -15,6 +16,11 @@ export function SettingsPage() {
       </Section>
       <Section title="Plataformas de delivery" description="Su comisión se descuenta del margen en lugar de la comisión bancaria.">
         <PlatformsTable />
+      </Section>
+      <Section title="Cierres" description="Colaboradores y gastos que se reutilizan en los cierres de sesión.">
+        <ClosingsToKeep />
+        <CollaboratorsTable />
+        <ExpenseTypesTable />
       </Section>
       <Section title="Respaldos" description="Copia completa de la base de datos (suministros, recetas, productos y ajustes).">
         <BackupsSection />

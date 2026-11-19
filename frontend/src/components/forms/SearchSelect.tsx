@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, X } from 'lucide-react'
+import { Check, ChevronsUpDown, Plus, X } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { cn, commandFilter } from '@/lib/utils'
+import { cn, commandFilter, foldText } from '@/lib/utils'
 
 export interface SearchOption {
   value: number
@@ -28,6 +28,10 @@ interface SearchSelectProps {
   placeholder: string
   searchPlaceholder?: string
   clearable?: boolean
+  /** Shown when `value` isn't among the options (e.g. a line whose catalog entry was deleted). */
+  fallbackLabel?: string
+  /** Adds a "Crear «…»" item for the typed text when no option has exactly that name. */
+  onCreate?: (name: string) => void
 }
 
 /** Searchable single select over numeric ids, grouped by `group`. */
@@ -39,14 +43,26 @@ export function SearchSelect({
   placeholder,
   searchPlaceholder = 'Buscar…',
   clearable = true,
+  fallbackLabel,
+  onCreate,
 }: SearchSelectProps) {
   const [open, setOpen] = useState(false)
+  const [search, setSearch] = useState('')
   const selected = options.find((o) => o.value === value)
+  const label = selected?.label ?? fallbackLabel
+  const typed = search.trim()
+  const canCreate = onCreate !== undefined && typed !== '' && !options.some((o) => foldText(o.label) === foldText(typed))
   const groups = [...new Set(options.map((o) => o.group ?? ''))]
 
   return (
     <div className="flex gap-1">
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover
+        open={open}
+        onOpenChange={(next) => {
+          setOpen(next)
+          if (!next) setSearch('')
+        }}
+      >
         <PopoverTrigger asChild>
           <Button
             id={id}
@@ -54,17 +70,17 @@ export function SearchSelect({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className={cn('w-full justify-between bg-surface-card font-normal', !selected && 'text-muted-foreground')}
+            className={cn('w-full justify-between bg-surface-card font-normal', !label && 'text-muted-foreground')}
           >
-            <span className="truncate">{selected?.label ?? placeholder}</span>
+            <span className="truncate">{label ?? placeholder}</span>
             <ChevronsUpDown className="size-3.5 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-(--radix-popover-trigger-width) min-w-72 p-0" align="start">
           <Command filter={commandFilter}>
-            <CommandInput placeholder={searchPlaceholder} />
+            <CommandInput placeholder={searchPlaceholder} value={search} onValueChange={setSearch} />
             <CommandList>
-              <CommandEmpty>Sin resultados.</CommandEmpty>
+              {!canCreate && <CommandEmpty>Sin resultados.</CommandEmpty>}
               {groups.map((group) => (
                 <CommandGroup key={group} heading={group || undefined}>
                   {options
@@ -87,6 +103,22 @@ export function SearchSelect({
                     ))}
                 </CommandGroup>
               ))}
+              {canCreate && (
+                <CommandGroup forceMount>
+                  <CommandItem
+                    forceMount
+                    value={`__create__ ${typed}`}
+                    onSelect={() => {
+                      onCreate(typed)
+                      setOpen(false)
+                      setSearch('')
+                    }}
+                  >
+                    <Plus className="size-4" />
+                    <span className="truncate">Crear «{typed}»</span>
+                  </CommandItem>
+                </CommandGroup>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>

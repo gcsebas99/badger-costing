@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router'
 
 import { AppLayout } from '@/components/layout/AppLayout'
 import { RouteError } from '@/components/layout/RouteError'
+import { ClosingEditorPage } from '@/pages/closings/ClosingEditorPage'
+import { ClosingsPage } from '@/pages/closings/ClosingsPage'
 import { DashboardPage } from '@/pages/dashboard/DashboardPage'
 import { MenuPage } from '@/pages/menu/MenuPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
@@ -41,6 +43,9 @@ export const router = createBrowserRouter([
           { path: 'productos/nuevo', element: <ProductEditorPage key="new" /> },
           { path: 'productos/:id', element: <ProductEditorPage /> },
           { path: 'planeacion', element: <PlanningPage /> },
+          { path: 'cierres', element: <ClosingsPage /> },
+          { path: 'cierres/nuevo', element: <ClosingEditorPage key="new" /> },
+          { path: 'cierres/:id', element: <ClosingEditorPage /> },
           { path: 'menu', element: <MenuPage /> },
           { path: 'ajustes', element: <SettingsPage /> },
           { path: 'simulador', element: <SimulatorPage /> },

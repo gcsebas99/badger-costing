@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Package,
+  Receipt,
   Settings,
   UtensilsCrossed,
 } from 'lucide-react'
@@ -50,6 +51,13 @@ export const NAV_ITEMS: NavItem[] = [
     searchPlaceholder: 'Buscar producto…',
   },
   { path: '/planeacion', label: 'Planeación', icon: ClipboardList },
+  {
+    path: '/cierres',
+    label: 'Cierres',
+    icon: Receipt,
+    newLabel: 'Nuevo cierre',
+    newPath: '/cierres/nuevo',
+  },
   { path: '/menu', label: 'Ingeniería de menú', icon: LayoutGrid },
   { path: '/ajustes', label: 'Ajustes', icon: Settings },
   { path: '/simulador', label: 'Simulador de impacto', icon: FlaskConical, hidden: true },

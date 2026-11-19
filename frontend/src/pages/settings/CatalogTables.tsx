@@ -30,7 +30,7 @@ import {
 import { formatPercent, percentInputToRate, rateToPercentInput } from '@/lib/format'
 
 /** Text input that saves on blur / Enter when its value changed. */
-function InlineInput({
+export function InlineInput({
   value,
   onSave,
   label,
@@ -56,7 +56,8 @@ function InlineInput({
     try {
       await onSave(draft)
     } catch (error) {
-      toast.error(errorMessage(error))
+      // Validation errors thrown before the request carry their own (Spanish) message.
+      toast.error(error instanceof Error && !('status' in error) ? error.message : errorMessage(error))
       setDraft(value)
     }
   }
